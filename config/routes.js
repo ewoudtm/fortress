@@ -36,6 +36,7 @@ module.exports.routes = {
   'get /message/inbox': 'MessageController.inbox',
   'get /user/username/:id': 'UserController.getUsername',
   'post /message': 'MessageController.create',
+  'get /performer/:id': 'PerformerController.find',
   'put /message/by-thread/:thread': 'MessageController.update'
   // Custom routes here ...
 
