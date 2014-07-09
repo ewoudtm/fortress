@@ -70,6 +70,7 @@ userModel.register = function (userCredentials, callback) {
 
   // Create the new user.
   this.create(userCredentials).exec(function (error, newUser) {
+
     if (error) {
       return callback(error);
     }
@@ -87,21 +88,34 @@ userModel.register = function (userCredentials, callback) {
         return;
       }
 
-      var role = userRoles.shift();
+      var role = userRoles.shift()
+        , model = sails.models[role];
 
-      // There hasn't been supplied anything for this role, so no need to create.
-      if (typeof userRoleObjects[role] === 'undefined') {
-        return next();
+      // @todo sort out this HACK. This is because sails doesn't work well with custom primary keys.
+      if ('id' === model.primaryKey) {
+        model.update(newUser[role], {user: newUser.id}).exec(function (error) {
+          if (error) {
+            return callback(error);
+          }
+
+          next();
+        });
+
+        return;
       }
 
       // Set the ID of the newly added user to ensure a functional association.
       userRoleObjects[role].user = newUser.id;
 
-      sails.models[role].update(newUser[role], {user: newUser.id}).exec(function (error) {
+      model.create(userRoleObjects[role]).exec(function (error, newAccountType) {
         if (error) {
           return callback(error);
         }
 
+        // Set newly created account type on newly created user (remove the need to populate later on)
+        newUser[role] = newAccountType;
+
+        // On to the next role.
         next();
       });
     })();
