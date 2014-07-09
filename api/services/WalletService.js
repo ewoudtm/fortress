@@ -1,0 +1,61 @@
+var request = require('request')
+  , extend = require('extend');
+
+var walletService = module.exports = {
+
+  importUser: function (credentials, callback) {
+
+    sails.models.wallet.findUser(credentials.username, function (error, user) {
+      if (error) {
+        return callback(error);
+      }
+
+      if (!user) {
+        return callback(null, null);
+      }
+
+      var newVisitorValues = {
+            walletId: user.id,
+            credits : user.credits
+          }
+        , newUserValues = {
+            email   : credentials.username,
+            password: credentials.password,
+            visitor : newVisitorValues
+          };
+
+      sails.models.user.register(newUserValues, function (error, newUser) {
+        if (error) {
+          return callback(error);
+        }
+
+        callback(null, newUser);
+      });
+    });
+  },
+
+  login: function (credentials, callback) {
+    var walletUrl = sails.config.userSync.backupAuthenticationUrl
+      , self = this;
+
+    request.post(walletUrl, {form: extend({action: 'login'}, credentials)}, function (error, response, body) {
+      var responseData;
+
+      if (error) {
+        return callback(error);
+      }
+
+      try {
+        responseData = JSON.parse(body);
+      } catch (error) {
+        return callback(error);
+      }
+
+      if (!responseData.ok) {
+        return callback(null, false);
+      }
+
+      self.importUser(credentials, callback);
+    });
+  }
+};

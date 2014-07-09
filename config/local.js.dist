@@ -1,0 +1,48 @@
+module.exports = {
+  port: process.env.PORT || 1337,
+
+  environment: process.env.NODE_ENV || 'development'
+
+};
+
+module.exports.scaling = {
+  scaled: false
+};
+
+// If this instance does importing
+module.exports.import = {
+  enabled    : true,
+  credentials: {
+    host    : '',
+    user    : '',
+    password: '',
+    database: ''
+  }
+};
+
+module.exports.connections = {
+  localDiskDb: {
+    adapter: 'sails-disk'
+  },
+  islive: {
+    adapter : 'sails-mysql',
+    host    : '',
+    user    : '',
+    password: '',
+    database: ''
+  },
+
+  chatterbox: {
+    adapter : 'sails-mysql',
+    host    : '',
+    user    : '',
+    password: '',
+    database: ''
+  },
+  mongoLocal: {
+    adapter     : 'sails-mongo',
+    host        : 'localhost',
+    nativeParser: true,
+    port        : 27017
+  }
+};
