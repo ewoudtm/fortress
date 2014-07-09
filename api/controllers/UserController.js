@@ -5,41 +5,51 @@ module.exports = {
 
   getIdentity: function (req, res) {
     if (!req.session || !req.session.user) {
+      var errorResponse = new Error();
+      errorResponse.name = 'no_identity';
+      errorResponse.message = 'No identity';
+
       return res.json({
-        success: false,
-        message: 'No identity'
+        error: errorResponse
       });
     }
 
-    sails.models['user'].findOne({id: req.session.user}).exec(function(error, user) {
+    sails.models['user'].findOne({id: req.session.user}).populateAll().exec(function(error, user) {
       if (error) {
+        var errorResponse = new Error();
+        errorResponse.name = 'database_error';
+        errorResponse.message = 'Something went wrong while fetching the identity.';
+
         return res.json({
-          success: false,
-          message: 'error',
-          error: error
+          error: errorResponse
         });
       }
 
-      res.json({
-        success: true,
-        what: req.session.whattt,
-        data: user
-      });
-
+      res.json(user);
     });
   },
 
   getUsername: function(req, res) {
     sails.models['user'].findOne(req.param('id')).exec(function(error, user) {
+      var errorResponse;
+
       if (error) {
+        errorResponse = new Error();
+        errorResponse.name = 'database_error';
+        errorResponse.message = 'Something went wrong while fetching the identity.';
+
         return res.json({
-          error: 'Server error'
+          error: errorResponse
         });
       }
 
       if (!user) {
+        errorResponse = new Error();
+        errorResponse.name = 'no_identity';
+        errorResponse.message = 'No identity';
+
         return res.json({
-          error: 'User not found'
+          error: errorResponse
         });
       }
 
@@ -71,8 +81,12 @@ module.exports = {
      * Handle invalid credentials.
      */
     function invalidCredentials() {
+      var errorResponse = new Error();
+      errorResponse.name = 'invalid_credentials';
+      errorResponse.message = 'Invalid credentials supplied';
+
       return res.json({
-        error: 'Invalid credentials'
+        error: errorResponse
       });
     }
 
@@ -82,10 +96,12 @@ module.exports = {
      * @param {String|Error} error
      */
     function authenticationError(error) {
-      console.error('Error fetching user.', error);
+      var errorResponse = new Error();
+      errorResponse.name = 'database_error';
+      errorResponse.message = 'Something went wrong while fetching the identity.';
 
       return res.json({
-        error: 'Authentication error'
+        error: errorResponse
       });
     }
 
@@ -105,7 +121,7 @@ module.exports = {
      *
      * @todo Switch to findOne by username only, and match the passwords later on (because of bcrypt).
      */
-    sails.models.user.findOne(credentialsEmail).exec(function (error, result) {
+    sails.models.user.findOne(credentialsEmail).populateAll().exec(function (error, result) {
 
       if (error) {
         return authenticationError(error);
