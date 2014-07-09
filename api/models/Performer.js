@@ -2,8 +2,6 @@ module.exports = {
 
   schema: true,
 
-  adapter: 'mongoLocal',
-
   attributes: {
     user : {
       model: 'user'
