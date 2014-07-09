@@ -24,7 +24,7 @@ var walletService = module.exports = {
             visitor : newVisitorValues
           };
 
-      sails.models.user.register(newUserValues, function (error, newUser) {
+      sails.models['user'].register(newUserValues, function (error, newUser) {
         if (error) {
           return callback(error);
         }
