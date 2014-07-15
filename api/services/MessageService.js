@@ -15,8 +15,6 @@ module.exports = {
 
     message = thread.messages[0];
 
-    console.log(thread.messages);
-
     /**
      * +===========================================================================+
      * |                                                                           |

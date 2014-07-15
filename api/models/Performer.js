@@ -1,3 +1,6 @@
+/**
+ * @todo as soon as we start using this model, move properties to "profile" model as association.
+ */
 module.exports = {
 
   schema: true,

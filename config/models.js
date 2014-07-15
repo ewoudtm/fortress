@@ -14,4 +14,3 @@ module.exports.models = {
   // (defaults to localDiskDb)
   connection: 'mongoLocal'
 };
-

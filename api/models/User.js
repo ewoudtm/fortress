@@ -51,6 +51,19 @@ roles.forEach(function (role) {
   userModel.attributes[role] = {model: role};
 });
 
+userModel.getValidRoles = function() {
+  return roles;
+};
+
+/**
+ * Check if supplied role is valid.
+ * @param role
+ * @returns {boolean}
+ */
+userModel.isValidRole = function(role) {
+  return roles.indexOf(role) > -1;
+};
+
 /**
  * Register a new user. Allows supplying nested account types such as performer and visitor.
  *
@@ -93,7 +106,9 @@ userModel.register = function (userCredentials, callback) {
 
       // @todo sort out this HACK. This is because sails doesn't work well with custom primary keys.
       if ('id' === model.primaryKey) {
-        model.update(newUser[role], {user: newUser.id}).exec(function (error) {
+        model.update(newUser[role], {user: newUser.id}).exec(function (error, updated) {
+          newUser[role] = updated[0];
+
           if (error) {
             return callback(error);
           }
