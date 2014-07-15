@@ -8,9 +8,10 @@
 module.exports = {
   setUsername : function(req, res) {
     if (!req.body.username) {
-      return res.badRequest('missing_parameter', 'Username was not supplied');
+      return res.badRequest('missing_parameter', 'username');
     }
 
     sails.models['user'].update(req.session.user, {username: req.body.username});
+    sails.models['visitor'].update(req.session.visitor, {username: req.body.username});
   }
 };
