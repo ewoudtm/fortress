@@ -6,6 +6,7 @@ module.exports = {
     user: {
       model: 'user'
     },
+
     username: {
       type: 'string',
       unique: true

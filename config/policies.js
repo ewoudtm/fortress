@@ -22,8 +22,13 @@ module.exports.policies = {
 
   MessageController: {
     'create': ['isAuthenticated', 'complementReply'],
-    'inbox': ['isAuthenticated'],
-    'find': 'inboxSetUser'
+    'inbox' : ['isAuthenticated'],
+    'find'  : 'inboxSetUser'
+  },
+
+  VisitorController: {
+    'find'       : ['isAuthenticated', 'resolveVisitorIdentity', 'ownsVisitorRecord'],
+    'setUsername': 'isAuthenticated'
   },
 
   ThreadController: {

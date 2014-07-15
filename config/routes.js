@@ -31,23 +31,20 @@ module.exports.routes = {
     view: 'homepage'
   },
 
-
-  'get /user/identity': 'UserController.getIdentity',
-  'get /message/inbox': 'MessageController.inbox',
-  'get /user/username/:id': 'UserController.getUsername',
-  'post /message': 'MessageController.create',
-  'get /performer/:id': 'PerformerController.find',
+  'get /connect/getcookie'        : 'ConnectController.getcookie',
+  'get /user/identity/:role?'     : 'UserController.getIdentity',
+  'get /message/inbox'            : 'MessageController.inbox',
+  'get /user/username/:id'        : 'UserController.getUsername',
+  'post /message'                 : 'MessageController.create',
+  'post /user/login'              : 'UserController.login',
+  'get /visitor/identity'         : 'VisitorController.find', // @see policies/resolveVisitorIdentity
+  'put /visitor/username'         : 'VisitorController.setUsername', // @see policies/resolveVisitorIdentity
+  'put /visitor/:id?'             : 'VisitorController.update',
+  'get /performer/:id'            : 'PerformerController.find',
   'put /message/by-thread/:thread': 'MessageController.update'
-  // Custom routes here ...
-
 
   // If a request to a URL doesn't match any of the custom routes above,
   // it is matched against Sails route blueprints.  See `config/blueprints.js`
   // for configuration options and examples.
 
 };
-
-/**
- * Data
- * Errors
- */
