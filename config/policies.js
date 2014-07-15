@@ -32,6 +32,6 @@ module.exports.policies = {
   },
 
   ThreadController: {
-    //'create': ['isAuthenticated', 'complementNewThread']
+    'create': ['isAuthenticated', 'complementNewThread']
   }
 };
