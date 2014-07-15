@@ -41,11 +41,7 @@ module.exports.routes = {
   'put /visitor/username'         : 'VisitorController.setUsername', // @see policies/resolveVisitorIdentity
   'put /visitor/:id?'             : 'VisitorController.update',
   'get /performer/:id'            : 'PerformerController.find',
-  'put /message/by-thread/:thread': 'MessageController.update',
-
-  // To remove
-  'get /visitor'                  : 'VisitorController.find'
-
+  'put /message/by-thread/:thread': 'MessageController.update'
 
   // If a request to a URL doesn't match any of the custom routes above,
   // it is matched against Sails route blueprints.  See `config/blueprints.js`
