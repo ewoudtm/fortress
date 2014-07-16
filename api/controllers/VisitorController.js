@@ -16,7 +16,7 @@ module.exports = {
         return res.badRequest('database_error');
       }
 
-      sails.models['visitor'].update(req.session.userInfo.id, {username: req.body.username}).exec(function(error) {
+      sails.models['visitor'].update(req.session.userInfo.visitorId, {username: req.body.username}).exec(function(error) {
         if (error) {
           return res.badRequest('database_error');
         }
