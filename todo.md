@@ -1,12 +1,9 @@
 ## TODO High priority
 All of this should be done **FIRST**.
 * Sync with wallet (triggers etc)
-* Verify existence of username.
 * Add credit checks
 * Check for session cookie! Otherwise NO socket connection. Really. Seriously. The server will explode.
 * @todo Make a policy add "where: to = authenticated user". Now both parties will have their messages marked as "read".
-
-
 
 ## To keep in mind
 
