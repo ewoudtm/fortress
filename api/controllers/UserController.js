@@ -3,7 +3,6 @@ var request = require('request')
   , UserController;
 
 UserController = {
-
   getIdentity: function (req, res) {
     var query, role;
 
@@ -110,7 +109,10 @@ UserController = {
       // We got data! Success, user logged in.
       if (typeof result !== 'undefined') {
         req.session.user = result.id;
-        req.session[role] = result[role].id;
+        req.session.userInfo = {
+          id      : result[role].id,
+          username: result[role].username
+        };
 
         if (req.isSocket) {
           sails.models[role].subscribe(req, result[role]);
