@@ -21,7 +21,7 @@ module.exports.policies = {
   '*': false,
 
   MessageController: {
-    create: ['isAuthenticated', 'complementReply'],
+    create: ['isAuthenticated', 'hasUsername', 'complementReply'],
     inbox : ['isAuthenticated'],
     find  : 'inboxSetUser'
   },
@@ -37,11 +37,11 @@ module.exports.policies = {
 
   VisitorController: {
     find       : ['isAuthenticated', 'resolveVisitorIdentity', 'ownsVisitorRecord'],
-    setUsername: 'isAuthenticated'
+    setUsername: ['isAuthenticated', 'isVisitor']
   },
 
   ThreadController: {
-    create: ['isAuthenticated', 'complementNewThread']
+    create: ['isAuthenticated', 'hasUsername', 'complementNewThread']
   },
 
   PerformerController: {

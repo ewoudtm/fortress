@@ -110,9 +110,11 @@ UserController = {
       if (typeof result !== 'undefined') {
         req.session.user = result.id;
         req.session.userInfo = {
-          id      : result[role].id,
-          username: result[role].username
+          username: result.username,
+          roles   : result.roles
         };
+
+        req.session.userInfo[role + 'Id'] = result[role].id;
 
         if (req.isSocket) {
           sails.models[role].subscribe(req, result[role]);
