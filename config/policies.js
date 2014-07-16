@@ -18,20 +18,33 @@ module.exports.policies = {
 
   // Default policy for all controllers and actions
   // (`true` allows public access)
-  '*': true,
+  '*': false,
 
   MessageController: {
-    'create': ['isAuthenticated', 'complementReply'],
-    'inbox' : ['isAuthenticated'],
-    'find'  : 'inboxSetUser'
+    create: ['isAuthenticated', 'complementReply'],
+    inbox : ['isAuthenticated'],
+    find  : 'inboxSetUser'
+  },
+
+  ConnectController: {
+    getcookie: true
+  },
+
+  UserController: {
+    login      : true,
+    getIdentity: 'isAuthenticated'
   },
 
   VisitorController: {
-    'find'       : ['isAuthenticated', 'resolveVisitorIdentity', 'ownsVisitorRecord'],
-    'setUsername': 'isAuthenticated'
+    find       : ['isAuthenticated', 'resolveVisitorIdentity', 'ownsVisitorRecord'],
+    setUsername: 'isAuthenticated'
   },
 
   ThreadController: {
-    'create': ['isAuthenticated', 'complementNewThread']
+    create: ['isAuthenticated', 'complementNewThread']
+  },
+
+  PerformerController: {
+    find: true
   }
 };
