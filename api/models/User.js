@@ -1,5 +1,5 @@
 var roles = ['visitor', 'performer']
-  , userModel = {};
+  , userModel = {schema: true};
 
 /**
  * The attributes for the model.
@@ -23,6 +23,16 @@ userModel.attributes = {
   },
 
   password: 'string',
+
+  partnerCode : {
+    type: 'string',
+    defaultsTo: 61
+  },
+
+  partnerInfo : {
+    type: 'string',
+    defaultsTo: 'typein'
+  },
 
   roles: {
     type      : 'array',
@@ -51,6 +61,10 @@ roles.forEach(function (role) {
   userModel.attributes[role] = {model: role};
 });
 
+/**
+ * Get all valid roles
+ * @returns {string[]}
+ */
 userModel.getValidRoles = function() {
   return roles;
 };

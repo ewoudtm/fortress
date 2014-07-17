@@ -21,7 +21,9 @@ UserController = {
         return res.badRequest('database_error');
       }
 
-      sails.models[role].subscribe(req, user[role]);
+      if (role) {
+        sails.models[role].subscribe(req, user[role]);
+      }
 
       res.ok(user);
     });
@@ -109,7 +111,7 @@ UserController = {
       // We got data! Success, user logged in.
       if (typeof result !== 'undefined') {
         req.session.user = result.id;
-        req.session.userInfo = {
+          req.session.userInfo = {
           username: result.username,
           roles   : result.roles
         };

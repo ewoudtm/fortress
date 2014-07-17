@@ -1,10 +1,3 @@
-/**
- * MessageController
- *
- * @description :: Server-side logic for managing messages
- * @help        :: See http://links.sailsjs.org/docs/controllers
- */
-
 module.exports = {
   inbox: function (req, res) {
     var userId = req.session.user
@@ -28,8 +21,6 @@ module.exports = {
       , findQuery = sails.models['thread'].find().where(threadCriteria);
 
     findQuery.populate('from').populate('to').populate('messages', messageCriteria);
-
-
 
     findQuery.exec(function (error, results) {
       if (error) {
