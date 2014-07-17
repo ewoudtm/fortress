@@ -18,6 +18,10 @@ UserController = {
       }
 
       if (role) {
+        if (!user[role]) {
+          return res.badRequest('missing_role', role);
+        }
+
         sails.models[role].subscribe(req, user[role]);
       }
 
