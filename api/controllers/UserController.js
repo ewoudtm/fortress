@@ -6,10 +6,6 @@ UserController = {
   getIdentity: function (req, res) {
     var query, role;
 
-    if (!req.session || !req.session.user) {
-      return res.badRequest('no_identity');
-    }
-
     query = sails.models['user'].findOne({id: req.session.user});
 
     if (role = req.param('role')) {
@@ -43,7 +39,7 @@ UserController = {
       }
 
       if (!user) {
-        return res.badRequest('no_identity');
+        return res.badRequest('unknown_user');
       }
 
       return res.ok({username: user.username});
