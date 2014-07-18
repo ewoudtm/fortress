@@ -103,13 +103,14 @@ UserController = {
         return res.serverError('database_error', error);
       }
 
-      // Does the supplied role exist?
-      if (result.roles.indexOf(role) === -1) {
-        return res.badRequest('missing_role', role);
-      }
-
       // We got data! Success, user logged in.
       if (typeof result !== 'undefined') {
+
+        // Does the supplied role exist?
+        if (result.roles.indexOf(role) === -1) {
+          return res.badRequest('missing_role', role);
+        }
+
         req.session.user = result.id;
           req.session.userInfo = {
           username: result.username,
