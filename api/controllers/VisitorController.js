@@ -13,12 +13,12 @@ module.exports = {
 
     sails.models['user'].update(req.session.user, {username: req.body.username}).exec(function(error) {
       if (error) {
-        return res.badRequest('database_error');
+        return res.serverError('database_error', error);
       }
 
       sails.models['visitor'].update(req.session.userInfo.visitorId, {username: req.body.username}).exec(function(error) {
         if (error) {
-          return res.badRequest('database_error');
+          return res.serverError('database_error', error);
         }
 
         req.session.userInfo.username = req.body.username;

@@ -24,7 +24,7 @@ module.exports = {
 
     findQuery.exec(function (error, results) {
       if (error) {
-        return res.json({error  : error});
+        return res.serverError('database_error', error);
       }
 
       res.json(sails.services['messageservice'].flatten(userId, results));

@@ -7,7 +7,7 @@ module.exports = function badRequest(name, details) {
   res.status(400);
 
   if (!name) {
-    return res.send();
+    return res.send({status: 400});
   }
 
   // Log error to console
