@@ -13,7 +13,7 @@ module.exports = function forbidden(err, info) {
   }
 
   if (!err) {
-    return res.send();
+    return res.send({status: 403});
   }
 
   if (typeof err !== 'object' || err instanceof Error) {

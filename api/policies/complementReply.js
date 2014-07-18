@@ -1,13 +1,10 @@
-/**
- * Set to find where to = authenticated user's id, or from = authenticated user's id.
- */
 module.exports = function(req, res, next) {
   if (!req.body.thread) {
-    return res.badRequest('Required thread not supplied.');
+    return res.badRequest('missing_parameter', 'thread');
   }
 
   if (!req.body.body) {
-    return res.badRequest('Required body not supplied.');
+    return res.badRequest('missing_parameter', 'body');
   }
 
   sails.models['message'].findOne({thread: req.body.thread}).exec(function(error, data) {

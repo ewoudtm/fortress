@@ -11,7 +11,7 @@ module.exports = function sendOK(data) {
 
   if (!data) {
     // Things that don't have data, like "logout". Client side will look for res.error anyway.
-    return res.send();
+    return res.send({status: 200});
   }
 
   this.req._sails.log.verbose(data);

@@ -14,7 +14,7 @@ UserController = {
 
     query.exec(function (error, user) {
       if (error) {
-        return res.badRequest('database_error');
+        return res.serverError('database_error', error);
       }
 
       if (role) {
@@ -39,7 +39,7 @@ UserController = {
     sails.models['user'].findOne(req.param('id')).exec(function (error, user) {
 
       if (error) {
-        return res.badRequest('database_error');
+        return res.serverError('database_error', error);
       }
 
       if (!user) {
@@ -100,7 +100,7 @@ UserController = {
 
       // Something went wrong in the backend.
       if (error) {
-        return res.badRequest('database_error');
+        return res.serverError('database_error', error);
       }
 
       // Does the supplied role exist?
@@ -129,7 +129,7 @@ UserController = {
       sails.services['walletservice'].login(credentials, function (error, record) {
 
         if (error) {
-          return res.badRequest('database_error');
+          return res.serverError('database_error', error);
         }
 
         if (!record) {

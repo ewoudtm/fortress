@@ -1,12 +1,3 @@
-/**
- * sessionAuth
- *
- * @module      :: Policy
- * @description :: Simple policy to allow any authenticated user
- *                 Assumes that your login action in one of your controllers sets `req.session.authenticated = true;`
- * @docs        :: http://sailsjs.org/#!documentation/policies
- *
- */
 module.exports = function(req, res, next) {
 
   var thread = req.body
@@ -14,11 +5,11 @@ module.exports = function(req, res, next) {
     , recipient;
 
   if (messages.length > 1) {
-    return res.badRequest("Too many messages.");
+    return res.badRequest('invalid_parameter', 'messages');
   }
 
   if (!messages[0].to) {
-    return res.badRequest('User is mandatory.');
+    return res.badRequest('missing_parameter', 'message.to');
   }
 
   recipient = messages[0].to;

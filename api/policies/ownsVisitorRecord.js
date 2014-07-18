@@ -1,7 +1,3 @@
-/**
- * @todo Test custom blueprint https://github.com/balderdashy/sails/pull/1934
- *
- */
 module.exports = function(req, res, next) {
   if (req.options.user) {
     return next();

@@ -14,8 +14,16 @@ module.exports = function (req, res, next) {
     , recipient
     , userQuery;
 
-  if (!params.to || !params.subject || !params.body) {
-    return res.badRequest('Mandatory parameter missing. Required parameters are "to", "subject" and "body".');
+  if (!params.to) {
+    return res.badRequest('missing_parameter', 'to');
+  }
+
+  if (!params.subject) {
+    return res.badRequest('missing_parameter', 'subject');
+  }
+
+  if (!params.body) {
+    return res.badRequest('missing_parameter', 'body');
   }
 
   recipient = params.to;
@@ -26,7 +34,7 @@ module.exports = function (req, res, next) {
 
   userQuery.exec(function (error, data) {
     if (error) {
-      return res.serverError(error);
+      return res.serverError('database_error', error);
     }
 
     if (!data) {
