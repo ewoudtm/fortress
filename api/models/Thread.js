@@ -5,7 +5,7 @@ module.exports = {
       collection: 'message',
       via: 'thread'
     },
-    subject: 'email',
+    subject: 'string',
     from: {
       model: 'user'
     },
