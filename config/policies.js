@@ -30,6 +30,7 @@ module.exports.policies = {
     create  : ['isAuthenticated', 'hasUsername', 'complementNewThread'],
     findOne : ['isAuthenticated', 'hasUsername'],
     markRead: ['isAuthenticated']
+
   },
 
   PerformerController: {
