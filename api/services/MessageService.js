@@ -53,16 +53,17 @@ module.exports = {
     }
 
     return {
-      id       : message.id,
-      created  : message.createdAt,
-      updated  : message.updatedAt,
-      from     : from,
-      to       : to,
-      subject  : thread.subject,
-      thread   : thread.id,
-      body     : message.body,
-      read     : message.read,
-      direction: message.from === userId ? 'out' : 'in'
+      id          : message.id,
+      created     : message.createdAt,
+      updated     : message.updatedAt,
+      from        : from,
+      to          : to,
+      subject     : thread.subject,
+      thread      : thread.id,
+      body        : message.body,
+      read        : message.read,
+      direction   : message.from === userId ? 'out' : 'in',
+      participant : message.from === userId ? message.to : message.from
     };
   }
 };
