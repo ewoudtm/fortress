@@ -17,6 +17,7 @@ module.exports.policies = {
 
   UserController: {
     login      : true,
+    getUsername: true,
     getIdentity: 'isAuthenticated'
   },
 
