@@ -28,26 +28,14 @@ module.exports = {
      * |                                                                           |
      * +---------------------------------------------------------------------------+
      * |                                                                           |
-     /* |*/  var newest = {createdAt: 0}, tmp, date;
-    /* |*/
-    /* |*/
-    /* |*/
-    /* |*/
-    for (tmp = 0; tmp < thread.messages.length; tmp++) {                /* |*/
-      /* |*/
-      date = new Date(thread.messages[tmp].createdAt);
-      /* |*/
-      /* |*/
-      newest = date > newest.createdAt ? thread.messages[tmp] : newest;
-      /* |*/
-      /* |*/
-    }
-    /* |*/
-    /* |*/
-    /* |*/
-    /* |*/
-    message = newest;
-    /* |
+    /* |*/  var newest = {createdAt: 0}, tmp, date;                             /* |*/
+    /* |*/                                                                      /* |*/
+    /* |*/  for (tmp = 0; tmp < thread.messages.length; tmp++) {                /* |*/
+    /* |*/    date = new Date(thread.messages[tmp].createdAt);                  /* |*/
+    /* |*/    newest = date > newest.createdAt ? thread.messages[tmp] : newest; /* |*/
+    /* |*/  }                                                                   /* |*/
+    /* |*/                                                                      /* |*/
+    /* |*/  message = newest;                                                   /* |
      * |                                                                           |
      * +---------------------------------------------------------------------------+
      * |                                                                           |
@@ -65,17 +53,17 @@ module.exports = {
     }
 
     return {
-      id         : message.id,
-      created    : message.createdAt,
-      updated    : message.updatedAt,
-      from       : from,
-      to         : to,
-      subject    : thread.subject,
-      thread     : thread.id,
-      body       : message.body,
-      read       : message.read,
-      direction  : message.from === userId ? 'out' : 'in',
-      participant: message.from === userId ? message.to : message.from
+      id          : message.id,
+      created     : message.createdAt,
+      updated     : message.updatedAt,
+      from        : from,
+      to          : to,
+      subject     : thread.subject,
+      thread      : thread.id,
+      body        : message.body,
+      read        : message.read,
+      direction   : message.from === userId ? 'out' : 'in',
+      participant : message.from === userId ? message.to : message.from
     };
   }
 };
