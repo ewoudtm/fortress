@@ -29,5 +29,21 @@ module.exports = {
 
       res.json(sails.services['messageservice'].flatten(userId, results));
     });
+  },
+
+  // Here until I find a more viable method using blueprints.
+  markRead: function (req, res) {
+
+    if (!req.body.id) {
+      return res.badRequest('missing_parameter', 'id');
+    }
+
+    sails.models['message'].update({to: req.session.user, id: req.body.id}, {read: true}).exec(function (error, updated) {
+      if (error) {
+        return res.serverError('database_error', error);
+      }
+
+      return res.ok();
+    });
   }
 };
