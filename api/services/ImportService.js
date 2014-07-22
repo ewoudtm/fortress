@@ -277,46 +277,38 @@ function ImportService() {
    * Setup the listeners for performer status changes.
    */
   function runOnlineListener() {
+    log('Attaching listeners for performer status...');
 
-    socket.emit('hello', { type: 'admin' }, function (data) {
-
-      if (!data) {
-        handleError('Not allowed', 'Hello as admin failed.');
-      }
-
-      log('Attaching listeners for performer status...');
-
-      // When a performer comes online
-      socket.on('performer join', function (data) {
-        setPerformerStatus(data.user, true, function (model, duplicate) {
-          if (duplicate) {
-            return log('Performer already online: ' + data.user);
-          }
-
-          return log('Performer set online: ' + data.user);
-        });
-      });
-
-      // When a performer goes offline.
-      socket.on('performer part', function (data) {
-        setPerformerStatus(data.user, false, function () {
-          log('Performer set offline: ' + data.user);
-        });
-      });
-
-      // Init performers
-      socket.emit('online performers', {}, function (performers) {
-
-        log("Setting performers online...");
-        var onlinePerformers = Object.keys(performers).length
-          , performersDone = 0;
-
-        for (var name in performers) {
-          setPerformerStatus(name, true, function () {
-            progress(++performersDone, onlinePerformers);
-          });
+    // When a performer comes online
+    socket.on('performer join', function (data) {
+      setPerformerStatus(data.user, true, function (model, duplicate) {
+        if (duplicate) {
+          return log('Performer already online: ' + data.user);
         }
+
+        return log('Performer set online: ' + data.user);
       });
+    });
+
+    // When a performer goes offline.
+    socket.on('performer part', function (data) {
+      setPerformerStatus(data.user, false, function () {
+        log('Performer set offline: ' + data.user);
+      });
+    });
+
+    // Init performers
+    socket.emit('online performers', {}, function (performers) {
+
+      log("Setting performers online...");
+      var onlinePerformers = Object.keys(performers).length
+        , performersDone = 0;
+
+      for (var name in performers) {
+        setPerformerStatus(name, true, function () {
+          progress(++performersDone, onlinePerformers);
+        });
+      }
     });
   }
 
