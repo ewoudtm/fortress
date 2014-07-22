@@ -7,7 +7,7 @@ module.exports.policies = {
   MessageController: {
     create  : ['isAuthenticated', 'hasUsername', 'complementReply'],
     inbox   : ['isAuthenticated'],
-    find    : 'inboxSetUser',
+    find    : ['isAuthenticated', 'ensureThreadParticipation'],
     markRead: ['isAuthenticated']
   },
 
