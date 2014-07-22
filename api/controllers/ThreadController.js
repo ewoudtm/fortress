@@ -9,11 +9,15 @@ module.exports = {
   // Here until I find a more viable method using blueprints.
   markRead: function (req, res) {
 
+    var searchCriteria;
+
     if (!req.body.thread) {
       return res.badRequest('missing_parameter', 'thread');
     }
 
-    sails.models['message'].update({to: req.session.user, thread: req.body.thread}, {read: true}).exec(function (error, updated) {
+    searchCriteria = {where: { or: [{to: req.session.user}, {from: req.session.user}], thread: req.body.thread}};
+
+    sails.models['message'].update(searchCriteria, {read: true}).exec(function (error, updated) {
       if (error) {
         return res.serverError('database_error', error);
       }
