@@ -22,23 +22,23 @@
 
 module.exports.routes = {
 
-
   // Make the view located at `views/homepage.ejs` (or `views/homepage.jade`, etc. depending on your
   // default view engine) your home page.
   //
   // (Alternatively, remove this and add an `index.html` file in your `assets` directory)
-  'get /connect/getcookie'        : 'ConnectController.getcookie',
-  'get /user/identity/:role?'     : 'UserController.getIdentity',
-  'get /message/inbox'            : 'MessageController.inbox',
-  'get /user/username/:id'        : 'UserController.getUsername',
-  'post /message'                 : 'MessageController.create',
-  'post /user/login'              : 'UserController.login',
-  'get /visitor/identity'         : 'VisitorController.find', // @see policies/resolveVisitorIdentity
-  'put /visitor/username'         : 'VisitorController.setUsername', // @see policies/resolveVisitorIdentity
-  'put /visitor/:id?'             : 'VisitorController.update',
-  'get /performer/:id'            : 'PerformerController.find',
-  'put /thread/mark-read'         : 'ThreadController.markRead',
-  'put /message/mark-read'        : 'MessageController.markRead'
+  'get /connect/getcookie'   : 'ConnectController.getcookie',
+  'get /user/identity/:role?': 'UserController.getIdentity',
+  'get /message/inbox'       : 'MessageController.inbox',
+  'get /user/username/:id'   : 'UserController.getUsername',
+  'post /message'            : 'MessageController.create',
+  'post /user/login'         : 'UserController.login',
+  'get /visitor/identity'    : 'VisitorController.find', // @see policies/resolveVisitorIdentity
+  'put /visitor/username'    : 'VisitorController.setUsername', // @see policies/resolveVisitorIdentity
+  'put /visitor/:id?'        : 'VisitorController.update',
+  'get /performer/:id'       : 'PerformerController.find',
+  'put /thread/mark-read'    : 'ThreadController.markRead',
+  'put /message/mark-read'   : 'MessageController.markRead',
+  'get /message/unread'      : 'MessageController.unread'
 
   // If a request to a URL doesn't match any of the custom routes above,
   // it is matched against Sails route blueprints.  See `config/blueprints.js`
