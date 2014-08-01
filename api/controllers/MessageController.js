@@ -45,5 +45,15 @@ module.exports = {
 
       return res.ok();
     });
+  },
+
+  unread: function(req, res) {
+    sails.models['message'].count({read: false, to: req.session.user}, function(error, unreadCount) {
+      if (error) {
+        return res.serverError('database_error', error);
+      }
+
+      res.ok({count: unreadCount});
+    });
   }
 };

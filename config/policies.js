@@ -8,7 +8,8 @@ module.exports.policies = {
     create  : ['isAuthenticated', 'hasUsername', 'complementReply'],
     inbox   : ['isAuthenticated'],
     find    : ['isAuthenticated', 'ensureThreadParticipation'],
-    markRead: ['isAuthenticated']
+    markRead: ['isAuthenticated'],
+    unread  : ['isAuthenticated']
   },
 
   ConnectController: {
@@ -30,7 +31,6 @@ module.exports.policies = {
     create  : ['isAuthenticated', 'hasUsername', 'complementNewThread'],
     findOne : ['isAuthenticated', 'hasUsername'],
     markRead: ['isAuthenticated']
-
   },
 
   PerformerController: {
