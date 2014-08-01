@@ -61,7 +61,7 @@ UserController = {
     var userModel = sails.models['user']
       , role
       , credentials
-      , credentialsEmail;
+      , criteria;
 
     if (!req.body.role) {
       return res.badRequest('missing_parameter', 'role');
@@ -86,25 +86,28 @@ UserController = {
       password: req.body.password
     };
 
-    credentialsEmail = {
-      email   : req.body.username,
-      password: req.body.password
+    criteria = {
+      email: req.body.username
     };
 
     /**
      * Authenticate.
-     *
-     * @todo Switch to findOne by username only, and match the passwords later on (because of bcrypt).
      */
-    userModel.findOne(credentialsEmail).populate(role).exec(function (error, result) {
+    userModel.findOne(criteria).populate(role).exec(function (error, result) {
 
       // Something went wrong in the backend.
       if (error) {
         return res.serverError('database_error', error);
       }
 
-      // We got data! Success, user logged in.
+      // We got data!
       if (typeof result !== 'undefined') {
+
+        // Do the passwords match? Check is here, so now we won't import from the wallet.
+        // @todo implement bcrypt
+        if (credentials.password !== result.password) {
+          return res.badRequest('invalid_credentials');
+        }
 
         // Does the supplied role exist?
         if (result.roles.indexOf(role) === -1) {
@@ -112,7 +115,7 @@ UserController = {
         }
 
         req.session.user = result.id;
-          req.session.userInfo = {
+        req.session.userInfo = {
           username: result.username,
           roles   : result.roles
         };
