@@ -15,34 +15,10 @@ module.exports = {
 
     message = thread.messages[0];
 
-    /**
-     * +===========================================================================+
-     * |                                                                           |
-     * |                              [TEMPORARY FIX]                              |
-     * |                                                                           |
-     * | This logic is here until the criteria bug with populate has been solved.  |
-     * |                                                                           |
-     * | @see https://github.com/balderdashy/waterline/issues/247                  |
-     * | @see https://github.com/balderdashy/waterline/issues/334                  |
-     * | @todo Fix issue and remove TMP fix                                        |
-     * |                                                                           |
-     * +---------------------------------------------------------------------------+
-     * |                                                                           |
-    /* |*/  var newest = {createdAt: 0}, tmp, date;                             /* |*/
-    /* |*/                                                                      /* |*/
-    /* |*/  for (tmp = 0; tmp < thread.messages.length; tmp++) {                /* |*/
-    /* |*/    date = new Date(thread.messages[tmp].createdAt);                  /* |*/
-    /* |*/    newest = date > newest.createdAt ? thread.messages[tmp] : newest; /* |*/
-    /* |*/  }                                                                   /* |*/
-    /* |*/                                                                      /* |*/
-    /* |*/  message = newest;                                                   /* |
-     * |                                                                           |
-     * +---------------------------------------------------------------------------+
-     * |                                                                           |
-     * |                            [END TEMPORARY FIX]                            |
-     * |                                                                           |
-     * +===========================================================================+
-     */
+    if (thread.messages.length > 1) {
+      sails.log.error('More than 1 message found... Weird?');
+      sails.log.error(thread);
+    }
 
     if (message.from === thread.from.id) {
       from = thread.from.username;
