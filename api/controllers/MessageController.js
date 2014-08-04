@@ -1,8 +1,8 @@
 module.exports = {
-  inbox: function (req, res) {
+  inbox   : function (req, res) {
     var userId = req.session.user
       , threadCriteria = {
-          where  : {
+          where: {
             or: [
               {
                 to: userId
@@ -12,13 +12,13 @@ module.exports = {
               }
             ]
           },
-          sort   : 'updatedAt desc' // updatedAt gets upped on new reply.
+          sort : 'updatedAt desc' // updatedAt gets upped on new reply.
         }
       , messageCriteria = {
           limit: 1,
           sort : 'createdAt desc'
         }
-      , findQuery = sails.models['thread'].find().where(threadCriteria);
+      , findQuery = sails.models['thread'].find(threadCriteria);
 
     findQuery.populate('from').populate('to').populate('messages', messageCriteria);
 
@@ -47,8 +47,8 @@ module.exports = {
     });
   },
 
-  unread: function(req, res) {
-    sails.models['message'].count({read: false, to: req.session.user}, function(error, unreadCount) {
+  unread: function (req, res) {
+    sails.models['message'].count({read: false, to: req.session.user}, function (error, unreadCount) {
       if (error) {
         return res.serverError('database_error', error);
       }

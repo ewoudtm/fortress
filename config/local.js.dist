@@ -46,3 +46,9 @@ module.exports.connections = {
     port        : 27017
   }
 };
+
+// Sync user credits to this system?
+// Only use in production, or when configuring a local DB above ^
+module.exports.userSync = {
+  enabled: false,
+};

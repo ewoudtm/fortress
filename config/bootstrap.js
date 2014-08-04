@@ -8,13 +8,16 @@
  * For more information on bootstrapping your app, check out:
  * http://links.sailsjs.org/docs/config/bootstrap
  */
+'use strict';
 
 module.exports.bootstrap = function (cb) {
 
   // It's very important to trigger this callack method when you are finished
   // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
   sails.log.info('Starting sync.');
-  sails.services['syncservice'].run();
+  if (sails.config.userSync.enabled) {
+    sails.services['syncservice'].run();
+  }
   sails.log.info('Initializing chat service.');
   sails.services.chatservice.initialize(function () {
     sails.log.info('Initialized chat service. Initializing import service.');

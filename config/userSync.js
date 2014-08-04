@@ -1,4 +1,6 @@
 module.exports.userSync = {
+  enabled: false,
+
   /**
    * --Request::POST--
    * username : string
