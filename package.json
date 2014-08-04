@@ -25,10 +25,10 @@
     "mysql": "^2.3.2",
     "rc": "~0.3.3",
     "request": "^2.36.0",
-    "sails": "~0.10.0-rc10",
-    "sails-disk": "~0.10.0",
-    "sails-mongo": "^0.10.0-rc5",
-    "sails-mysql": "^0.10.0-rc7",
+    "sails": "^0.10.1",
+    "sails-disk": "^0.10.3",
+    "sails-mongo": "^0.10.1",
+    "sails-mysql": "^0.10.3",
     "socket.io-client": "^0.9.16"
   },
   "scripts": {
