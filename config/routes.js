@@ -29,6 +29,7 @@ module.exports.routes = {
   'get /connect/getcookie'   : 'ConnectController.getcookie',
   'get /user/identity/:role?': 'UserController.getIdentity',
   'get /message/inbox'       : 'MessageController.inbox',
+  'get /message/count'       : 'MessageController.getCount',
   'get /user/username/:id'   : 'UserController.getUsername',
   'post /message'            : 'MessageController.create',
   'post /user/login'         : 'UserController.login',
