@@ -26,20 +26,20 @@ module.exports.routes = {
   // default view engine) your home page.
   //
   // (Alternatively, remove this and add an `index.html` file in your `assets` directory)
-  'get /connect/getcookie'   : 'ConnectController.getcookie',
-  'get /user/identity/:role?': 'UserController.getIdentity',
-  'get /message/inbox'       : 'MessageController.inbox',
-  'get /message/count'       : 'MessageController.getCount',
-  'get /user/username/:id'   : 'UserController.getUsername',
-  'post /message'            : 'MessageController.create',
-  'post /user/login'         : 'UserController.login',
-  'get /visitor/identity'    : 'VisitorController.find', // @see policies/resolveVisitorIdentity
-  'put /visitor/username'    : 'VisitorController.setUsername', // @see policies/resolveVisitorIdentity
-  'put /visitor/:id?'        : 'VisitorController.update',
-  'get /performer/:id'       : 'PerformerController.find',
-  'put /thread/mark-read'    : 'ThreadController.markRead',
-  'put /message/mark-read'   : 'MessageController.markRead',
-  'get /message/unread'      : 'MessageController.unread'
+  'get /connect/getcookie'    : 'ConnectController.getcookie',
+  'get /user/identity/:role?' : 'UserController.getIdentity',
+  'get /message/inbox'        : 'MessageController.inbox',
+  'get /message/thread-count' : 'MessageController.getThreadCount',
+  'get /user/username/:id'    : 'UserController.getUsername',
+  'post /message'             : 'MessageController.create',
+  'post /user/login'          : 'UserController.login',
+  'get /visitor/identity'     : 'VisitorController.find', // @see policies/resolveVisitorIdentity
+  'put /visitor/username'     : 'VisitorController.setUsername', // @see policies/resolveVisitorIdentity
+  'put /visitor/:id?'         : 'VisitorController.update',
+  'get /performer/:id'        : 'PerformerController.find',
+  'put /thread/mark-read'     : 'ThreadController.markRead',
+  'put /message/mark-read'    : 'MessageController.markRead',
+  'get /message/unread'       : 'MessageController.unread'
 
   // If a request to a URL doesn't match any of the custom routes above,
   // it is matched against Sails route blueprints.  See `config/blueprints.js`

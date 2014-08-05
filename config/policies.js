@@ -5,12 +5,12 @@ module.exports.policies = {
   '*': false,
 
   MessageController: {
-    create   : ['isAuthenticated', 'hasUsername', 'complementReply'],
-    inbox    : ['isAuthenticated'],
-    find     : ['isAuthenticated', 'ensureThreadParticipation'],
-    markRead : ['isAuthenticated'],
-    unread   : ['isAuthenticated'],
-    getCount : ['isAuthenticated']
+    create         : ['isAuthenticated', 'hasUsername', 'complementReply'],
+    inbox          : ['isAuthenticated'],
+    find           : ['isAuthenticated', 'ensureThreadParticipation'],
+    markRead       : ['isAuthenticated'],
+    unread         : ['isAuthenticated'],
+    getThreadCount : ['isAuthenticated']
   },
 
   ConnectController: {

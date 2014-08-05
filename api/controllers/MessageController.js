@@ -56,7 +56,7 @@ module.exports = {
     });
   },
 
-  getCount: function (req, res) {
+  getThreadCount: function (req, res) {
     var userId = req.session.user
       , searchCriteria = {
           where: {
