@@ -28,9 +28,10 @@ module.exports.policies = {
   },
 
   ThreadController: {
-    create  : ['isAuthenticated', 'hasUsername', 'complementNewThread'],
-    findOne : ['isAuthenticated', 'hasUsername'],
-    markRead: ['isAuthenticated']
+    create        : ['isAuthenticated', 'hasUsername', 'complementNewThread'],
+    findOne       : ['isAuthenticated', 'hasUsername'],
+    markRead      : ['isAuthenticated'],
+    getThreadCount: ['isAuthenticated']
   },
 
   PerformerController: {

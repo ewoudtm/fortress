@@ -33,7 +33,6 @@ module.exports = {
 
   // Here until I find a more viable method using blueprints.
   markRead: function (req, res) {
-
     if (!req.body.id) {
       return res.badRequest('missing_parameter', 'id');
     }
