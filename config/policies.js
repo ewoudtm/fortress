@@ -5,12 +5,11 @@ module.exports.policies = {
   '*': false,
 
   MessageController: {
-    create         : ['isAuthenticated', 'hasUsername', 'complementReply'],
-    inbox          : ['isAuthenticated'],
-    find           : ['isAuthenticated', 'ensureThreadParticipation'],
-    markRead       : ['isAuthenticated'],
-    unread         : ['isAuthenticated'],
-    getThreadCount : ['isAuthenticated']
+    create  : ['isAuthenticated', 'hasUsername', 'complementReply'],
+    inbox   : ['isAuthenticated'],
+    find    : ['isAuthenticated', 'ensureThreadParticipation'],
+    markRead: ['isAuthenticated'],
+    unread  : ['isAuthenticated']
   },
 
   ConnectController: {
@@ -29,9 +28,10 @@ module.exports.policies = {
   },
 
   ThreadController: {
-    create  : ['isAuthenticated', 'hasUsername', 'complementNewThread'],
-    findOne : ['isAuthenticated', 'hasUsername'],
-    markRead: ['isAuthenticated']
+    create        : ['isAuthenticated', 'hasUsername', 'complementNewThread'],
+    findOne       : ['isAuthenticated', 'hasUsername'],
+    markRead      : ['isAuthenticated'],
+    getThreadCount: ['isAuthenticated']
   },
 
   PerformerController: {

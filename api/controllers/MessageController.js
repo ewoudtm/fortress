@@ -54,29 +54,5 @@ module.exports = {
 
       res.ok({count: unreadCount});
     });
-  },
-
-  getThreadCount: function (req, res) {
-    var userId = req.session.user
-      , searchCriteria = {
-          where: {
-            or: [
-              {
-                to: userId
-              },
-              {
-                from: userId
-              }
-            ]
-          }
-        }
-
-    sails.models['thread'].count(searchCriteria, function (error, count) {
-      if (error) {
-        return res.serverError('database_error', error);
-      }
-
-      res.ok({count: count});
-    });
   }
 };

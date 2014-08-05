@@ -8,7 +8,6 @@
 module.exports = {
   // Here until I find a more viable method using blueprints.
   markRead: function (req, res) {
-
     var searchCriteria;
 
     if (!req.body.thread) {
@@ -23,6 +22,30 @@ module.exports = {
       }
 
       return res.ok();
+    });
+  },
+
+  getThreadCount: function (req, res) {
+    var userId = req.session.user
+      , searchCriteria = {
+          where: {
+            or: [
+              {
+                to: userId
+              },
+              {
+                from: userId
+              }
+            ]
+          }
+        };
+
+    sails.models['thread'].count(searchCriteria, function (error, count) {
+      if (error) {
+        return res.serverError('database_error', error);
+      }
+
+      res.ok({count: count});
     });
   }
 };

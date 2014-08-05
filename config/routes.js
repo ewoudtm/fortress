@@ -26,20 +26,29 @@ module.exports.routes = {
   // default view engine) your home page.
   //
   // (Alternatively, remove this and add an `index.html` file in your `assets` directory)
-  'get /connect/getcookie'    : 'ConnectController.getcookie',
-  'get /user/identity/:role?' : 'UserController.getIdentity',
-  'get /message/inbox'        : 'MessageController.inbox',
-  'get /message/thread-count' : 'MessageController.getThreadCount',
-  'get /user/username/:id'    : 'UserController.getUsername',
+
+  // MessageController
   'post /message'             : 'MessageController.create',
-  'post /user/login'          : 'UserController.login',
-  'get /visitor/identity'     : 'VisitorController.find', // @see policies/resolveVisitorIdentity
-  'put /visitor/username'     : 'VisitorController.setUsername', // @see policies/resolveVisitorIdentity
-  'put /visitor/:id?'         : 'VisitorController.update',
-  'get /performer/:id'        : 'PerformerController.find',
-  'put /thread/mark-read'     : 'ThreadController.markRead',
+  'get /message/inbox'        : 'MessageController.inbox',
   'put /message/mark-read'    : 'MessageController.markRead',
-  'get /message/unread'       : 'MessageController.unread'
+  'get /message/unread'       : 'MessageController.unread',
+
+  // ThreadController
+  'put /thread/mark-read'     : 'ThreadController.markRead',
+  'get /thread/thread-count'  : 'ThreadController.getThreadCount',
+
+  // UserController
+  'post /user/login'          : 'UserController.login',
+  'get /user/username/:id'    : 'UserController.getUsername',
+  'get /user/identity/:role?' : 'UserController.getIdentity',
+
+   // VisitorController
+  'put /visitor/:id?'         : 'VisitorController.update',
+  'get /visitor/identity'     : 'VisitorController.find',        // @see policies/resolveVisitorIdentity
+  'put /visitor/username'     : 'VisitorController.setUsername', // @see policies/resolveVisitorIdentity
+
+  'get /connect/getcookie'    : 'ConnectController.getcookie',
+  'get /performer/:id'        : 'PerformerController.find',
 
   // If a request to a URL doesn't match any of the custom routes above,
   // it is matched against Sails route blueprints.  See `config/blueprints.js`
