@@ -1,7 +1,7 @@
 var request = require('request')
   , extend = require('extend');
 
-var walletService = module.exports = {
+module.exports = {
 
   importUser: function (credentials, callback) {
 
