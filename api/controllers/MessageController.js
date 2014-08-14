@@ -18,7 +18,7 @@ module.exports = {
           limit: 1,
           sort : 'createdAt desc'
         }
-      , findQuery = sails.models['thread'].find(threadCriteria);
+      , findQuery = sails.models.thread.find(threadCriteria);
 
     findQuery.populate('from').populate('to').populate('messages', messageCriteria);
 
@@ -27,7 +27,7 @@ module.exports = {
         return res.serverError('database_error', error);
       }
 
-      res.json(sails.services['messageservice'].flatten(userId, results));
+      res.json(sails.services.messageservice.flatten(userId, results));
     });
   },
 
@@ -37,7 +37,7 @@ module.exports = {
       return res.badRequest('missing_parameter', 'id');
     }
 
-    sails.models['message'].update({to: req.session.user, id: req.body.id}, {read: true}).exec(function (error, updated) {
+    sails.models.message.update({to: req.session.user, id: req.body.id}, {read: true}).exec(function (error) {
       if (error) {
         return res.serverError('database_error', error);
       }
@@ -47,7 +47,7 @@ module.exports = {
   },
 
   unread: function (req, res) {
-    sails.models['message'].count({read: false, to: req.session.user}, function (error, unreadCount) {
+    sails.models.message.count({read: false, to: req.session.user}, function (error, unreadCount) {
       if (error) {
         return res.serverError('database_error', error);
       }

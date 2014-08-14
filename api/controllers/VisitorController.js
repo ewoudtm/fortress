@@ -10,13 +10,12 @@ module.exports = {
     if (!req.body.username) {
       return res.badRequest('missing_parameter', 'username');
     }
-
-    sails.models['user'].update(req.session.user, {username: req.body.username}).exec(function(error) {
+    sails.models.user.update(req.session.user, {username: req.body.username}).exec(function(error) {
       if (error) {
         return res.serverError('database_error', error);
       }
 
-      sails.models['visitor'].update(req.session.userInfo.visitorId, {username: req.body.username}).exec(function(error) {
+      sails.models.visitor.update(req.session.userInfo.visitorId, {username: req.body.username}).exec(function(error) {
         if (error) {
           return res.serverError('database_error', error);
         }

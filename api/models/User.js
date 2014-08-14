@@ -1,5 +1,4 @@
-var roles = ['visitor', 'performer']
-  , userModel = {schema: true};
+var roles = ['visitor', 'performer'], userModel = {schema: true};
 
 /**
  * The attributes for the model.
@@ -9,11 +8,12 @@ userModel.attributes = {
   username: {
     type  : 'string',
     unique: true,
-    index : true
+    index : true,
+    regex : /^[\w-]{2,14}$/
   },
 
   email: {
-    type  : 'string',
+    type  : 'email',
     unique: true
   },
 
@@ -24,13 +24,13 @@ userModel.attributes = {
 
   password: 'string',
 
-  partnerCode : {
-    type: 'string',
+  partnerCode: {
+    type      : 'string',
     defaultsTo: 61
   },
 
-  partnerInfo : {
-    type: 'string',
+  partnerInfo: {
+    type      : 'string',
     defaultsTo: 'typein'
   },
 
@@ -65,7 +65,7 @@ roles.forEach(function (role) {
  * Get all valid roles
  * @returns {string[]}
  */
-userModel.getValidRoles = function() {
+userModel.getValidRoles = function () {
   return roles;
 };
 
@@ -74,7 +74,7 @@ userModel.getValidRoles = function() {
  * @param role
  * @returns {boolean}
  */
-userModel.isValidRole = function(role) {
+userModel.isValidRole = function (role) {
   return roles.indexOf(role) > -1;
 };
 
@@ -115,8 +115,7 @@ userModel.register = function (userCredentials, callback) {
         return;
       }
 
-      var role = userRoles.shift()
-        , model = sails.models[role];
+      var role = userRoles.shift(), model = sails.models[role];
 
       // @todo sort out this HACK. This is because sails doesn't work well with custom primary keys.
       if ('id' === model.primaryKey) {

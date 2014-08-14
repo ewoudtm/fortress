@@ -6,9 +6,10 @@ UserController = {
   getIdentity: function (req, res) {
     var query, role;
 
-    query = sails.models['user'].findOne({id: req.session.user});
+    query = sails.models.user.findOne({id: req.session.user});
+    role = req.param('role');
 
-    if (role = req.param('role')) {
+    if (role) {
       query.populate(role);
     }
 
@@ -36,7 +37,7 @@ UserController = {
    * @param res
    */
   getUsername: function (req, res) {
-    sails.models['user'].findOne(req.param('id')).exec(function (error, user) {
+    sails.models.user.findOne(req.param('id')).exec(function (error, user) {
 
       if (error) {
         return res.serverError('database_error', error);
@@ -58,7 +59,7 @@ UserController = {
    */
   login: function (req, res) {
 
-    var userModel = sails.models['user']
+    var userModel = sails.models.user
       , role
       , credentials
       , criteria;
@@ -130,7 +131,7 @@ UserController = {
       }
 
       // Fallback. If possible, import user from wallet. Otherwise, screw it.
-      sails.services['walletservice'].login(credentials, function (error, record) {
+      sails.services.walletservice.login(credentials, function (error, record) {
 
         if (error) {
           return res.serverError('database_error', error);
