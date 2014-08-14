@@ -24,7 +24,7 @@ module.exports.policies = {
 
   VisitorController: {
     find       : ['isAuthenticated', 'resolveVisitorIdentity', 'ownsVisitorRecord'],
-    setUsername: ['isAuthenticated','isVisitor']
+    setUsername: ['isAuthenticated', 'isVisitor']
   },
 
   ThreadController: {
