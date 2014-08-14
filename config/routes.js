@@ -33,26 +33,8 @@ module.exports.routes = {
   'get /thread/thread-count' : 'ThreadController.getThreadCount',
 
   // UserController
-<<<<<<< HEAD
-  'post /user/login'          : 'UserController.login',
-  'post /user/login-by-hash'  : 'UserController.loginByHash',
-  'get /user/username/:id'    : 'UserController.getUsername',
-  'get /user/identity/:role?' : 'UserController.getIdentity',
-
-   // VisitorController
-  'put /visitor/:id?'         : 'VisitorController.update',
-  'get /visitor/identity'     : 'VisitorController.find',        // @see policies/resolveVisitorIdentity
-  'put /visitor/username'     : 'VisitorController.setUsername', // @see policies/resolveVisitorIdentity
-
-  'get /connect/getcookie'    : 'ConnectController.getcookie',
-  'get /performer/:id'        : 'PerformerController.find',
-
-  // If a request to a URL doesn't match any of the custom routes above,
-  // it is matched against Sails route blueprints.  See `config/blueprints.js`
-  // for configuration options and examples.
-
-=======
   'post /user/login'         : 'UserController.login',
+  'post /user/login-by-hash' : 'UserController.loginByHash',
   'get /user/username/:id'   : 'UserController.getUsername',
   'get /user/identity/:role?': 'UserController.getIdentity',
 
@@ -64,5 +46,4 @@ module.exports.routes = {
   'get /connect/getcookie'  : 'ConnectController.getcookie',
   'get /performer/count'    : 'PerformerController.count',
   'get /performer/:username': 'PerformerController.findonesimple'
->>>>>>> 53c008299cc0c5697fc6d3d0461a737320c8ff7d
 };
