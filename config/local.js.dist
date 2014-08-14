@@ -52,3 +52,7 @@ module.exports.connections = {
 module.exports.userSync = {
   enabled: false,
 };
+
+module.exports.wallet = {
+    salt: '' // Salt goes here.
+}

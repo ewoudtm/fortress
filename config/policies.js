@@ -18,6 +18,7 @@ module.exports.policies = {
 
   UserController: {
     login      : true,
+    loginByHash: true,
     getUsername: true,
     getIdentity: 'isAuthenticated'
   },

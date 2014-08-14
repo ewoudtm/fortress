@@ -29,7 +29,8 @@
     "sails-disk": "^0.10.3",
     "sails-mongo": "^0.10.1",
     "sails-mysql": "^0.10.3",
-    "socket.io-client": "^0.9.16"
+    "socket.io-client": "^0.9.16",
+    "MD5": "~1.2.1"
   },
   "scripts": {
     "start": "node app.js",
