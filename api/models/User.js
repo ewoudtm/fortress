@@ -22,7 +22,10 @@ userModel.attributes = {
     defaultsTo: null
   },
 
-  password: 'string',
+  password: {
+    type      : 'string',
+    defaultsTo: null
+  },
 
   partnerCode: {
     type      : 'string',

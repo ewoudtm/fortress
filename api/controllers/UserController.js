@@ -64,6 +64,7 @@ UserController = {
       , credentials
       , criteria;
 
+    // Verify that all required parameters have been supplied.
     if (!req.body.role) {
       return res.badRequest('missing_parameter', 'role');
     }
@@ -92,8 +93,35 @@ UserController = {
     };
 
     /**
-     * Authenticate.
+     * Generic function for login, that checks the role and sets session data.
+     *
+     * @param {{}} result
      */
+    function handleValidCredentials(result) {
+      // Does the user have the role that is being authenticated for?
+      if (result.roles.indexOf(role) === -1) {
+        return res.badRequest('missing_role', role);
+      }
+
+      // Store user info in session.
+      req.session.user = result.id;
+      req.session.userInfo = {
+        username: result.username,
+        roles   : result.roles
+      };
+
+      req.session.userInfo[role + 'Id'] = result[role].id;
+
+      // Is request over socket? Subscribe to events.
+      if (req.isSocket) {
+        sails.models[role].subscribe(req, result[role]);
+      }
+
+      // all done and authenticated.
+      return res.ok(result);
+    }
+
+    // Fetch the user from the database.
     userModel.findOne(criteria).populate(role).exec(function (error, result) {
 
       // Something went wrong in the backend.
@@ -101,78 +129,69 @@ UserController = {
         return res.serverError('database_error', error);
       }
 
-      // We got data!
-      if (typeof result !== 'undefined') {
+      // No user found... Check if user has to be imported from the wallet.
+      if (result.length < 1) {
 
-        // Do the passwords match? Check is here, so now we won't import from the wallet.
-        // @todo implement bcrypt
-        if (credentials.password === result.password) {
+        return sails.services.walletservice.login(credentials, function (error, record) {
 
-          // Does the supplied role exist?
-          if (result.roles.indexOf(role) === -1) {
-            return res.badRequest('missing_role', role);
-          }
-
-          req.session.user = result.id;
-          req.session.userInfo = {
-            username: result.username,
-            roles   : result.roles
-          };
-
-          req.session.userInfo[role + 'Id'] = result[role].id;
-
-          if (req.isSocket) {
-            sails.models[role].subscribe(req, result[role]);
-          }
-
-          return res.ok(result);
-        }
-
-        if (null !== result.password && 0 !== result[role].walletId) {
-          return res.badRequest('invalid_credentials');
-        }
-
-        // Match wallet credentials
-        sails.services['walletservice'].login(credentials, function (error, record) {
           if (error) {
             return res.serverError('database_error', error);
           }
 
+          // Nope. Alright then, invalid credentials.
           if (!record) {
             return res.badRequest('invalid_credentials');
           }
 
-          // Update empty password with given password.
-          sails.models['user'].update({email: credentials.username, password: null}, {password: credentials.password}).exec(function (error, updated) {
-            if (error) {
-              return res.serverError('database_error', error);
-            }
-
-            UserController.login(req, res);
-          });
+          // Simply rethrow, as we've just created the user. Prevents the existence of duplicate logic.
+          UserController.login(req, res);
         });
-
-        return;
       }
 
-      // Fallback. If possible, import user from wallet. Otherwise, screw it.
-      sails.services['walletservice'].login(credentials, function (error, record) {
+      // User record exists. Is supplied password correct?
+      // @todo implement bcrypt
+      if (credentials.password === result.password) {
 
+        // Credentials are valid! Execute remainder of validations.
+        return handleValidCredentials(result);
+      }
+
+      // Only users with walletId are allowed to not have a password, because of import in hashLogin.
+      // Otherwise, credentials were invalid for certain.
+      if (!result[role].walletId) {
+        return res.badRequest('invalid_credentials');
+      }
+
+      // Password is not empty, so it's not an imported user from hashLogin. Invalid credentials.
+      if (result.password) {
+        return res.badRequest('invalid_credentials');
+      }
+
+      // At this point, we know it's a wallet user, with no password (so imported on hashLogin).
+      // We will now try to authenticate with the wallet, to see if the supplied credentials are correct.
+      sails.services.walletservice.login(credentials, function (error, result) {
         if (error) {
-          return res.serverError('database_error', error);
+          return res.serverError('server_error', error);
         }
 
-        if (!record) {
+        // Nope, invalid credentials.
+        if (!result) {
           return res.badRequest('invalid_credentials');
         }
 
-        // Simply rethrow, as we've just created the user. Prevents the existence of duplicate logic.
-        UserController.login(req, res);
+        // Update password for wallet user with the supplied, proven to be the valid, password.
+        sails.models.user.update({email: credentials.username, password: null}, {password: credentials.password}).exec(function (error) {
+          if (error) {
+            return res.serverError('database_error', error);
+          }
+
+          handleValidCredentials(result);
+        });
       });
     });
   },
 
- /**
+  /**
    * Login by hash action.
    *
    * @param req
@@ -180,11 +199,12 @@ UserController = {
    */
   loginByHash: function (req, res) {
 
-    var userModel = sails.models['user']
+    var userModel = sails.models.user
       , role
       , credentials
       , criteria;
 
+    // Verify that all required parameters have been supplied.
     if (!req.body.role) {
       return res.badRequest('missing_parameter', 'role');
     }
@@ -204,7 +224,7 @@ UserController = {
     role = req.body.role;
 
     credentials = {
-      username: req.body.username,
+      username: req.body.username
     };
 
     criteria = {
@@ -221,56 +241,50 @@ UserController = {
         return res.serverError('database_error', error);
       }
 
-      var hashService  = sails.services['hashservice']
-        , validateHash = hashService.verifyLoginHash(req.body.hash, credentials.username)
+      // No user found by that email address.
+      if (!result) {
 
-      if (false === validateHash) {
+        // try to import user.
+        return sails.services.walletservice.importUser(credentials, function (error, record) {
+          if (error) {
+            return res.serverError('server_error', error);
+          }
+
+          if (!record) {
+            return res.badRequest('invalid_credentials');
+          }
+
+          UserController.loginByHash(req, res);
+        });
+      }
+
+      var hashService = sails.services.hashservice;
+
+      // Check if the specified hash is correct.
+      if (!hashService.verifyLoginHash(req.body.hash, credentials.username)) {
+
+        // It's not. Invalid credentials.
         return res.badRequest('invalid_credentials');
       }
 
-      // We got data!
-      if (typeof result !== 'undefined') {
-
-        // Does the supplied role exist?
-        if (result.roles.indexOf(role) === -1) {
-          return res.badRequest('missing_role', role);
-        }
-
-        req.session.user     = result.id;
-        req.session.userInfo = {
-          username: result.username,
-          roles   : result.roles
-        };
-
-        req.session.userInfo[role + 'Id'] = result[role].id;
-
-        if (req.isSocket) {
-          sails.models[role].subscribe(req, result[role]);
-        }
-
-        return res.ok(result);
+      // Does the supplied role exist?
+      if (result.roles.indexOf(role) === -1) {
+        return res.badRequest('missing_role', role);
       }
 
-      // Fallback. No user found but hash validates, import user without a password.
-      sails.services['walletservice'].importUser(credentials, function (error, record) {
-        if (error) {
-          return res.serverError('database_error', error);
-        }
+      req.session.user = result.id;
+      req.session.userInfo = {
+        username: result.username,
+        roles   : result.roles
+      };
 
-        req.session.user     = record.id;
-        req.session.userInfo = {
-          username: record.username,
-          roles   : record.roles
-        };
+      req.session.userInfo[role + 'Id'] = result[role].id;
 
-        req.session.userInfo[role + 'Id'] = record[role].id;
+      if (req.isSocket) {
+        sails.models[role].subscribe(req, result[role]);
+      }
 
-        if (req.isSocket) {
-          sails.models[role].subscribe(req, record[role]);
-        }
-
-        return res.ok(record);
-      });
+      return res.ok(result);
     });
   },
 
