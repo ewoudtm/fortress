@@ -36,6 +36,8 @@ module.exports.policies = {
   },
 
   PerformerController: {
-    find: true
+    find         : true,
+    findonesimple: true,
+    count        : true
   }
 };

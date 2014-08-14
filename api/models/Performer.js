@@ -11,8 +11,7 @@ module.exports = {
     },
     username: {
       type: 'string',
-      unique: true,
-      primaryKey: true
+      unique: true
     },
     lastLogin: {
       type: 'date',

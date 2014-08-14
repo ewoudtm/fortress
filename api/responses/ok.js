@@ -9,7 +9,7 @@ module.exports = function sendOK(data) {
   // Log error to console
   this.req._sails.log.verbose('Sent 200 ("OK") response');
 
-  if (!data) {
+  if (typeof data === 'undefined') {
     // Things that don't have data, like "logout". Client side will look for res.error anyway.
     return res.send({status: 200});
   }
