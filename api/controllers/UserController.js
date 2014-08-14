@@ -105,49 +105,53 @@ UserController = {
 
         // Do the passwords match? Check is here, so now we won't import from the wallet.
         // @todo implement bcrypt
-        if (credentials.password !== result.password) {
+        if (credentials.password === result.password) {
 
-          if (null !== result.password && 0 !== result[role].walletId) {
+          // Does the supplied role exist?
+          if (result.roles.indexOf(role) === -1) {
+            return res.badRequest('missing_role', role);
+          }
+
+          req.session.user = result.id;
+          req.session.userInfo = {
+            username: result.username,
+            roles   : result.roles
+          };
+
+          req.session.userInfo[role + 'Id'] = result[role].id;
+
+          if (req.isSocket) {
+            sails.models[role].subscribe(req, result[role]);
+          }
+
+          return res.ok(result);
+        }
+
+        if (null !== result.password && 0 !== result[role].walletId) {
+          return res.badRequest('invalid_credentials');
+        }
+
+        // Match wallet credentials
+        sails.services['walletservice'].login(credentials, function (error, record) {
+          if (error) {
+            return res.serverError('database_error', error);
+          }
+
+          if (!record) {
             return res.badRequest('invalid_credentials');
           }
 
-          // Match wallet credentials
-          sails.services['walletservice'].login(credentials, function (error, record) {
+          // Update empty password with given password.
+          sails.models['user'].update({email: credentials.username, password: null}, {password: credentials.password}).exec(function (error, updated) {
             if (error) {
               return res.serverError('database_error', error);
             }
 
-            if (!record) {
-              return res.badRequest('invalid_credentials');
-            }
-
-            // Update empty password with given password.
-            sails.models['user'].update({email: credentials.username}, {password: credentials.password}).exec(function (error, updated) {
-              if (error) {
-                return res.serverError('database_error', error);
-              }
-            });
+            UserController.login(req, res);
           });
-        }
+        });
 
-        // Does the supplied role exist?
-        if (result.roles.indexOf(role) === -1) {
-          return res.badRequest('missing_role', role);
-        }
-
-        req.session.user = result.id;
-        req.session.userInfo = {
-          username: result.username,
-          roles   : result.roles
-        };
-
-        req.session.userInfo[role + 'Id'] = result[role].id;
-
-        if (req.isSocket) {
-          sails.models[role].subscribe(req, result[role]);
-        }
-
-        return res.ok(result);
+        return;
       }
 
       // Fallback. If possible, import user from wallet. Otherwise, screw it.
