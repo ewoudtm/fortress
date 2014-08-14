@@ -1,7 +1,7 @@
 var md5 = require('MD5')
   , salt;
 
-var hashService = module.exports = {
+module.exports = {
 
   setSalt: function(newSalt) {
     salt = newSalt;

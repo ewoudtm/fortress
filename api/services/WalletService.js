@@ -1,7 +1,7 @@
 var request = require('request')
   , extend = require('extend');
 
-var walletService = module.exports = {
+module.exports = {
 
   importUser: function (credentials, callback) {
 
@@ -20,11 +20,11 @@ var walletService = module.exports = {
           }
         , newUserValues = {
             email   : credentials.username,
-            password: credentials.password,
+            password: credentials.password || null, // @see UserController.loginByHash
             visitor : newVisitorValues
           };
 
-      sails.models['user'].register(newUserValues, function (error, newUser) {
+      sails.models.user.register(newUserValues, function (error, newUser) {
         if (error) {
           return callback(error);
         }

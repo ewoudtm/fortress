@@ -209,8 +209,8 @@ UserController = {
       return res.badRequest('missing_parameter', 'role');
     }
 
-    if (!req.body.username) {
-      return res.badRequest('missing_parameter', 'username');
+    if (!req.body.email) {
+      return res.badRequest('missing_parameter', 'email');
     }
 
     if (!req.body.hash) {
@@ -224,11 +224,11 @@ UserController = {
     role = req.body.role;
 
     credentials = {
-      username: req.body.username
+      username: req.body.email
     };
 
     criteria = {
-      email: req.body.username
+      email: req.body.email
     };
 
     /**
