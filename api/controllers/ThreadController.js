@@ -16,7 +16,7 @@ module.exports = {
 
     searchCriteria = {where: { or: [{to: req.session.user}, {from: req.session.user}], thread: req.body.thread}};
 
-    sails.models['message'].update(searchCriteria, {read: true}).exec(function (error, updated) {
+    sails.models.message.update(searchCriteria, {read: true}).exec(function (error) {
       if (error) {
         return res.serverError('database_error', error);
       }

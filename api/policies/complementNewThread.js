@@ -27,7 +27,7 @@ module.exports = function (req, res, next) {
   }
 
   recipient = params.to;
-  userQuery = sails.models['user'].findOne().where({or: [
+  userQuery = sails.models.user.findOne().where({or: [
     {username: recipient},
     {id: recipient}
   ]});

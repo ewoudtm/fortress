@@ -24,7 +24,7 @@ module.exports.policies = {
 
   VisitorController: {
     find       : ['isAuthenticated', 'resolveVisitorIdentity', 'ownsVisitorRecord'],
-    setUsername: ['isAuthenticated', 'isVisitor']
+    setUsername: ['isAuthenticated','isVisitor']
   },
 
   ThreadController: {
@@ -35,6 +35,8 @@ module.exports.policies = {
   },
 
   PerformerController: {
-    find: true
+    find         : true,
+    findonesimple: true,
+    count        : true
   }
 };

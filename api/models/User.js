@@ -9,11 +9,12 @@ userModel.attributes = {
   username: {
     type  : 'string',
     unique: true,
-    index : true
+    index : true,
+    regex: /^[\w-]{2,14}$/
   },
 
   email: {
-    type  : 'string',
+    type  : 'email',
     unique: true
   },
 
