@@ -168,14 +168,17 @@ function ImportService() {
       return;
     }
 
+    sails.log.error(message);
+
+    if (error.invalidAttributes) {
+      return sails.log.error(error.invalidAttributes);
+    }
+
     try {
       connection.end();
     } catch (error) {
       // Just here to prevent the application from crashing if end cannot be called.
     }
-
-    sails.log.error(message);
-    sails.log.info(error);
 
     process.exit(1);
   }
@@ -230,7 +233,7 @@ function ImportService() {
    * @param {{}} rowValues
    */
   function importPerformerModel(row, rowValues) {
-    performerModel.update({displayName: row.modelnaam}, rowValues).exec(function performerUpdateDone(error, model) {
+    performerModel.update({username: row.modelnaam}, rowValues).exec(function performerUpdateDone(error, model) {
       handleError(error, 'Importing performer (update) failed.');
 
       // Higher than 0 means we just updated the record.
@@ -239,7 +242,7 @@ function ImportService() {
       }
 
       var newPerformer = {
-        email: row.email_adres,
+        email: row.email_adres.replace(/(^\s+)|(\s+$)/g, ''),
         username: row.modelnaam,
         password: row.passwd,
         roles: ['performer'],
@@ -305,6 +308,10 @@ function ImportService() {
         , performersDone = 0;
 
       for (var name in performers) {
+        if (!performers.hasOwnProperty(name)) {
+          continue;
+        }
+
         setPerformerStatus(name, true, function () {
           progress(++performersDone, onlinePerformers);
         });

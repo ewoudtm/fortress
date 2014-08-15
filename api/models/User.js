@@ -13,8 +13,7 @@ userModel.attributes = {
   },
 
   email: {
-    type  : 'email',
-    unique: true
+    type  : 'email'
   },
 
   socketId: {
@@ -137,7 +136,6 @@ userModel.register = function (userCredentials, callback) {
 
       // Set the ID of the newly added user to ensure a functional association.
       userRoleObjects[role].user = newUser.id;
-
       model.create(userRoleObjects[role]).exec(function (error, newAccountType) {
         if (error) {
           return callback(error);
