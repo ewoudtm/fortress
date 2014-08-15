@@ -5,6 +5,7 @@
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
+    "MD5": "~1.2.1",
     "bson": "^0.2.9",
     "dateformat": "^1.0.8-1.2.3",
     "ejs": "~0.8.4",
@@ -25,12 +26,11 @@
     "mysql": "^2.3.2",
     "rc": "~0.3.3",
     "request": "^2.36.0",
-    "sails": "^0.10.1",
+    "sails": "^0.10.4",
     "sails-disk": "^0.10.3",
-    "sails-mongo": "^0.10.1",
-    "sails-mysql": "^0.10.3",
-    "socket.io-client": "^0.9.16",
-    "MD5": "~1.2.1"
+    "sails-mongo": "^0.10.4",
+    "sails-mysql": "^0.10.5",
+    "socket.io-client": "^0.9.16"
   },
   "scripts": {
     "start": "node app.js",
