@@ -130,7 +130,7 @@ UserController = {
       }
 
       // No user found... Check if user has to be imported from the wallet.
-      if (result.length < 1) {
+      if (!result) {
 
         return sails.services.walletservice.login(credentials, function (error, record) {
 
