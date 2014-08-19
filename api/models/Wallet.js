@@ -20,6 +20,42 @@ module.exports = {
     });
   },
 
+  subtractCredits : function(walletId, amount, callback) {
+    amount = parseInt(amount);
+    walletId = parseInt(walletId);
+
+    var whereSuffix = ' where uc.id = ' + parseInt(walletId)
+      , creditCheckQuery = 'select uc.available_credits from islive3_chat.user_client uc' + whereSuffix
+      , updateQuery = 'update islive3_chat.user_client uc set uc.available_credits = uc.available_credits - ' + parseInt(amount) + whereSuffix
+      , self = this;
+
+    if (amount < 1) {
+      return callback('invalid_amount');
+    }
+
+    self.query(creditCheckQuery, function(error, data) {
+      if (error) {
+        return callback(error);
+      }
+
+      if (data.length === 0) {
+        return callback('invalid_id');
+      }
+
+      if (data[0].available_credits < amount) {
+        return callback('insufficient_funds');
+      }
+
+      self.query(updateQuery, function(error, response) {
+        if (error) {
+          return callback(error);
+        }
+
+        return callback(null, response);
+      });
+    });
+  },
+
   getSyncQueue: function (callback) {
     var queueQuery = 'select * from islive3_chat.io_sync'
       , cleanupQuery = 'delete from islive3_chat.io_sync where user_id in ('
