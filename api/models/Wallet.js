@@ -28,7 +28,7 @@ module.exports = {
       return callback('missing_parameter');
     }
 
-    if (!amount || amount < 1) {
+    if (!amount) {
       return callback('invalid_amount');
     }
 
