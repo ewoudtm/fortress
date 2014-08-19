@@ -3,7 +3,14 @@
  */
 module.exports.prices = {
   'thread.create': {
-    label   : 'Regular message. New, or reply.',
+    label   : 'Regular message. New.',
+    type    : 'purchase',
+    currency: 'credits',
+    amount  : 60
+  },
+
+  'message.create': {
+    label   : 'Regular message. Reply.',
     type    : 'purchase',
     currency: 'credits',
     amount  : 60
