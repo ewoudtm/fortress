@@ -5,7 +5,7 @@ module.exports.policies = {
   '*': false,
 
   MessageController: {
-    create  : ['isAuthenticated', 'hasUsername', 'complementReply'],
+    create  : ['isAuthenticated', 'hasUsername',  'subtractCredits', 'complementReply'],
     inbox   : ['isAuthenticated'],
     find    : ['isAuthenticated', 'ensureThreadParticipation'],
     markRead: ['isAuthenticated'],
@@ -29,7 +29,7 @@ module.exports.policies = {
   },
 
   ThreadController: {
-    create        : ['isAuthenticated', 'hasUsername', 'complementNewThread'],
+    create        : ['isAuthenticated', 'hasUsername', 'subtractCredits', 'complementNewThread'],
     findOne       : ['isAuthenticated', 'hasUsername'],
     markRead      : ['isAuthenticated'],
     getThreadCount: ['isAuthenticated']
