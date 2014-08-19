@@ -24,9 +24,9 @@ module.exports = {
     amount = parseInt(amount);
     walletId = parseInt(walletId);
 
-    var whereSuffix = ' where uc.id = ' + parseInt(walletId)
+    var whereSuffix = ' where uc.id = ' + walletId
       , creditCheckQuery = 'select uc.available_credits from islive3_chat.user_client uc' + whereSuffix
-      , updateQuery = 'update islive3_chat.user_client uc set uc.available_credits = uc.available_credits - ' + parseInt(amount) + whereSuffix
+      , updateQuery = 'update islive3_chat.user_client uc set uc.available_credits = uc.available_credits - ' + amount + whereSuffix
       , self = this;
 
     if (amount < 1) {
