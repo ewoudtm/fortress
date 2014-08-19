@@ -6,146 +6,147 @@ module.exports = {
   schema: true,
 
   attributes: {
-    user : {
+    user            : {
       model: 'user'
     },
-    username: {
-      type: 'string',
+    username        : {
+      type  : 'string',
+      regex : /^[\w-]{2,14}$/,
       unique: true
     },
-    lastLogin: {
-      type: 'date',
+    lastLogin       : {
+      type : 'date',
       index: true
     },
-    dateOfBirth: {
-      type: 'date',
+    dateOfBirth     : {
+      type : 'date',
       index: true
     },
-    zodiac: {
-      type: 'string',
+    zodiac          : {
+      type : 'string',
       index: true
     },
-    description: {
-      type: 'text',
+    description     : {
+      type : 'text',
       index: true
     },
-    languages: {
-      type: 'array',
+    languages       : {
+      type : 'array',
       index: true
     },
-    eyeColor: {
-      type: 'string',
+    eyeColor        : {
+      type : 'string',
       index: true
     },
-    hairColor: {
-      type: 'string',
+    hairColor       : {
+      type : 'string',
       index: true
     },
-    hobbies: {
+    hobbies         : {
       type: 'string'
     },
-    pets: {
+    pets            : {
       type: 'string'
     },
-    food: {
+    food            : {
       type: 'string'
     },
-    drinks: {
+    drinks          : {
       type: 'string'
     },
-    manType: {
+    manType         : {
       type: 'string'
     },
-    webcamming: {
+    webcamming      : {
       type: 'string'
     },
-    sexPosition: {
+    sexPosition     : {
       type: 'string'
     },
-    sexLocation: {
+    sexLocation     : {
       type: 'string'
     },
-    turnoff: {
+    turnoff         : {
       type: 'string'
     },
-    shaved: {
-      type: 'string',
+    shaved          : {
+      type : 'string',
       index: true
     },
-    nicestAboutMe: {
+    nicestAboutMe   : {
       type: 'string'
     },
-    nicestAboutMen: {
+    nicestAboutMen  : {
       type: 'string'
     },
-    lifeGoal: {
+    lifeGoal        : {
       type: 'string'
     },
-    motto: {
+    motto           : {
       type: 'string'
     },
     sexualPreference: {
-      type: 'string',
+      type : 'string',
       index: true
     },
-    appearance: {
-      type: 'string',
+    appearance      : {
+      type : 'string',
       index: true
     },
-    nationality: {
-      type: 'string',
+    nationality     : {
+      type : 'string',
       index: true
     },
-    relationship: {
+    relationship    : {
       type: 'string'
     },
-    smoking: {
+    smoking         : {
       type: 'string'
     },
-    cupSize: {
-      type: 'string',
+    cupSize         : {
+      type : 'string',
       index: true
     },
-    piercings: {
-      type: 'string',
+    piercings       : {
+      type : 'string',
       index: true
     },
-    music: {
+    music           : {
       type: 'string'
     },
-    gender: {
-      type: 'string',
+    gender          : {
+      type : 'string',
       index: true
     },
-    online: {
+    online          : {
       defaultsTo: false,
-      type: 'boolean',
-      index: true
+      type      : 'boolean',
+      index     : true
     },
-    country: {
+    country         : {
       type: 'string'
     },
-    city: {
-      type: 'string',
+    city            : {
+      type : 'string',
       index: true
     },
-    rating: {
+    rating          : {
       defaultsTo: -1,
-      type: 'integer',
+      type      : 'integer',
+      index     : true
+    },
+    ethnicity       : {
+      type : 'string',
       index: true
     },
-    ethnicity: {
-      type: 'string',
-      index: true
-    },
-    promoClip: {
+    promoClip       : {
       type: 'string'
     },
-    promoClipMobile: {
+    promoClipMobile : {
       type: 'string'
     },
     // Add age.
-    toJSON: function() {
+    toJSON          : function () {
       var obj = this.toObject();
 
       obj.age = ~~((Date.now() - (+new Date(obj.dateOfBirth))) / (31557600000));
