@@ -151,7 +151,6 @@ function register(userCredentials, callback) {
  * @param {Function} callback
  */
 userModel.register = function (userCredentials, callback) {
-
   if (!userCredentials.username) {
     return register(userCredentials, callback);
   }
