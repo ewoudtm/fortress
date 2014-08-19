@@ -112,6 +112,10 @@ UserController = {
 
       req.session.userInfo[role + 'Id'] = result[role].id;
 
+      if ('visitor' === role && result.visitor.walletId) {
+        req.session.userInfo.walletId = result.visitor.walletId;
+      }
+
       // Is request over socket? Subscribe to events.
       if (req.isSocket) {
         sails.models[role].subscribe(req, result[role]);
@@ -130,7 +134,7 @@ UserController = {
       }
 
       // No user found... Check if user has to be imported from the wallet.
-      if (result.length < 1) {
+      if (!result) {
 
         return sails.services.walletservice.login(credentials, function (error, record) {
 
@@ -154,6 +158,11 @@ UserController = {
 
         // Credentials are valid! Execute remainder of validations.
         return handleValidCredentials(result);
+      }
+
+      // Does the user have the role that is being authenticated for?
+      if (result.roles.indexOf(role) === -1) {
+        return res.badRequest('missing_role', role);
       }
 
       // Only users with walletId are allowed to not have a password, because of import in hashLogin.
@@ -279,6 +288,10 @@ UserController = {
       };
 
       req.session.userInfo[role + 'Id'] = result[role].id;
+
+      if ('visitor' === role && result.visitor.walletId) {
+        req.session.userInfo.walletId = result.visitor.walletId;
+      }
 
       if (req.isSocket) {
         sails.models[role].subscribe(req, result[role]);
