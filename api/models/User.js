@@ -151,8 +151,10 @@ function register(userCredentials, callback) {
  * @param {Function} callback
  */
 userModel.register = function (userCredentials, callback) {
+  var self = this;
+
   if (!userCredentials.username) {
-    return register(userCredentials, callback);
+    return register.call(self, userCredentials, callback);
   }
 
   sails.services.userservice.usernameAvailable(userCredentials.username, function (error, available) {
@@ -164,7 +166,7 @@ userModel.register = function (userCredentials, callback) {
       return callback({error: 'username_exists'});
     }
 
-    register(userCredentials, callback);
+    register.call(self, userCredentials, callback);
   });
 };
 
