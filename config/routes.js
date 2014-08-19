@@ -23,25 +23,26 @@
 module.exports.routes = {
 
   // MessageController
-  'post /message'            : 'MessageController.create',
-  'get /message/inbox'       : 'MessageController.inbox',
-  'put /message/mark-read'   : 'MessageController.markRead',
-  'get /message/unread'      : 'MessageController.unread',
+  'post /message'                : 'MessageController.create',
+  'get /message/inbox'           : 'MessageController.inbox',
+  'put /message/mark-read'       : 'MessageController.markRead',
+  'get /message/unread'          : 'MessageController.unread',
 
   // ThreadController
-  'put /thread/mark-read'    : 'ThreadController.markRead',
-  'get /thread/thread-count' : 'ThreadController.getThreadCount',
+  'put /thread/mark-read'        : 'ThreadController.markRead',
+  'get /thread/thread-count'     : 'ThreadController.getThreadCount',
 
   // UserController
-  'post /user/login'         : 'UserController.login',
-  'post /user/login-by-hash' : 'UserController.loginByHash',
-  'get /user/username/:id'   : 'UserController.getUsername',
-  'get /user/identity/:role?': 'UserController.getIdentity',
+  'post /user/login'             : 'UserController.login',
+  'post /user/login-by-hash'     : 'UserController.loginByHash',
+  'get /user/username/:id'       : 'UserController.getUsername',
+  'get /user/identity/:role?'    : 'UserController.getIdentity',
+  'post /user/username-available': 'UserController.usernameAvailable',
 
   // VisitorController
-  'put /visitor/username'    : 'VisitorController.setUsername', // @see policies/resolveVisitorIdentity
-  'put /visitor/:id?'        : 'VisitorController.update',
-  'get /visitor/identity'    : 'VisitorController.find',        // @see policies/resolveVisitorIdentity
+  'put /visitor/username'        : 'VisitorController.setUsername', // @see policies/resolveVisitorIdentity
+  'put /visitor/:id?'            : 'VisitorController.update',
+  'get /visitor/identity'        : 'VisitorController.find',        // @see policies/resolveVisitorIdentity
 
   'get /connect/getcookie'  : 'ConnectController.getcookie',
   'get /performer/count'    : 'PerformerController.count',

@@ -24,6 +24,22 @@ userService = {
   },
 
   /**
+   * Check if a username is available.
+   *
+   * @param {string}   username
+   * @param {Function} callback
+   */
+  usernameAvailable : function(username, callback) {
+    sails.models.user.find({username: username}, function(error, matches) {
+      if (error) {
+        return callback(error);
+      }
+
+      callback(null, matches.length === 0);
+    });
+  },
+
+  /**
    * Connect a client and store his/her socket ID.
    *
    * @param {String} userId
