@@ -47,7 +47,27 @@ UserController = {
         return res.badRequest('unknown_user');
       }
 
-      return res.ok({username: user.username});
+      res.ok({username: user.username});
+    });
+  },
+
+  /**
+   * Check if the desired username is still available.
+   *
+   * @param req
+   * @param res
+   */
+  usernameAvailable: function(req, res) {
+    if (!req.body.username) {
+      return res.badRequest('missing_parameter', 'username');
+    }
+
+    sails.services.userservice.usernameAvailable(req.body.username, function(error, available) {
+      if (error) {
+        return res.serverError('server_error', error);
+      }
+
+      res.ok({available: available});
     });
   },
 

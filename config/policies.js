@@ -5,7 +5,7 @@ module.exports.policies = {
   '*': false,
 
   MessageController: {
-    create  : ['isAuthenticated', 'hasUsername',  'subtractCredits', 'complementReply'],
+    create  : ['isAuthenticated', 'hasUsername', 'subtractCredits', 'complementReply'],
     inbox   : ['isAuthenticated'],
     find    : ['isAuthenticated', 'ensureThreadParticipation'],
     markRead: ['isAuthenticated'],
@@ -17,10 +17,11 @@ module.exports.policies = {
   },
 
   UserController: {
-    login      : true,
-    loginByHash: true,
-    getUsername: true,
-    getIdentity: 'isAuthenticated'
+    login            : true,
+    loginByHash      : true,
+    getUsername      : true,
+    getIdentity      : 'isAuthenticated',
+    usernameAvailable: true
   },
 
   VisitorController: {
