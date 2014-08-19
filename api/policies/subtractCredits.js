@@ -26,7 +26,7 @@ module.exports = function(req, res, next) {
 
   // Update credits in the wallet (single source of truth yada yada).
   if (userInfo.walletId) {
-    return sails.models.wallet.subtractCredits(userInfo.walletId, product.amount, function(error, result) {
+    return sails.models.wallet.subtractCredits(userInfo.walletId, product.amount, function(error) {
       // Error or credits reduced.
       if (error) {
         if (typeof error === 'string') {
