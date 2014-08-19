@@ -14,5 +14,5 @@ module.exports.models = {
   // (defaults to localDiskDb)
   connection: 'mongoLocal',
 
-  migrate: 'alter'
+  migrate: 'safe'
 };
