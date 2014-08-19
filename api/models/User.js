@@ -13,7 +13,7 @@ userModel.attributes = {
   },
 
   email: {
-    type  : 'email'
+    type: 'email'
   },
 
   socketId: {
@@ -80,14 +80,7 @@ userModel.isValidRole = function (role) {
   return roles.indexOf(role) > -1;
 };
 
-/**
- * Register a new user. Allows supplying nested account types such as performer and visitor.
- *
- * @param {{}}       userCredentials
- * @param {Function} callback
- */
-userModel.register = function (userCredentials, callback) {
-
+function register(userCredentials, callback) {
   var userRoleObjects = {};
 
   // Populate the roles to be created, because sails changes the references.
@@ -148,6 +141,31 @@ userModel.register = function (userCredentials, callback) {
         next();
       });
     })();
+  });
+}
+
+/**
+ * Register a new user. Allows supplying nested account types such as performer and visitor.
+ *
+ * @param {{}}       userCredentials
+ * @param {Function} callback
+ */
+userModel.register = function (userCredentials, callback) {
+
+  if (!userCredentials.username) {
+    return register(userCredentials, callback);
+  }
+
+  sails.services.userservice.usernameAvailable(userCredentials.username, function (error, available) {
+    if (error) {
+      return callback(error);
+    }
+
+    if (!available) {
+      return callback({error: 'username_exists'});
+    }
+
+    register(userCredentials, callback);
   });
 };
 
