@@ -24,14 +24,18 @@ module.exports = {
     amount = parseInt(amount);
     walletId = parseInt(walletId);
 
+    if (!walletId) {
+      return callback('missing_parameter');
+    }
+
+    if (!amount || amount < 1) {
+      return callback('invalid_amount');
+    }
+
     var whereSuffix = ' where uc.id = ' + walletId
       , creditCheckQuery = 'select uc.available_credits from islive3_chat.user_client uc' + whereSuffix
       , updateQuery = 'update islive3_chat.user_client uc set uc.available_credits = uc.available_credits - ' + amount + whereSuffix
       , self = this;
-
-    if (amount < 1) {
-      return callback('invalid_amount');
-    }
 
     self.query(creditCheckQuery, function(error, data) {
       if (error) {
