@@ -8,18 +8,19 @@ module.exports = {
     },
 
     username: {
-      type: 'string',
+      type  : 'string',
+      regex : /^[\w-]{2,14}$/,
       unique: true
     },
 
     credits: {
-      type: 'integer',
+      type      : 'integer',
       defaultsTo: 0
     },
 
     walletId: {
-      type: 'integer',
-      index: true,
+      type      : 'integer',
+      index     : true,
       defaultsTo: null
     }
   }
