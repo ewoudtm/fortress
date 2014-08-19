@@ -13,7 +13,7 @@ module.exports = {
 
     sails.services.userservice.usernameAvailable(req.body.username, function (error, available) {
       if (error) {
-        return res.serverError('database_error', error);
+        return res.serverError('server_error', error);
       }
 
       if (!available) {
