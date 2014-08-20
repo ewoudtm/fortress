@@ -1,5 +1,6 @@
 module.exports = function sendOK(data) {
-  // Get access to `req` & `res`
+
+  // Get access to `res`
   var res = this.res;
 
   // Set status code

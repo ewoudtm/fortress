@@ -1,7 +1,6 @@
 module.exports = function badRequest(name, details) {
 
-  // Get access to `req` & `res`
-  var req = this.req;
+  // Get access to `res`
   var res = this.res;
 
   // Set status code

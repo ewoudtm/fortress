@@ -1,7 +1,6 @@
 module.exports = function forbidden(err, info) {
 
-  // Get access to `req` & `res`
-  var req = this.req;
+  // Get access to `res`
   var res = this.res;
 
   // Set status code

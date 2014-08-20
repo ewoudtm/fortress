@@ -1,6 +1,6 @@
 module.exports = function serverError(data, details) {
 
-  // Get access to `req` & `res`
+  // Get access to `res`
   var res = this.res;
 
   // Set status code
