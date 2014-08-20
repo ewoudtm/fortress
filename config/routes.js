@@ -25,7 +25,6 @@ module.exports.routes = {
   // MessageController
   'post /message'                : 'MessageController.create',
   'get /message/inbox'           : 'MessageController.inbox',
-  'post /message/inbox'          : 'MessageController.inbox',
   'put /message/mark-read'       : 'MessageController.markRead',
   'get /message/unread'          : 'MessageController.unread',
 

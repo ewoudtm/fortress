@@ -21,14 +21,12 @@ module.exports = {
       , findQuery;
 
     // pagination
-    if (req.body !== undefined) {
-      if(req.body.skip && !isNaN(parseInt(req.body.skip))) {
-        threadCriteria.skip = req.body.skip;
-      }
+    if(req.query.skip && !isNaN(parseInt(req.query.skip))) {
+      threadCriteria.skip = req.query.skip;
+    }
 
-      if(req.body.limit && !isNaN(parseInt(req.body.limit))) {
-        threadCriteria.limit = req.body.limit;
-      }
+    if(req.query.limit && !isNaN(parseInt(req.query.limit))) {
+      threadCriteria.limit = req.query.limit;
     }
 
     findQuery = sails.models.thread.find(threadCriteria);
