@@ -1,6 +1,7 @@
 module.exports = function serverError(data, details) {
 
-  // Get access to `res`
+  // Get access to `req` & `res`
+  var req = this.req;
   var res = this.res;
 
   // Set status code
@@ -14,7 +15,7 @@ module.exports = function serverError(data, details) {
   }
 
   if (!data) {
-    return res.send({status: 500});
+    return res.json({status: 500});
   }
   if (typeof data !== 'object' || data instanceof Error) {
     data = {error: data};
@@ -22,5 +23,9 @@ module.exports = function serverError(data, details) {
 
   data.status = 500;
 
-  return res.json(data);
+  if (req.options.jsonp && !req.isSocket) {
+    return res.jsonp(data);
+  }
+
+  res.json(data);
 };
