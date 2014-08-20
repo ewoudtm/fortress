@@ -15,6 +15,7 @@
 
 module.exports.blueprints = {
 
+  jsonp: true,
 
   /**
    * NOTE:

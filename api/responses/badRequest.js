@@ -1,20 +1,26 @@
 module.exports = function badRequest(name, details) {
 
-  // Get access to `res`
+  // Get access to `req` & `res`
+  var req = this.req;
   var res = this.res;
 
   // Set status code
   res.status(400);
 
   if (!name) {
-    return res.send({status: 400});
+    return res.json({status: 400});
   }
 
   // Log error to console
   this.req._sails.log.verbose('Sent 400 ("Bad Request") response');
   this.req._sails.log.verbose(name);
 
-  return res.json(createResponse(name, details));
+
+  if (req.options.jsonp && !req.isSocket) {
+    return res.jsonp(createResponse(name, details));
+  }
+
+  res.json(createResponse(name, details));
 };
 
 /**

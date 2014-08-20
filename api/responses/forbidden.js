@@ -1,6 +1,7 @@
 module.exports = function forbidden(err, info) {
 
-  // Get access to `res`
+  // Get access to `req` & `res`
+  var req = this.req;
   var res = this.res;
 
   // Set status code
@@ -13,7 +14,7 @@ module.exports = function forbidden(err, info) {
   }
 
   if (!err) {
-    return res.send({status: 403});
+    return res.json({status: 403});
   }
 
   if (typeof err !== 'object' || err instanceof Error) {
@@ -26,5 +27,10 @@ module.exports = function forbidden(err, info) {
 
   err.status = 403;
 
-  return res.json(err);
+
+  if (req.options.jsonp && !req.isSocket) {
+    return res.jsonp(err);
+  }
+
+  res.json(err);
 };
