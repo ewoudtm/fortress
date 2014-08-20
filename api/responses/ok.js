@@ -1,6 +1,6 @@
 module.exports = function sendOK(data) {
-  // Get access to `req` & `res`
-  var req = this.req;
+
+  // Get access to `res`
   var res = this.res;
 
   // Set status code
@@ -11,7 +11,7 @@ module.exports = function sendOK(data) {
 
   if (typeof data === 'undefined') {
     // Things that don't have data, like "logout". Client side will look for res.error anyway.
-    return res.json({status: 200});
+    return res.jsonp({status: 200});
   }
 
   this.req._sails.log.verbose(data);
@@ -20,9 +20,5 @@ module.exports = function sendOK(data) {
     throw new Error('Expected a valid data type (object) as response data.');
   }
 
-  if (req.options.jsonp && !req.isSocket) {
-    return res.jsonp(data);
-  }
-
-  res.json(data);
+  res.jsonp(data);
 };
