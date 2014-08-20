@@ -37,15 +37,18 @@ module.exports.routes = {
   'post /user/login'             : 'UserController.login',
   'post /user/login-by-hash'     : 'UserController.loginByHash',
   'get /user/username/:id'       : 'UserController.getUsername',
-  'get /user/identity/:role?'    : 'UserController.getIdentity',
   'post /user/username-available': 'UserController.usernameAvailable',
+  'get /user/identity/:role?'    : 'UserController.getIdentity',
 
   // VisitorController
   'put /visitor/username'        : 'VisitorController.setUsername', // @see policies/resolveVisitorIdentity
   'put /visitor/:id?'            : 'VisitorController.update',
   'get /visitor/identity'        : 'VisitorController.find',        // @see policies/resolveVisitorIdentity
 
-  'get /connect/getcookie'  : 'ConnectController.getcookie',
-  'get /performer/count'    : 'PerformerController.count',
-  'get /performer/:username': 'PerformerController.findonesimple'
+  // PerformerController
+  'get /performer/count'         : 'PerformerController.count',
+  'get /performer/:username'     : 'PerformerController.findonesimple',
+
+  // Misc
+  'get /connect/getcookie'       : 'ConnectController.getcookie',
 };
