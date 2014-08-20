@@ -18,7 +18,20 @@ module.exports = {
           limit: 1,
           sort : 'createdAt desc'
         }
-      , findQuery = sails.models.thread.find(threadCriteria);
+      , findQuery;
+
+    // pagination
+    if (req.body !== undefined) {
+      if(req.body.skip && !isNaN(parseInt(req.body.skip))) {
+        threadCriteria.skip = req.body.skip;
+      }
+
+      if(req.body.limit && !isNaN(parseInt(req.body.limit))) {
+        threadCriteria.limit = req.body.limit;
+      }
+    }
+
+    findQuery = sails.models.thread.find(threadCriteria);
 
     findQuery.populate('from').populate('to').populate('messages', messageCriteria);
 
