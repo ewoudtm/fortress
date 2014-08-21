@@ -2,6 +2,12 @@ var request = require('request')
   , extend = require('extend')
   , UserController;
 
+function subscribe(req, model, instance) {
+  if (req.isSocket) {
+    sails.models[model].subscribe(req, instance);
+  }
+}
+
 UserController = {
   getIdentity: function (req, res) {
     var query, role;
@@ -23,7 +29,7 @@ UserController = {
           return res.badRequest('missing_role', role);
         }
 
-        sails.models[role].subscribe(req, user[role]);
+        subscribe(req, role, user[role]);
       }
 
       res.ok(user);
@@ -136,10 +142,8 @@ UserController = {
         req.session.userInfo.walletId = result.visitor.walletId;
       }
 
-      // Is request over socket? Subscribe to events.
-      if (req.isSocket) {
-        sails.models[role].subscribe(req, result[role]);
-      }
+      // Subscribe to events.
+      subscribe(req, role, result[role]);
 
       // all done and authenticated.
       return res.ok(result);
@@ -313,9 +317,7 @@ UserController = {
         req.session.userInfo.walletId = result.visitor.walletId;
       }
 
-      if (req.isSocket) {
-        sails.models[role].subscribe(req, result[role]);
-      }
+      subscribe(req, role, result[role]);
 
       return res.ok(result);
     });
