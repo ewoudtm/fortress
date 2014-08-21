@@ -60,14 +60,6 @@ userService = {
     this.updateSocketId(userId, null);
   },
 
-  subtractCredits : function(userId, amount) {
-    // Subtract here.
-  },
-
-  syncCredits : function(userId) {
-    // Sync to chatterbox.
-  },
-
   /**
    * Send an event to a specific user.
    *
