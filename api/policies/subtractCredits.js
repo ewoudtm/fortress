@@ -2,6 +2,7 @@ module.exports = function(req, res, next) {
   var config = sails.config.prices
     , options = req.options
     , userInfo = req.session.userInfo
+    , visitorService = sails.services.visitorservice
     , priceKey = options.model + '.' + options.action
     , product;
 
@@ -50,11 +51,11 @@ module.exports = function(req, res, next) {
       return res.badRequest('insufficient_funds', 'Need at least '+product.amount+' credits.');
     }
 
-    user.visitor.credits -= product.amount;
+    var newCreditCount = user.visitor.credits - product.amount;
 
-    user.visitor.save(function(error) {
+    visitorService.updateCredits(user.visitor.id, newCreditCount, req, function(error) {
       if (error) {
-        return res.serverError('database_error', error);
+        return res.serverError('server_error', error);
       }
 
       next();
