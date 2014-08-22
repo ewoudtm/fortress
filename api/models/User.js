@@ -48,11 +48,13 @@ userModel.attributes = {
    * @returns {Object}
    */
   toJSON: function () {
-    var userInstance = this.toObject();
+    var modelInstance = this.toObject();
 
-    delete userInstance.password;
+    delete modelInstance.password;
 
-    return userInstance;
+    modelInstance._modelName = 'user';
+
+    return modelInstance;
   }
 };
 

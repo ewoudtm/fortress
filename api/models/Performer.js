@@ -147,11 +147,12 @@ module.exports = {
     },
     // Add age.
     toJSON          : function () {
-      var obj = this.toObject();
+      var modelInstance = this.toObject();
 
-      obj.age = ~~((Date.now() - (+new Date(obj.dateOfBirth))) / (31557600000));
+      modelInstance.age = ~~((Date.now() - (+new Date(modelInstance.dateOfBirth))) / (31557600000));
+      modelInstance._modelName = 'performer';
 
-      return obj;
+      return modelInstance;
     }
   }
 };
