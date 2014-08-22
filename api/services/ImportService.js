@@ -1,9 +1,9 @@
 function ImportService() {
 
-  var performerModel = sails.models['performer']
-    , importModel = sails.models['import']
-    , userModel = sails.models['user']
-    , socket = sails.services['chatservice'].getSocket()
+  var performerModel = sails.models.performer
+    , importModel = sails.models.import
+    , userModel = sails.models.user
+    , socket = sails.services.chatservice.getSocket()
     , dateFormat = require('dateformat')
     , config = sails.config
     , util = require('util')
@@ -18,7 +18,6 @@ function ImportService() {
 
   /**
    * The fields to fetch
-   *
    * @type {Array}
    */
   fields = [
@@ -176,7 +175,7 @@ function ImportService() {
 
     try {
       connection.end();
-    } catch (error) {
+    } catch (ignore) {
       // Just here to prevent the application from crashing if end cannot be called.
     }
 
@@ -312,9 +311,7 @@ function ImportService() {
           continue;
         }
 
-        setPerformerStatus(name, true, function () {
-          progress(++performersDone, onlinePerformers);
-        });
+        setPerformerStatus(name, true, progress(++performersDone, onlinePerformers));
       }
     });
   }

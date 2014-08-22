@@ -323,10 +323,9 @@ UserController = {
 
   /**
    * Logout action.
-   *
+   * @todo fix logout over socket.
    * @param req
    * @param res
-   * @todo fix logout over socket.
    */
   logout: function (req, res) {
     req.session.user = null;

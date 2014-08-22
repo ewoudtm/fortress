@@ -27,7 +27,5 @@ module.exports = function(req, res, next) {
     sort: 'updatedAt desc'
   };
 
-  console.log(req.body);
-
   next();
 };

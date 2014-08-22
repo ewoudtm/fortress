@@ -21,11 +21,11 @@ module.exports = {
       , findQuery;
 
     // pagination
-    if(req.query.skip && !isNaN(parseInt(req.query.skip))) {
+    if(req.query.skip && !isNaN(parseInt(req.query.skip, 10))) {
       threadCriteria.skip = req.query.skip;
     }
 
-    if(req.query.limit && !isNaN(parseInt(req.query.limit))) {
+    if(req.query.limit && !isNaN(parseInt(req.query.limit, 10))) {
       threadCriteria.limit = req.query.limit;
     }
 

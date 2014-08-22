@@ -9,7 +9,7 @@ userModel.attributes = {
     type  : 'string',
     unique: true,
     index : true,
-    regex : /^[\w-]{2,14}$/
+    regex : /^[\w\-]{2,14}$/
   },
 
   email: {

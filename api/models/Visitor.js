@@ -9,7 +9,7 @@ module.exports = {
 
     username: {
       type  : 'string',
-      regex : /^[\w-]{2,14}$/,
+      regex : /^[\w\-]{2,14}$/,
       unique: true
     },
 
