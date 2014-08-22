@@ -40,7 +40,7 @@ module.exports = {
           }
         };
 
-    sails.models['thread'].count(searchCriteria, function (error, count) {
+    sails.models.thread.count(searchCriteria, function (error, count) {
       if (error) {
         return res.serverError('database_error', error);
       }

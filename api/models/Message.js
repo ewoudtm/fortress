@@ -38,7 +38,7 @@ module.exports = {
     }
 
     // Update the updatedAt date for inbox sorting.
-    sails.models['thread'].update(threadId, {}).exec(function(error, results) {
+    sails.models.thread.update(threadId, {}).exec(function(error, results) {
       next();
     });
   }

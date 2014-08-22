@@ -23,11 +23,11 @@ module.exports = {
       , findQuery;
 
     // pagination
-    if(skip && !isNaN(parseInt(skip))) {
+    if(skip && !isNaN(parseInt(skip, 10))) {
       threadCriteria.skip = skip;
     }
 
-    if(limit && !isNaN(parseInt(limit))) {
+    if(limit && !isNaN(parseInt(limit, 10))) {
       threadCriteria.limit = limit;
     }
 

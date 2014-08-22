@@ -14,7 +14,7 @@ module.exports = function(req, res, next) {
 
   recipient = messages[0].to;
 
-  sails.models['user'].findOne().where({or: [{username: recipient}, {id: recipient}]}).exec(function(error, data) {
+  sails.models.user.findOne().where({or: [{username: recipient}, {id: recipient}]}).exec(function(error, data) {
     if (error) {
       return res.serverError(error);
     }

@@ -10,7 +10,7 @@ userService = {
    * @param {String} socketId
    */
   updateSocketId: function (userId, socketId) {
-    sails.models['user'].update(userId, {socketId: socketId}).exec(function (error, updated) {
+    sails.models.user.update(userId, {socketId: socketId}).exec(function (error) {
       if (error) {
         // @todo decide what to do with errors.
       }
@@ -83,7 +83,7 @@ userService = {
     }
 
     // Fetch the user and find the socket id.
-    sails.models['user'].findOne(userId).exec(function (error, data) {
+    sails.models.user.findOne(userId).exec(function (error, data) {
       if (error) {
         // @todo decide what to do with errors
       }

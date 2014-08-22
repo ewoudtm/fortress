@@ -1,9 +1,10 @@
+/*jshint loopfunc: true */
 function ImportService() {
 
-  var performerModel = sails.models['performer']
-    , importModel = sails.models['import']
-    , userModel = sails.models['user']
-    , socket = sails.services['chatservice'].getSocket()
+  var performerModel = sails.models.performer
+    , importModel = sails.models.import
+    , userModel = sails.models.user
+    , socket = sails.services.chatservice.getSocket()
     , dateFormat = require('dateformat')
     , config = sails.config
     , util = require('util')
@@ -18,7 +19,6 @@ function ImportService() {
 
   /**
    * The fields to fetch
-   *
    * @type {Array}
    */
   fields = [
@@ -176,7 +176,7 @@ function ImportService() {
 
     try {
       connection.end();
-    } catch (error) {
+    } catch (ignore) {
       // Just here to prevent the application from crashing if end cannot be called.
     }
 
@@ -307,15 +307,13 @@ function ImportService() {
       var onlinePerformers = Object.keys(performers).length
         , performersDone = 0;
 
-      for (var name in performers) {
-        if (!performers.hasOwnProperty(name)) {
-          continue;
-        }
-
-        setPerformerStatus(name, true, function () {
-          progress(++performersDone, onlinePerformers);
-        });
+      function incrementProgress() {
+        progress(++performersDone, onlinePerformers);
       }
+
+      Object.getOwnPropertyNames(performers).forEach(function(name) {
+        setPerformerStatus(name, true, incrementProgress);
+      });
     });
   }
 

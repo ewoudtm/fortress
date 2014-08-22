@@ -2,7 +2,7 @@ module.exports = {
   run : function() {
     var self = this;
 
-    sails.models['wallet'].getSyncQueue(function(error, queue, done) {
+    sails.models.wallet.getSyncQueue(function(error, queue, done) {
 
       if (error) {
         return console.error(error);
