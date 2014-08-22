@@ -307,15 +307,13 @@ function ImportService() {
       var onlinePerformers = Object.keys(performers).length
         , performersDone = 0;
 
-      for (var name in performers) {
-        if (!performers.hasOwnProperty(name)) {
-          continue;
-        }
-
-        setPerformerStatus(name, true, function () {
-          progress(++performersDone, onlinePerformers);
-        });
+      function incrementProgress() {
+        progress(++performersDone, onlinePerformers);
       }
+
+      Object.getOwnPropertyNames(performers).forEach(function(name) {
+        setPerformerStatus(name, true, incrementProgress);
+      });
     });
   }
 
