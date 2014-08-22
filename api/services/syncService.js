@@ -19,7 +19,14 @@ module.exports = {
           return;
         }
 
-        var row = queue.pop();
+        var row = queue.pop()
+          , visitorService = sails.services.visitorservice;
+
+
+        visitorService.updateCredits({walletId: row.user_id}, row.credits, function(error) {
+          if (error) {
+            sails.log.error('error while syncing credits.', error);
+          }
 
         sails.models.visitor.update({walletId: row.user_id}, {credits: row.credits}).exec(function() {
           next();

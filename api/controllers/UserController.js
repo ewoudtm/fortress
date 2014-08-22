@@ -2,6 +2,12 @@ var request = require('request')
   , extend = require('extend')
   , UserController;
 
+function subscribe(req, model, instance) {
+  if (req.isSocket) {
+    sails.models[model].subscribe(req, instance);
+  }
+}
+
 UserController = {
   getIdentity: function (req, res) {
     var query, role;
@@ -23,7 +29,7 @@ UserController = {
           return res.badRequest('missing_role', role);
         }
 
-        sails.models[role].subscribe(req, user[role]);
+        subscribe(req, role, user[role]);
       }
 
       res.ok(user);
@@ -58,11 +64,11 @@ UserController = {
    * @param res
    */
   usernameAvailable: function(req, res) {
-    if (!req.body.username) {
+    if (!req.param('username')) {
       return res.badRequest('missing_parameter', 'username');
     }
 
-    sails.services.userservice.usernameAvailable(req.body.username, function(error, available) {
+    sails.services.userservice.usernameAvailable(req.param('username'), function(error, available) {
       if (error) {
         return res.serverError('server_error', error);
       }
@@ -85,31 +91,31 @@ UserController = {
       , criteria;
 
     // Verify that all required parameters have been supplied.
-    if (!req.body.role) {
+    if (!req.param('role')) {
       return res.badRequest('missing_parameter', 'role');
     }
 
-    if (!req.body.username) {
+    if (!req.param('username')) {
       return res.badRequest('missing_parameter', 'username');
     }
 
-    if (!req.body.password) {
+    if (!req.param('password')) {
       return res.badRequest('missing_parameter', 'password');
     }
 
-    if (!userModel.isValidRole(req.body.role)) {
+    if (!userModel.isValidRole(req.param('role'))) {
       return res.badRequest('invalid_parameter', 'role');
     }
 
-    role = req.body.role;
+    role = req.param('role');
 
     credentials = {
-      username: req.body.username,
-      password: req.body.password
+      username: req.param('username'),
+      password: req.param('password')
     };
 
     criteria = {
-      email: req.body.username
+      email: req.param('username')
     };
 
     /**
@@ -136,10 +142,8 @@ UserController = {
         req.session.userInfo.walletId = result.visitor.walletId;
       }
 
-      // Is request over socket? Subscribe to events.
-      if (req.isSocket) {
-        sails.models[role].subscribe(req, result[role]);
-      }
+      // Subscribe to events.
+      subscribe(req, role, result[role]);
 
       // all done and authenticated.
       return res.ok(result);
@@ -234,30 +238,30 @@ UserController = {
       , criteria;
 
     // Verify that all required parameters have been supplied.
-    if (!req.body.role) {
+    if (!req.param('role')) {
       return res.badRequest('missing_parameter', 'role');
     }
 
-    if (!req.body.email) {
+    if (!req.param('email')) {
       return res.badRequest('missing_parameter', 'email');
     }
 
-    if (!req.body.hash) {
+    if (!req.param('hash')) {
       return res.badRequest('missing_parameter', 'hash');
     }
 
-    if (!userModel.isValidRole(req.body.role)) {
+    if (!userModel.isValidRole(req.param('role'))) {
       return res.badRequest('invalid_parameter', 'role');
     }
 
-    role = req.body.role;
+    role = req.param('role');
 
     credentials = {
-      username: req.body.email
+      username: req.param('email')
     };
 
     criteria = {
-      email: req.body.email
+      email: req.param('email')
     };
 
     /**
@@ -290,7 +294,7 @@ UserController = {
       var hashService = sails.services.hashservice;
 
       // Check if the specified hash is correct.
-      if (!hashService.verifyLoginHash(req.body.hash, credentials.username)) {
+      if (!hashService.verifyLoginHash(req.param('hash'), credentials.username)) {
 
         // It's not. Invalid credentials.
         return res.badRequest('invalid_credentials');
@@ -313,9 +317,7 @@ UserController = {
         req.session.userInfo.walletId = result.visitor.walletId;
       }
 
-      if (req.isSocket) {
-        sails.models[role].subscribe(req, result[role]);
-      }
+      subscribe(req, role, result[role]);
 
       return res.ok(result);
     });

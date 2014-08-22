@@ -18,15 +18,17 @@ module.exports = {
           limit: 1,
           sort : 'createdAt desc'
         }
+      , limit = req.param('limit')
+      , skip = req.param('skip')
       , findQuery;
 
     // pagination
-    if(req.query.skip && !isNaN(parseInt(req.query.skip, 10))) {
-      threadCriteria.skip = req.query.skip;
+    if(skip && !isNaN(parseInt(skip, 10))) {
+      threadCriteria.skip = skip;
     }
 
-    if(req.query.limit && !isNaN(parseInt(req.query.limit, 10))) {
-      threadCriteria.limit = req.query.limit;
+    if(limit && !isNaN(parseInt(limit, 10))) {
+      threadCriteria.limit = limit;
     }
 
     findQuery = sails.models.thread.find(threadCriteria);

@@ -14,7 +14,7 @@ module.exports = function serverError(data, details) {
   }
 
   if (!data) {
-    return res.send({status: 500});
+    return res.jsonp({status: 500});
   }
   if (typeof data !== 'object' || data instanceof Error) {
     data = {error: data};
@@ -22,5 +22,5 @@ module.exports = function serverError(data, details) {
 
   data.status = 500;
 
-  return res.json(data);
+  res.jsonp(data);
 };

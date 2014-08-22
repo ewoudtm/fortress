@@ -11,7 +11,7 @@ module.exports = function sendOK(data) {
 
   if (typeof data === 'undefined') {
     // Things that don't have data, like "logout". Client side will look for res.error anyway.
-    return res.send({status: 200});
+    return res.jsonp({status: 200});
   }
 
   this.req._sails.log.verbose(data);
@@ -20,5 +20,5 @@ module.exports = function sendOK(data) {
     throw new Error('Expected a valid data type (object) as response data.');
   }
 
-  return res.json(data);
+  res.jsonp(data);
 };

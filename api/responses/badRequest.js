@@ -7,14 +7,14 @@ module.exports = function badRequest(name, details) {
   res.status(400);
 
   if (!name) {
-    return res.send({status: 400});
+    return res.jsonp({status: 400});
   }
 
   // Log error to console
   this.req._sails.log.verbose('Sent 400 ("Bad Request") response');
   this.req._sails.log.verbose(name);
 
-  return res.json(createResponse(name, details));
+  res.jsonp(createResponse(name, details));
 };
 
 /**

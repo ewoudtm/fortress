@@ -13,7 +13,7 @@ module.exports = function forbidden(err, info) {
   }
 
   if (!err) {
-    return res.send({status: 403});
+    return res.jsonp({status: 403});
   }
 
   if (typeof err !== 'object' || err instanceof Error) {
@@ -26,5 +26,5 @@ module.exports = function forbidden(err, info) {
 
   err.status = 403;
 
-  return res.json(err);
+  res.jsonp(err);
 };
