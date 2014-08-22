@@ -22,6 +22,13 @@ module.exports = {
       type      : 'integer',
       index     : true,
       defaultsTo: null
+    },
+    toJSON: function() {
+      var modelInstance = this.toObject();
+
+      modelInstance._modelName = 'visitor';
+
+      return modelInstance;
     }
   }
 };
