@@ -1,3 +1,4 @@
+/*jshint loopfunc: true */
 function ImportService() {
 
   var performerModel = sails.models.performer
@@ -311,7 +312,9 @@ function ImportService() {
           continue;
         }
 
-        setPerformerStatus(name, true, progress(++performersDone, onlinePerformers));
+        setPerformerStatus(name, true, function () {
+          progress(++performersDone, onlinePerformers);
+        });
       }
     });
   }
