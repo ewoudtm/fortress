@@ -20,6 +20,13 @@ module.exports = {
     },
     to: {
       model: 'user'
+    },
+    toJSON: function() {
+      var modelInstance = this.toObject();
+
+      modelInstance._modelName = 'message';
+
+      return modelInstance;
     }
   },
 
