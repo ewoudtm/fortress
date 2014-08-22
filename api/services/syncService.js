@@ -28,7 +28,6 @@ module.exports = {
             sails.log.error('error while syncing credits.', error);
           }
 
-        sails.models.visitor.update({walletId: row.user_id}, {credits: row.credits}).exec(function() {
           next();
         });
       })();
