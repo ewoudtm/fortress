@@ -59,6 +59,11 @@ module.exports = {
     });
   },
 
+  /**
+   * @todo solve this with the count blueprint and a policy to set the criteria
+   * @param req
+   * @param res
+   */
   unread: function (req, res) {
     sails.models.message.count({read: false, to: req.session.user}, function (error, unreadCount) {
       if (error) {
