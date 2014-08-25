@@ -7,6 +7,7 @@
   "dependencies": {
     "MD5": "~1.2.1",
     "bson": "^0.2.9",
+    "connect-redis": "^1.4.5",
     "dateformat": "^1.0.8-1.2.3",
     "ejs": "~0.8.4",
     "extend": "^1.2.1",
