@@ -14,7 +14,7 @@ module.exports = {
       return res.badRequest('missing_parameter', 'thread');
     }
 
-    searchCriteria = {where: { or: [{to: req.session.user}, {from: req.session.user}], thread: req.body.thread}};
+    searchCriteria = {where: { to: req.session.user, thread: req.body.thread}};
 
     sails.models.message.update(searchCriteria, {read: true}).exec(function (error) {
       if (error) {
