@@ -7,7 +7,5 @@ module.exports = function (req, res, next) {
     ]
   };
 
-  console.log('Called', req.session);
-
   next();
 };
