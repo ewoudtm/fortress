@@ -29,8 +29,10 @@ module.exports.routes = {
   'get /message/unread'          : 'MessageController.unread',
 
   // ThreadController
+  'get /thread'                  : 'ThreadController.find',
   'put /thread/mark-read'        : 'ThreadController.markRead',
   'get /thread/thread-count'     : 'ThreadController.getThreadCount',
+  'get /thread/:id'              : 'ThreadController.findonesimple',
 
   // UserController
   'post /user/login'             : 'UserController.login',
