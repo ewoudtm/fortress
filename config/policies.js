@@ -6,10 +6,10 @@ module.exports.policies = {
 
   MessageController: {
     create  : ['isAuthenticated', 'hasUsername', 'subtractCredits', 'complementReply'],
-    inbox   : ['isAuthenticated'],
-    find    : ['isAuthenticated', 'ensureThreadParticipation'],
-    markRead: ['isAuthenticated'],
-    unread  : ['isAuthenticated']
+    inbox   : ['isAuthenticated'], // Protected in action
+    find    : ['isAuthenticated', 'ensureParticipation'],
+    markRead: ['isAuthenticated'], // Protected in action
+    unread  : ['isAuthenticated']  // Protected in action
   },
 
   ConnectController: {
@@ -20,25 +20,26 @@ module.exports.policies = {
     login            : true,
     loginByHash      : true,
     getUsername      : true,
-    getIdentity      : 'isAuthenticated',
+    getIdentity      : 'isAuthenticated', // Protected in action
     usernameAvailable: true
   },
 
   VisitorController: {
     find       : ['isAuthenticated', 'resolveVisitorIdentity', 'ownsVisitorRecord'],
-    setUsername: ['isAuthenticated', 'isVisitor']
+    setUsername: ['isAuthenticated', 'isVisitor'] // Protected in action
   },
 
   ThreadController: {
     create        : ['isAuthenticated', 'hasUsername', 'subtractCredits', 'complementNewThread'],
-    findOne       : ['isAuthenticated', 'hasUsername'],
-    markRead      : ['isAuthenticated'],
-    getThreadCount: ['isAuthenticated']
+    findonesimple : ['isAuthenticated', 'hasUsername', 'ensureParticipation'],
+    markRead      : ['isAuthenticated'], // Protected in action
+    find          : 'ensureParticipation',
+    getThreadCount: ['isAuthenticated'] // Protected in action
   },
 
   PerformerController: {
-    find         : true,
-    findonesimple: true,
-    count        : true
+    //find         : true,  // Full search
+    //findonesimple: true,  // Search based on username
+    //count        : true   // Count based on full search
   }
 };
