@@ -1,8 +1,6 @@
 var actionUtils = require('sails/lib/hooks/blueprints/actionUtil');
 
 /**
- * Not used. But will be useful at some point.
- *
  * @param req
  * @param res
  * @returns {*}
@@ -19,11 +17,16 @@ module.exports = function findOneRecord(req, res) {
     return res.badRequest('findOneSimple accepts no more than one parameter.');
   }
 
-  key           = keys[0];
-  criteria[key] = req.param(key);
-  Model         = actionUtils.parseModel(req);
-  query         = Model.findOne(criteria);
-  query         = actionUtils.populateEach(query, req);
+  key      = keys[0];
+  criteria = actionUtils.parseCriteria(req);
+  Model    = actionUtils.parseModel(req);
+
+  if (req.param(key)) {
+    criteria[key] = req.param(key);
+  }
+
+  query = Model.findOne(criteria);
+  query = actionUtils.populateEach(query, req);
 
   query.exec(function found(err, matchingRecord) {
     if (err) {
