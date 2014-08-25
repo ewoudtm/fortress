@@ -1,6 +1,1 @@
-# backend
-
-### Features
-* User authentication
-* Performer search
-* Online performers
+Backend. Home of all features.
