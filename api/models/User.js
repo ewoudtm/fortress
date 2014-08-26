@@ -1,4 +1,5 @@
-var roles = ['visitor', 'performer'], userModel = {schema: true};
+var roles     = ['visitor', 'performer'],
+    userModel = {schema: true};
 
 /**
  * The attributes for the model.
@@ -13,7 +14,26 @@ userModel.attributes = {
   },
 
   email: {
-    type: 'email'
+    type : 'email',
+    index: true
+  },
+
+  /**
+   * If user verified the email address.
+   */
+  emailVerified: {
+    type      : 'boolean',
+    defaultsTo: false,
+    index     : true
+  },
+
+  /**
+   * If user has opted out from receiving email.
+   */
+  mailable: {
+    type      : 'boolean',
+    defaultsTo: true,
+    index     : true
   },
 
   socketId: {

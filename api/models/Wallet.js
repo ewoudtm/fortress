@@ -5,7 +5,16 @@ module.exports = {
   migrate: 'safe',
 
   findUser: function (username, callback) {
-    var query = 'select uc.id, uc.available_credits as credits, nickname from userbase.user u join islive3_chat.user_client uc on u.id = uc.id where u.username=' + mysql.escape(username);
+    var query = '' +
+      'select ' +
+        'uc.id, ' +
+        'uc.available_credits as credits, ' +
+        'u.reg_promotor_info, ' +
+        'if (u.verified_dt is null, 0, 1) as email_verified,' +
+        'ifnull(u.reg_promotor_id, uc.partner_code) as partner_code ' +
+      'from userbase.user u ' +
+      'join islive3_chat.user_client uc on u.id = uc.id ' +
+      'where u.username=' + mysql.escape(username);
 
     this.query(query, function findUserQuery(error, data) {
       if (error) {

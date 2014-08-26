@@ -3,6 +3,7 @@ module.exports = {
   schema: true,
 
   attributes: {
+
     user: {
       model: 'user'
     },
@@ -18,12 +19,23 @@ module.exports = {
       defaultsTo: 0
     },
 
+    partnerCode: {
+      type      : 'integer',
+      defaultsTo: 61
+    },
+
+    partnerInfo: {
+      type      : 'string',
+      defaultsTo: 'typein'
+    },
+
     walletId: {
       type      : 'integer',
       index     : true,
       defaultsTo: null
     },
-    toJSON: function() {
+
+    toJSON  : function () {
       var modelInstance = this.toObject();
 
       modelInstance._modelName = 'visitor';
