@@ -24,8 +24,8 @@ UserController = {
         return res.serverError('database_error', error);
       }
 
-      if (undefined === user) {
-        return res.badRequest('missing_user', req.session.user);
+      if (!user) {
+        return res.badRequest('no_indentity', req.session.user);
       }
 
       if (role) {
