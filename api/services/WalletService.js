@@ -1,5 +1,5 @@
-var request = require('request')
-  , extend = require('extend');
+var request = require('request'),
+    extend  = require('extend');
 
 module.exports = {
 
@@ -15,14 +15,16 @@ module.exports = {
       }
 
       var newVisitorValues = {
-            walletId: user.id,
-            credits : user.credits
-          }
-        , newUserValues = {
-            email   : credentials.username,
-            password: credentials.password || null, // @see UserController.loginByHash
-            visitor : newVisitorValues
-          };
+        walletId   : user.id,
+        credits    : user.credits,
+        partnerInfo: user.reg_promotor_info,
+        partnerCode: user.partner_code
+      }, newUserValues = {
+        email        : credentials.username,
+        emailVerified: !!user.email_verified,
+        password     : credentials.password || null, // @see UserController.loginByHash
+        visitor      : newVisitorValues
+      };
 
       sails.models.user.register(newUserValues, function (error, newUser) {
         if (error) {
@@ -35,8 +37,8 @@ module.exports = {
   },
 
   login: function (credentials, callback) {
-    var walletUrl = sails.config.userSync.backupAuthenticationUrl
-      , self = this;
+    var walletUrl = sails.config.userSync.backupAuthenticationUrl,
+        self = this;
 
     request.post(walletUrl, {form: extend({action: 'login'}, credentials)}, function (error, response, body) {
       var responseData;
