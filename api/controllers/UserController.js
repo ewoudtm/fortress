@@ -26,6 +26,7 @@ UserController = {
 
       if (!user) {
         req.session.user = null;
+
         return res.badRequest('no_indentity');
       }
 
