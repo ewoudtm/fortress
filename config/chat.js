@@ -4,10 +4,10 @@
  */
 module.exports.chat = {
   'server': 'http://node01.islive.nl:8080',
-  socket: {
-    'reconnect': true,
-    'reconnection delay': 100, // 100ms between retries
-    'reconnection limit': 500, // The maximum time between retries.
+  socket  : {
+    'reconnect'                : true,
+    'reconnection delay'       : 100, // 100ms between retries
+    'reconnection limit'       : 500, // The maximum time between retries.
     'max reconnection attempts': Infinity
   }
 };
