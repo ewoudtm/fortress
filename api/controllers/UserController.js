@@ -25,7 +25,8 @@ UserController = {
       }
 
       if (!user) {
-        return res.badRequest('no_indentity', req.session.user);
+        req.session.user = null;
+        return res.badRequest('no_indentity');
       }
 
       if (role) {
