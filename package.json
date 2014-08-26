@@ -33,9 +33,16 @@
     "sails-mysql": "^0.10.5",
     "socket.io-client": "^0.9.16"
   },
+  "devDependencies": {
+    "should": "^4.0.4",
+    "mocha": "^1.21.4",
+    "nock": "^0.45.0",
+    "chai": "^1.9.1"
+  },
   "scripts": {
     "start": "node app.js",
-    "debug": "node debug app.js"
+    "debug": "node debug app.js",
+    "test": "mocha -b"
   },
   "main": "app.js",
   "repository": {
