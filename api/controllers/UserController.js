@@ -24,6 +24,10 @@ UserController = {
         return res.serverError('database_error', error);
       }
 
+      if (undefined === user) {
+        return res.badRequest('missing_user', req.session.user);
+      }
+
       if (role) {
         if (!user[role]) {
           return res.badRequest('missing_role', role);
