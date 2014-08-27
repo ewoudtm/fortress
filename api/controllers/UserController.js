@@ -24,6 +24,12 @@ UserController = {
         return res.serverError('database_error', error);
       }
 
+      if (!user) {
+        req.session.user = null;
+
+        return res.badRequest('no_indentity');
+      }
+
       if (role) {
         if (!user[role]) {
           return res.badRequest('missing_role', role);
