@@ -1,4 +1,10 @@
-var mysql = require('mysql');
+var mysql = require('mysql'),
+    test  = process.env.NODE_ENV === 'test',
+    dbs   = {
+      user       : (test ? 'test_fortress' : 'userbase') + '.user',
+      user_client: (test ? 'test_fortress' : 'islive3_chat') + '.user_client',
+      io_sync    : (test ? 'test_fortress' : 'islive3_chat') + '.io_sync'
+    };
 
 module.exports = {
   adapter: 'chatterbox',
@@ -7,13 +13,13 @@ module.exports = {
   findUser: function (username, callback) {
     var query = '' +
       'select ' +
-        'uc.id, ' +
-        'uc.available_credits as credits, ' +
-        'u.reg_promotor_info, ' +
-        'if (u.verified_dt is null, 0, 1) as email_verified,' +
-        'ifnull(u.reg_promotor_id, uc.partner_code) as partner_code ' +
-      'from userbase.user u ' +
-      'join islive3_chat.user_client uc on u.id = uc.id ' +
+      'uc.id, ' +
+      'uc.available_credits as credits, ' +
+      'u.reg_promotor_info, ' +
+      'if (u.verified_dt is null, 0, 1) as email_verified,' +
+      'ifnull(u.reg_promotor_id, uc.partner_code) as partner_code ' +
+      'from ' + dbs.user + ' u ' +
+      'join ' + dbs.user_client + ' uc on u.id = uc.id ' +
       'where u.username=' + mysql.escape(username);
 
     this.query(query, function findUserQuery(error, data) {
@@ -29,7 +35,7 @@ module.exports = {
     });
   },
 
-  subtractCredits : function(walletId, amount, callback) {
+  subtractCredits: function (walletId, amount, callback) {
     amount = parseInt(amount);
     walletId = parseInt(walletId);
 
@@ -41,12 +47,12 @@ module.exports = {
       return callback('invalid_amount');
     }
 
-    var whereSuffix = ' where uc.id = ' + walletId
-      , creditCheckQuery = 'select uc.available_credits from islive3_chat.user_client uc' + whereSuffix
-      , updateQuery = 'update islive3_chat.user_client uc set uc.available_credits = uc.available_credits - ' + amount + whereSuffix
-      , self = this;
+    var whereSuffix = ' where uc.id = ' + walletId,
+        creditCheckQuery = 'select uc.available_credits from ' + dbs.user_client + ' uc' + whereSuffix,
+        updateQuery = 'update ' + dbs.user_client + ' uc set uc.available_credits = uc.available_credits - ' + amount + whereSuffix,
+        self = this;
 
-    self.query(creditCheckQuery, function(error, data) {
+    self.query(creditCheckQuery, function (error, data) {
       if (error) {
         return callback(error);
       }
@@ -59,7 +65,7 @@ module.exports = {
         return callback('insufficient_funds');
       }
 
-      self.query(updateQuery, function(error, response) {
+      self.query(updateQuery, function (error, response) {
         if (error) {
           return callback(error);
         }
@@ -70,10 +76,10 @@ module.exports = {
   },
 
   getSyncQueue: function (callback) {
-    var queueQuery = 'select * from islive3_chat.io_sync'
-      , cleanupQuery = 'delete from islive3_chat.io_sync where user_id in ('
-      , userIds = []
-      , self = this;
+    var queueQuery = 'select * from ' + dbs.io_sync,
+        cleanupQuery = 'delete from ' + dbs.io_sync + ' where user_id in (',
+        userIds = [],
+        self = this;
 
     this.query(queueQuery, function fetchQueueQuery(error, data) {
       if (error) {
@@ -82,14 +88,15 @@ module.exports = {
 
       userIds = _.pluck(data, 'user_id');
 
-      cleanupQuery += userIds.join(',')+')';
+      cleanupQuery += userIds.join(',') + ')';
 
       if (data.length === 0) {
-        return callback(null, [], function() {});
+        return callback(null, [], function () {
+        });
       }
 
-      callback(null, data, function() {
-        self.query(cleanupQuery, function(error, a, b) {
+      callback(null, data, function () {
+        self.query(cleanupQuery, function (error, a, b) {
           if (error) {
             console.error('Oops!', error, a, b);
           }
