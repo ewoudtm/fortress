@@ -7,6 +7,9 @@ Backend. Home of all features.
 * Edit configuration in `/config/local.js`
 * Install redis
 
+If you want to run the application on port 80 add the following line to your firewall or startup.
+`/sbin/iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8001`
+
 ## Installing redis:
 Add to /etc/apt/sources.list
 ```
