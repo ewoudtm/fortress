@@ -22,6 +22,8 @@ module.exports.bootstrap = function (cb) {
         var importService = new (require('../api/services/ImportService'));
         importService.init();
         cb();
+      } else {
+        cb();
       }
     } catch (error) {
       sails.log.info('Running importer failed.');

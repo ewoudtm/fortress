@@ -1,0 +1,4 @@
+env: DB=mysql
+
+before_script:
+  - mysql -e 'create database test_fortress;'
