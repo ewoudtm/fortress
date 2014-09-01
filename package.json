@@ -27,6 +27,7 @@
     "mysql": "^2.3.2",
     "rc": "~0.3.3",
     "request": "^2.36.0",
+    "request-helpers": "0.0.1",
     "sails": "^0.10.4",
     "sails-disk": "^0.10.3",
     "sails-mongo": "^0.10.4",
