@@ -74,7 +74,7 @@ UserController = {
       return res.badRequest('missing_parameter', 'username');
     }
 
-    sails.services.userservice.usernameAvailable(req.param('username'), function(error, available) {
+    sails.services.userservice.usernameAvailable(req.param('username'), req.object.id, function(error, available) {
       if (error) {
         return res.serverError('server_error', error);
       }
@@ -165,6 +165,8 @@ UserController = {
 
       // No user found... Check if user has to be imported from the wallet.
       if (!result) {
+
+        credentials.object = req.object.id;
 
         return sails.services.walletservice.login(credentials, function (error, record) {
 
@@ -282,6 +284,8 @@ UserController = {
 
       // No user found by that email address.
       if (!result) {
+
+        credentials.object = req.object.id;
 
         // try to import user.
         return sails.services.walletservice.importUser(credentials, function (error, record) {
