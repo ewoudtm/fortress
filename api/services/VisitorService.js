@@ -34,7 +34,6 @@ VisitorService = {
   },
 
   register: function (params, callback) {
-
     sails.services.userservice.wouldBeDuplicate(params, function (error, wouldBe) {
       if (error) {
         return callback(error);
@@ -71,7 +70,10 @@ VisitorService = {
         });
       }
 
-      // @todo Implement register for non-wallet users here.
+      callback({
+        error      : 'not_implemented',
+        description: "This feature hasn't been implemented yet."
+      });
     });
   }
 };

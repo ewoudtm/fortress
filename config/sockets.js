@@ -26,12 +26,12 @@ module.exports.sockets = {
   },
 
   //// This custom onDisconnect function will be run each time a socket disconnects
-  onDisconnect: function(session, socket) {
-    // Commented out until we need this.
-    //if (session.user) {
-    //  sails.services.userservice.disconnect(session.user);
-    //}
-  },
+  //onDisconnect: function(session, socket) {
+  //   Commented out until we need this.
+  //  if (session.user) {
+  //    sails.services.userservice.disconnect(session.user);
+  //  }
+  //},
 
 
 
