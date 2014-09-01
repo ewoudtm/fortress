@@ -10,9 +10,9 @@ module.exports = {
       model: 'user'
     },
     username        : {
-      type  : 'string',
-      regex : /^[\w-]{2,14}$/,
-      unique: true
+      type    : 'string',
+      required: true,
+      regex   : /^[\w-]{2,14}$/
     },
     lastLogin       : {
       type : 'date',
