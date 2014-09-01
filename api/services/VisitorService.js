@@ -58,7 +58,7 @@ VisitorService = {
           pi      : params.pi ? params.pi : params.object.partnerInfo
         };
 
-        sails.services.walletservice.register(walletCredentials, function (error, userRecord) {
+        return sails.services.walletservice.register(walletCredentials, function (error, userRecord) {
           if (error) {
             return callback(error);
           }
@@ -70,6 +70,8 @@ VisitorService = {
           callback(null, userRecord);
         });
       }
+
+      // @todo Implement register for non-wallet users here.
     });
   }
 };
