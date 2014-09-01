@@ -9,6 +9,10 @@ module.exports.scaling = {
   scaled: false
 };
 
+module.exports.system = {
+  masterIps : ['127.0.0.1']
+};
+
 // If this instance does importing
 module.exports.import = {
   enabled    : true,

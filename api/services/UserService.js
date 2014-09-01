@@ -1,5 +1,5 @@
-var connections = {}
-  , userService;
+var connections = {},
+    userService;
 
 userService = {
 
@@ -27,16 +27,61 @@ userService = {
    * Check if a username is available.
    *
    * @param {string}   username
+   * @param {string}   object
    * @param {Function} callback
    */
-  usernameAvailable : function(username, callback) {
-    sails.models.user.find({username: username}, function(error, matches) {
+  usernameAvailable: function (username, object, callback) {
+    sails.models.user.find({username: username, object: object}, function (error, matches) {
       if (error) {
         return callback(error);
       }
 
       callback(null, matches.length === 0);
     });
+  },
+
+  wouldBeDuplicate: function (userCredentials, callback) {
+    var duplicateCheckCriteria = {
+      object: userCredentials.object
+    };
+
+    // Probably an import.
+    if (!userCredentials.username) {
+      duplicateCheckCriteria.email = userCredentials.email;
+    } else {
+      duplicateCheckCriteria.or = [
+        {username: userCredentials.username},
+        {email: userCredentials.email}
+      ];
+    }
+
+    sails.models.user.find(duplicateCheckCriteria, function (error, results) {
+      if (error) {
+        return callback(error);
+      }
+
+      var isDuplicate = !!results.length;
+
+      if (!isDuplicate) {
+        return callback(null, false);
+      }
+
+      callback(null, results[0].email === userCredentials.email ? 'email' : 'username');
+    });
+  },
+
+  register: function (req, res) {
+
+    /**
+     * - role
+     * - username
+     * - email
+     * - password
+     * -
+     */
+    // Check if username or email combo with object Id already exists (in policy)
+    // Check if it's a wallet register, if so, send jsonp to wallet.
+    // Attach object to user
   },
 
   /**

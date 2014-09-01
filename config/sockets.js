@@ -16,14 +16,18 @@ module.exports.sockets = {
   // (To control whether a socket is allowed to connect, check out `authorization` config.)
   // Keep in mind that Sails' RESTful simulation for sockets
   // mixes in socket.io events for your routes and blueprints automatically.
-  //onConnect: function(session, socket) {
-  //  if (session.user) {
-  //    sails.services.userservice.connect(session.user, socket);
-  //  }
-  //},
-  //
+  onConnect: function(session, socket) {
+    socket.host = socket.handshake.headers.host.replace(/\:\d+$/, ''); //trim port.
+
+    // Commented out until we need this.
+    //if (session.user) {
+    //  sails.services.userservice.connect(session.user, socket);
+    //}
+  },
+
   //// This custom onDisconnect function will be run each time a socket disconnects
   //onDisconnect: function(session, socket) {
+  //   Commented out until we need this.
   //  if (session.user) {
   //    sails.services.userservice.disconnect(session.user);
   //  }

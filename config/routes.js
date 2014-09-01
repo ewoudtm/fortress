@@ -43,6 +43,8 @@ module.exports.routes = {
   'get /user/identity/:role?'    : 'UserController.getIdentity',
 
   // VisitorController
+  'get  /visitor/register'       : 'VisitorController.register',
+  'post /visitor/register'       : 'VisitorController.register',
   'put /visitor/username'        : 'VisitorController.setUsername', // @see policies/resolveVisitorIdentity
   'put /visitor/:id?'            : 'VisitorController.update',
   'get /visitor/identity'        : 'VisitorController.find',        // @see policies/resolveVisitorIdentity
@@ -51,6 +53,12 @@ module.exports.routes = {
   'get /performer/count'         : 'PerformerController.count',
   'get /performer/:username'     : 'PerformerController.findonesimple',
 
+  // ObjectController
+  'get /object/:id?'             : 'ObjectController.find',
+  'post /object'                 : 'ObjectController.create',
+  'put /object/:id'              : 'ObjectController.update',
+  'delete /object/:id'           : 'ObjectController.destroy',
+
   // Misc
-  'get /connect/getcookie'       : 'ConnectController.getcookie',
+  'get /connect/getcookie'       : 'ConnectController.getcookie'
 };

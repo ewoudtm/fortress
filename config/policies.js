@@ -1,3 +1,21 @@
+var globalPolicies = [
+  'setObject'
+];
+
+function makePolicies(policies) {
+  if (!Array.isArray(policies)) {
+    policies = [policies];
+  }
+
+  if (!policies) {
+    policies = [];
+  }
+
+  policies = globalPolicies.concat(policies);
+
+  return policies;
+}
+
 module.exports.policies = {
 
   // Default policy for all controllers and actions
@@ -5,36 +23,41 @@ module.exports.policies = {
   '*': false,
 
   MessageController: {
-    create  : ['isAuthenticated', 'hasUsername', 'subtractCredits', 'complementReply'],
-    inbox   : ['isAuthenticated'], // Protected in action
-    find    : ['isAuthenticated', 'ensureParticipation'],
-    markRead: ['isAuthenticated'], // Protected in action
-    unread  : ['isAuthenticated']  // Protected in action
+    create  : makePolicies(['isAuthenticated', 'hasUsername', 'subtractCredits', 'complementReply']),
+    inbox   : makePolicies(['isAuthenticated']), // Protected in action
+    find    : makePolicies(['isAuthenticated', 'ensureParticipation']),
+    markRead: makePolicies(['isAuthenticated']), // Protected in action
+    unread  : makePolicies(['isAuthenticated'])  // Protected in action
   },
 
   ConnectController: {
-    getcookie: true
+    getcookie: makePolicies(true)
   },
 
   UserController: {
-    login            : true,
-    loginByHash      : true,
-    getUsername      : true,
-    getIdentity      : 'isAuthenticated', // Protected in action
-    usernameAvailable: true
+    login            : makePolicies(true),
+    loginByHash      : makePolicies(true),
+    getUsername      : makePolicies(true),
+    getIdentity      : makePolicies('isAuthenticated'), // Protected in action
+    usernameAvailable: makePolicies(true)
   },
 
   VisitorController: {
-    find       : ['isAuthenticated', 'resolveVisitorIdentity', 'ownsVisitorRecord'],
-    setUsername: ['isAuthenticated', 'isVisitor'] // Protected in action
+    find       : makePolicies(['isAuthenticated', 'resolveVisitorIdentity', 'ownsVisitorRecord']),
+    setUsername: makePolicies(['isAuthenticated', 'isVisitor']), // Protected in action
+    register   : makePolicies(true)
+  },
+
+  ObjectController: {
+    '*': 'hasMasterIp'
   },
 
   ThreadController: {
-    create        : ['isAuthenticated', 'hasUsername', 'subtractCredits', 'complementNewThread'],
-    findonesimple : ['isAuthenticated', 'hasUsername', 'ensureParticipation'],
-    markRead      : ['isAuthenticated'], // Protected in action
-    find          : 'ensureParticipation',
-    getThreadCount: ['isAuthenticated'] // Protected in action
+    create        : makePolicies(['isAuthenticated', 'hasUsername', 'subtractCredits', 'complementNewThread']),
+    findonesimple : makePolicies(['isAuthenticated', 'hasUsername', 'ensureParticipation']),
+    markRead      : makePolicies(['isAuthenticated']), // Protected in action
+    find          : makePolicies('ensureParticipation'),
+    getThreadCount: makePolicies(['isAuthenticated']) // Protected in action
   },
 
   PerformerController: {

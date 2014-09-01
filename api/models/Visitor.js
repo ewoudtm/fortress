@@ -9,9 +9,8 @@ module.exports = {
     },
 
     username: {
-      type  : 'string',
-      regex : /^[\w\-]{2,14}$/,
-      unique: true
+      type    : 'string',
+      regex   : /^[\w\-]{2,14}$/
     },
 
     credits: {
@@ -35,7 +34,7 @@ module.exports = {
       defaultsTo: null
     },
 
-    toJSON  : function () {
+    toJSON: function () {
       var modelInstance = this.toObject();
 
       modelInstance._modelName = 'visitor';
