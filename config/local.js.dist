@@ -2,15 +2,18 @@ module.exports = {
   port: process.env.PORT || 8001,
 
   environment: process.env.NODE_ENV || 'development'
+};
 
+module.exports.system = {
+  masterIps : ['127.0.0.1']
 };
 
 module.exports.scaling = {
   scaled: false
 };
 
-module.exports.system = {
-  masterIps : ['127.0.0.1']
+module.exports.chat = {
+  enabled: true
 };
 
 // If this instance does importing
@@ -25,17 +28,6 @@ module.exports.import = {
 };
 
 module.exports.connections = {
-  localDiskDb: {
-    adapter: 'sails-disk'
-  },
-  islive: {
-    adapter : 'sails-mysql',
-    host    : '',
-    user    : '',
-    password: '',
-    database: ''
-  },
-
   chatterbox: {
     adapter : 'sails-mysql',
     host    : '',
@@ -52,15 +44,11 @@ module.exports.connections = {
 };
 
 // Sync user credits to this system?
-// Only use in production, or when configuring a local DB above ^
+// Only use in production
 module.exports.userSync = {
-  enabled: false,
+  enabled: false
 };
 
 module.exports.wallet = {
-    salt: '' // Salt goes here.
-}
-
-module.exports.chat = {
-  enabled: false
+  salt: '' // Salt goes here.
 };
