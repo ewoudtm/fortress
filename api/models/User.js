@@ -5,17 +5,26 @@ var roles     = ['visitor', 'performer'],
  * The attributes for the model.
  */
 userModel.attributes = {
-
   username: {
-    type  : 'string',
-    unique: true,
-    index : true,
-    regex : /^[\w\-]{2,14}$/
+    type    : 'string',
+    index   : true,
+    regex   : /^[\w\-]{2,14}$/
+  },
+
+  password: {
+    type      : 'string',
+    defaultsTo: null
   },
 
   email: {
-    type : 'email',
-    index: true
+    type    : 'email',
+    required: true,
+    index   : true
+  },
+
+  object: {
+    model   : 'object',
+    required: true
   },
 
   /**
@@ -37,11 +46,6 @@ userModel.attributes = {
   },
 
   socketId: {
-    type      : 'string',
-    defaultsTo: null
-  },
-
-  password: {
     type      : 'string',
     defaultsTo: null
   },
@@ -175,17 +179,16 @@ function register(userCredentials, callback) {
 userModel.register = function (userCredentials, callback) {
   var self = this;
 
-  if (!userCredentials.username) {
-    return register.call(self, userCredentials, callback);
-  }
-
-  sails.services.userservice.usernameAvailable(userCredentials.username, function (error, available) {
+  sails.services.userservice.wouldBeDuplicate(userCredentials, function(error, wouldBe) {
     if (error) {
       return callback(error);
     }
 
-    if (!available) {
-      return callback({error: 'username_exists'});
+    if (wouldBe) {
+      return callback({
+        error   : 'user_exists',
+        property: wouldBe
+      });
     }
 
     register.call(self, userCredentials, callback);
