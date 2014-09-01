@@ -1,9 +1,4 @@
-/**
- * ThreadController
- *
- * @description :: Server-side logic for managing threads
- * @help        :: See http://links.sailsjs.org/docs/controllers
- */
+var requestHelpers = require('request-helpers');
 
 module.exports = {
   setUsername: function (req, res) {
@@ -11,7 +6,7 @@ module.exports = {
       return res.badRequest('missing_parameter', 'username');
     }
 
-    sails.services.userservice.usernameAvailable(req.body.username, function (error, available) {
+    sails.services.userservice.usernameAvailable(req.body.username, req.object.id, function (error, available) {
       if (error) {
         return res.serverError('server_error', error);
       }
@@ -40,6 +35,35 @@ module.exports = {
 
           res.ok();
         });
+      });
+    });
+  },
+
+  register: function (req, res) {
+
+    var requiredProperties = [
+      'username',
+      'password',
+      'email',
+      {required: false, param: 'wallet'},
+      {required: false, param: 'p'},
+      {required: false, param: 'pi'}
+    ];
+
+    requestHelpers.pickParams(requiredProperties, req, function (error, params) {
+      if (error) {
+        return res.badRequest('missing_parameter', error);
+      }
+
+      // Set object
+      params.object = req.object;
+
+      sails.services.visitorservice.register(params, function (error, record) {
+        if (error) {
+          return res.badRequest(error);
+        }
+
+        return res.ok(record);
       });
     });
   }
