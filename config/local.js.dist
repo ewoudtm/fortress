@@ -50,5 +50,5 @@ module.exports.userSync = {
 };
 
 module.exports.wallet = {
-  salt: 'SALT'
+  salt: '' // Salt goes here.
 };
