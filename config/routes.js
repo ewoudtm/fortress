@@ -38,7 +38,7 @@ module.exports.routes = {
   'post /user/login'             : 'UserController.login',
   'post /user/login-by-hash'     : 'UserController.loginByHash',
   'get  /user/login-by-hash'     : 'UserController.loginByHash',
-  'get /user/username/:id '      : 'UserController.getUsername',
+  'get /user/username/:id'       : 'UserController.getUsername',
   'post /user/username-available': 'UserController.usernameAvailable',
   'get /user/identity/:role?'    : 'UserController.getIdentity',
 
