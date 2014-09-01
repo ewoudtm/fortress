@@ -1,4 +1,4 @@
-module.exports.userSync = {
+module.exports.wallet = {
   enabled: false,
 
   /**
@@ -8,5 +8,5 @@ module.exports.userSync = {
    * action   : string
    * -----------------
    */
-  backupAuthenticationUrl: 'http://mysecurewallet.nl/payment/islive/ajax/wallet'
+  walletAPIUrl: 'http://mysecurewallet.nl/payment/islive/ajax/wallet'
 };
