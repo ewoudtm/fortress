@@ -67,7 +67,7 @@ userService = {
         return callback(null, false);
       }
 
-      callback(null, results[0].email === userCredentials.email ? 'email' : 'username');
+      callback(null, results[0].email === userCredentials.email.toLowerCase() ? 'email' : 'username');
     });
   },
 
@@ -104,6 +104,28 @@ userService = {
    */
   disconnect: function (userId) {
     this.updateSocketId(userId, null);
+  },
+
+  /**
+   * Convenience method. Verifies the given `user` is a user object.
+   *
+   * @param user
+   * @param callback
+   * @param populateAll
+   * @returns {*}
+   */
+  getUser : function (user, callback, populateAll) {
+    if (typeof user === 'object') {
+      return callback(null, user);
+    }
+
+    var find = sails.models.user.findOne(user);
+
+    if (populateAll) {
+      find.populateAll();
+    }
+
+    find.exec(callback);
   },
 
   /**
