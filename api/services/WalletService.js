@@ -50,7 +50,43 @@ module.exports = {
     });
   },
 
-  request: function (action, parameters, callback) {
+  /**
+   * @param {{}}       from     Populated user object
+   * @param {{}}       to       Populated user object
+   * @param {Function} callback
+   */
+  sendNotification: function (from, to, callback) {
+    callback = callback || function () {
+      // Just here to avoid errors.
+    };
+
+    if (typeof to.visitor !== 'object') {
+      return callback({
+        error      : 'invalid_argument',
+        description: 'Expected a populated user entity.'
+      });
+    }
+
+    var visitor = to.visitor,
+        notificationData = {
+          hash     : sails.services.userservice.generateHash(to),
+          wallet_id: visitor.walletId,
+          user_id  : to.id,
+          performer: from.username
+        };
+
+    this.request('notification', {qs: notificationData}, function (error, response) {
+      if (error) {
+        return callback(error);
+      }
+
+      callback(null);
+    }, 'get');
+  },
+
+  request: function (action, parameters, callback, method) {
+    method = method || 'post';
+
     var walletUrl = sails.config.wallet.walletAPIUrl;
 
     if (typeof parameters === 'function') {
@@ -61,10 +97,10 @@ module.exports = {
     if (parameters.form) {
       parameters.form.action = action;
     } else {
-      parameters.action = action;
+      parameters.qs.action = action;
     }
 
-    request.post(walletUrl, parameters, function (error, response, body) {
+    request[method](walletUrl, parameters, function (error, response, body) {
       var responseData;
 
       if (error) {
