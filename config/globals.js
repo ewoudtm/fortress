@@ -9,9 +9,9 @@
  * http://links.sailsjs.org/docs/config/globals
  */
 module.exports.globals = {
-	_: true,
-	async: false,
-	sails: true,
-	services: false,
-	models: false
+  _       : true,
+  async   : true,
+  sails   : true,
+  services: false,
+  models  : false
 };
