@@ -1,4 +1,5 @@
-var connections = {},
+var md5         = require('MD5'),
+    connections = {},
     userService;
 
 userService = {
@@ -103,6 +104,24 @@ userService = {
    */
   disconnect: function (userId) {
     this.updateSocketId(userId, null);
+  },
+
+  /**
+   * Generate a hash for the user.
+   *
+   * @param user
+   * @returns {*}
+   */
+  generateHash: function (user) {
+    var magic = user.id.replace(/[a-z]/gi, ''),
+        veil = Math.abs(~~~(magic << Math.ceil(magic.split('').reverse().join('') / 5)) ^ magic);
+
+    return md5([
+      user.id,
+      user.email,
+      veil,
+      typeof user.object === 'object' ? user.object.id : user.object
+    ].join(''));
   },
 
   /**

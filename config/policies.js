@@ -39,7 +39,8 @@ module.exports.policies = {
     loginByHash      : makePolicies(true),
     getUsername      : makePolicies(true),
     getIdentity      : makePolicies('isAuthenticated'), // Protected in action
-    usernameAvailable: makePolicies(true)
+    usernameAvailable: makePolicies(true),
+    unsubscribe      : makePolicies(true)
   },
 
   VisitorController: {

@@ -1,6 +1,6 @@
-var request = require('request')
-  , extend = require('extend')
-  , UserController;
+var request = require('request'),
+    extend  = require('extend'),
+    UserController;
 
 function subscribe(req, model, instance) {
   if (req.isSocket) {
@@ -43,6 +43,46 @@ UserController = {
   },
 
   /**
+   * @todo Document this
+   * @todo Add support for authenticated users
+   * @todo Build the thing where I tell mysecurewallet to send an email (on new message).
+   *
+   * @param req
+   * @param res
+   */
+  unsubscribe: function (req, res) {
+    var hash = req.param('hash'),
+        id = req.param('id'),
+        userHash;
+
+    sails.models.user.findOne(id, function (error, user) {
+      if (error) {
+        return res.serverError('database_error', error);
+      }
+
+      if (!user) {
+        return res.badRequest('unknown_user');
+      }
+
+      userHash = sails.services.userservice.generateHash(user);
+
+      if (userHash !== hash) {
+        return res.badRequest('invalid_hash');
+      }
+
+      user.mailable = false;
+
+      user.save(function (error) {
+        if (error) {
+          return res.serverError('database_error', error);
+        }
+
+        res.ok();
+      });
+    });
+  },
+
+  /**
    * Get the username belonging to a userId
    *
    * @param req
@@ -69,12 +109,12 @@ UserController = {
    * @param req
    * @param res
    */
-  usernameAvailable: function(req, res) {
+  usernameAvailable: function (req, res) {
     if (!req.param('username')) {
       return res.badRequest('missing_parameter', 'username');
     }
 
-    sails.services.userservice.usernameAvailable(req.param('username'), req.object.id, function(error, available) {
+    sails.services.userservice.usernameAvailable(req.param('username'), req.object.id, function (error, available) {
       if (error) {
         return res.serverError('server_error', error);
       }
@@ -91,10 +131,10 @@ UserController = {
    */
   login: function (req, res) {
 
-    var userModel = sails.models.user
-      , role
-      , credentials
-      , criteria;
+    var userModel = sails.models.user,
+        role,
+        credentials,
+        criteria;
 
     // Verify that all required parameters have been supplied.
     if (!req.param('role')) {
@@ -221,7 +261,10 @@ UserController = {
         }
 
         // Update password for wallet user with the supplied, proven to be the valid, password.
-        sails.models.user.update({email: credentials.username, password: null}, {password: credentials.password}).exec(function (error) {
+        sails.models.user.update({
+          email   : credentials.username,
+          password: null
+        }, {password: credentials.password}).exec(function (error) {
           if (error) {
             return res.serverError('database_error', error);
           }
@@ -240,10 +283,10 @@ UserController = {
    */
   loginByHash: function (req, res) {
 
-    var userModel = sails.models.user
-      , role
-      , credentials
-      , criteria;
+    var userModel = sails.models.user,
+        role,
+        credentials,
+        criteria;
 
     // Verify that all required parameters have been supplied.
     if (!req.param('role')) {
