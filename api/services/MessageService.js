@@ -41,5 +41,42 @@ module.exports = {
       direction   : message.from === userId ? 'out' : 'in',
       participant : message.from === userId ? message.to : message.from
     };
+  },
+
+  /**
+   * Send an email notification to the user
+   *
+   * @todo move this logic elsewhere. It's too message-notification specific.
+   *
+   * @param message
+   * @param callback
+   */
+  sendNotification : function (message, callback) {
+    callback = callback || function () {
+      // Just here to avoid errors.
+    };
+
+    var userService = sails.services.userservice;
+
+    userService.getUser(message.to, function (error, to) {
+      if (error) {
+        return callback(error);
+      }
+
+      if (!to.visitor) {
+        return callback({
+          error      : 'not_implemented',
+          description: "This feature hasn't been implemented yet."
+        });
+      }
+
+      userService.getUser(message.from, function (error, from) {
+        if (error) {
+          return callback(error);
+        }
+
+        sails.services.walletservice.sendNotification(from, to, callback);
+      }, true); // true = populateAll
+    }, true); // true = populateAll
   }
 };
