@@ -70,6 +70,13 @@ module.exports = {
         });
       }
 
+      if (!to.mailable) {
+        return callback({
+          error      : 'not_mailable',
+          description: "User indicated not to want to receive anymore mail from us."
+        });
+      }
+
       userService.getUser(message.from, function (error, from) {
         if (error) {
           return callback(error);
