@@ -40,6 +40,9 @@ module.exports = {
     // Update the updatedAt date for inbox sorting.
     sails.models.thread.update(threadId, {}).exec(function(error, results) {
       next();
+
+      // Yes, this can be ran after calling next() because the email isn't that important.
+      sails.services.messageservice.sendNotification(newMessage);
     });
   }
 };

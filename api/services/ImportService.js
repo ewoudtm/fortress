@@ -1,21 +1,22 @@
 /*jshint loopfunc: true */
 function ImportService() {
 
-  var performerModel = sails.models.performer
-    , importModel = sails.models.import
-    , userModel = sails.models.user
-    , socket = sails.services.chatservice.getSocket()
-    , dateFormat = require('dateformat')
-    , config = sails.config
-    , util = require('util')
-    , mysql = require('mysql')
-    , self = this
-    , lastUpdateString
-    , connection
-    , baseQuery
-    , countQuery
-    , importQuery
-    , fields;
+  var performerModel = sails.models.performer,
+      importModel = sails.models.import,
+      userModel = sails.models.user,
+      objectModel = sails.models.object,
+      socket = sails.services.chatservice.getSocket(),
+      dateFormat = require('dateformat'),
+      config = sails.config,
+      util = require('util'),
+      mysql = require('mysql'),
+      defaultObject,
+      lastUpdateString,
+      connection,
+      baseQuery,
+      countQuery,
+      importQuery,
+      fields;
 
   /**
    * The fields to fetch
@@ -72,11 +73,11 @@ function ImportService() {
    * @todo join model_callmenow islive.model_callmenow
    */
   baseQuery = 'select %s' +
-    ' from modellen m join model_status s on m.modelnaam = s.modelnaam' +
-    ' left outer join model_multimedia mm on mm.model = m.modelnaam' +
+  ' from modellen m join model_status s on m.modelnaam = s.modelnaam' +
+  ' left outer join model_multimedia mm on mm.model = m.modelnaam' +
     //' left outer join model_callmenow mc on mc.modelnaam = m.modelnaam' +
-    ' left outer join props_model uiterlijk on uiterlijk.model = m.modelnaam and uiterlijk.property = "uiterlijk"' +
-    '  where m.disabled = 0 and m.last_modified > ?';
+  ' left outer join props_model uiterlijk on uiterlijk.model = m.modelnaam and uiterlijk.property = "uiterlijk"' +
+  '  where m.disabled = 0 and m.last_modified > ?';
 
   /**
    * The un-formatted countQuery
@@ -100,41 +101,41 @@ function ImportService() {
    */
   function getRowValues(row) {
     var values = {
-      username: row.modelnaam,
-      dateOfBirth: row.geboren,
-      lastLogin: row.last_login,
-      zodiac: row.sterrenbeeld,
-      description: row.beschrijving,
-      languages: [],
-      eyeColor: row.ogen,
-      hairColor: row.haar,
+      username        : row.modelnaam,
+      dateOfBirth     : row.geboren,
+      lastLogin       : row.last_login,
+      zodiac          : row.sterrenbeeld,
+      description     : row.beschrijving,
+      languages       : [],
+      eyeColor        : row.ogen,
+      hairColor       : row.haar,
       sexualPreference: row.geaardheid,
-      piercings: row.piercing,
-      music: row.muziek,
-      appearance: row.figuur,
-      relationship: row.relatie,
-      nationality: row.nationaliteit,
-      smoking: row.roken,
-      cupSize: row.cupmaat,
-      gender: row.geslacht,
-      hobbies: row.hobbies,
-      pets: row.huisdieren,
-      food: row.eten,
-      drinks: row.drinken,
-      manType: row.man_type,
-      webcamming: row.webcammen,
-      sexPosition: row.standje,
-      sexLocation: row.plekje,
-      turnoff: row.turnoff,
-      shaved: row.kaal_baal,
-      nicestAboutMe: row.mooiste_deel,
-      nicestAboutMen: row.beste_man_delen,
-      lifeGoal: row.doel_leven,
-      motto: row.motto,
-      country: row.country,
-      city: row.woonplaats,
-      rating: '' === row.waardering ? -1 : row.waardering,
-      ethnicity: row.uiterlijk
+      piercings       : row.piercing,
+      music           : row.muziek,
+      appearance      : row.figuur,
+      relationship    : row.relatie,
+      nationality     : row.nationaliteit,
+      smoking         : row.roken,
+      cupSize         : row.cupmaat,
+      gender          : row.geslacht,
+      hobbies         : row.hobbies,
+      pets            : row.huisdieren,
+      food            : row.eten,
+      drinks          : row.drinken,
+      manType         : row.man_type,
+      webcamming      : row.webcammen,
+      sexPosition     : row.standje,
+      sexLocation     : row.plekje,
+      turnoff         : row.turnoff,
+      shaved          : row.kaal_baal,
+      nicestAboutMe   : row.mooiste_deel,
+      nicestAboutMen  : row.beste_man_delen,
+      lifeGoal        : row.doel_leven,
+      motto           : row.motto,
+      country         : row.country,
+      city            : row.woonplaats,
+      rating          : '' === row.waardering ? -1 : row.waardering,
+      ethnicity       : row.uiterlijk
     };
 
     if (row.media_status === 'goedgekeurd' && row.media_active === 1) {
@@ -169,6 +170,7 @@ function ImportService() {
     }
 
     sails.log.error(message);
+    sails.log.error(error);
 
     if (error.invalidAttributes) {
       return sails.log.error(error.invalidAttributes);
@@ -208,8 +210,8 @@ function ImportService() {
       return;
     }
 
-    var percentage = Math.floor((processed / total) * 100)
-      , message = '... ' + dateFormat(new Date(), 'mmm dd "at" HH:MM:ss') + ': ';
+    var percentage = Math.floor((processed / total) * 100),
+        message = '... ' + dateFormat(new Date(), 'mmm dd "at" HH:MM:ss') + ': ';
 
     if (Number.isNaN(percentage)) {
       percentage = '100%';
@@ -242,19 +244,20 @@ function ImportService() {
       }
 
       var newPerformer = {
-        email: row.email_adres.replace(/(^\s+)|(\s+$)/g, ''),
-        username: row.modelnaam,
-        password: row.passwd,
-        roles: ['performer'],
+        email    : row.email_adres.replace(/(^\s+)|(\s+$)/g, ''),
+        username : row.modelnaam,
+        password : row.passwd,
+        roles    : ['performer'],
+        object   : defaultObject.id,
         performer: rowValues
       };
 
       // Not higher than 0, we'll have to create a new record.
-      return userModel.register(newPerformer, function (error, model) {
+      return userModel.register(newPerformer, function onRegisterModel(error, model) {
         connection.resume();
 
-        handleError(error, 'Importing performer (create) failed.');
-      });
+        handleError(error, 'Importing performer ' + newPerformer.username + ' (create) failed.');
+      }, true);
     });
   }
 
@@ -304,14 +307,13 @@ function ImportService() {
     socket.emit('online performers', {}, function (performers) {
 
       log("Setting performers online...");
-      var onlinePerformers = Object.keys(performers).length
-        , performersDone = 0;
+      var onlinePerformers = Object.keys(performers).length, performersDone = 0;
 
       function incrementProgress() {
         progress(++performersDone, onlinePerformers);
       }
 
-      Object.getOwnPropertyNames(performers).forEach(function(name) {
+      Object.getOwnPropertyNames(performers).forEach(function (name) {
         setPerformerStatus(name, true, incrementProgress);
       });
     });
@@ -335,9 +337,9 @@ function ImportService() {
 
         handleError(error, 'Failed fetching row count.');
 
-        var totalRows = row[0].totalRows
-          , query = connection.query(mysql.format(importQuery, [lastUpdateString]))
-          , processedRows = 0;
+        var totalRows = row[0].totalRows,
+            query = connection.query(mysql.format(importQuery, [lastUpdateString])),
+            processedRows = 0;
 
         /**
          * On error event, throw a new, readable error.
@@ -396,56 +398,32 @@ function ImportService() {
   /* Public methods */
 
   /**
-   * Install method to be called once, when running this application for the first time.
-   * @param callback
-   */
-  this.install = function (callback) {
-    importModel.create({}).exec(function (error, model) {
-
-      handleError(error, 'Creating importModel failed.');
-
-      log('Done installing.');
-
-      callback(model);
-    });
-  };
-
-  /**
-   * Start the importService
-   *
-   * @param model
-   */
-  this.start = function (model) {
-    lastUpdateString = dateFormat(model.lastUpdate, 'yyyy-mm-dd HH:MM:ss');
-
-    performerModel.update({}, {online: false}).exec(function (error) {
-      handleError(error, 'Setting performers offline failed.');
-      runImport(function () {
-        runOnlineListener();
-        setInterval(runImport, 600000);
-      });
-    });
-  };
-
-  /**
    * Initialize the importService
    */
   this.init = function (callback) {
-    importModel.find().limit(1).exec(function (error, model) {
-
-      model = model[0];
-
-      handleError(error, 'Getting the importModel record failed.');
-
-      if (typeof model === 'undefined') {
-        log('First time running application. Installing...');
-
-        self.install(self.start);
-
-        return;
+    async.parallel({
+      importModel  : function (callback) {
+        importModel.findOrCreate({}, {}, callback);
+      },
+      defaultObject: function (callback) {
+        objectModel.findOrCreate({host: config.system.defaultObject.host}, config.system.defaultObject, callback);
       }
+    }, function (error, results) {
+      handleError(error, 'Error during installation.');
 
-      self.start(model);
+      var model = results.importModel,
+          object = results.defaultObject;
+      
+      lastUpdateString = dateFormat(model.lastUpdate, 'yyyy-mm-dd HH:MM:ss');
+      defaultObject = object;
+
+      performerModel.update({}, {online: false}).exec(function (error) {
+        handleError(error, 'Setting performers offline failed.');
+        runImport(function () {
+          runOnlineListener();
+          setInterval(runImport, 600000);
+        });
+      });
     });
   };
 }

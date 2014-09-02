@@ -8,7 +8,11 @@
  */
 module.exports = {
   attributes: {
-    host: 'string',
+    host: {
+      type  : 'string',
+      unique: true,
+      index : true
+    },
 
     partnerCode: 'integer',
 

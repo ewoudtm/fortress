@@ -9,10 +9,10 @@
  */
 module.exports = function (req, res, next) {
 
-  var params = req.body
-    , thread = {}
-    , recipient
-    , userQuery;
+  var params = req.body,
+      thread = {},
+      recipient,
+      userQuery;
 
   if (!params.to) {
     return res.badRequest('missing_parameter', 'to');
@@ -27,10 +27,13 @@ module.exports = function (req, res, next) {
   }
 
   recipient = params.to;
-  userQuery = sails.models.user.findOne().where({or: [
-    {username: recipient},
-    {id: recipient}
-  ]});
+  userQuery = sails.models.user.findOne().where({
+    object : req.object.id,
+    or: [
+      {username: recipient},
+      {id: recipient}
+    ]
+  });
 
   userQuery.exec(function (error, data) {
     if (error) {
@@ -41,9 +44,9 @@ module.exports = function (req, res, next) {
       return res.badRequest('Unknown recipient.');
     }
 
-    thread.to       = data.id;
-    thread.from     = req.session.user;
-    thread.subject  = params.subject;
+    thread.to = data.id;
+    thread.from = req.session.user;
+    thread.subject = params.subject;
     thread.messages = [
       {
         from: req.session.user,

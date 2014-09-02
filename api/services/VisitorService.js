@@ -33,6 +33,21 @@ VisitorService = {
     });
   },
 
+  /**
+   * Convenience method. Verifies the given `visitor` is a visitor object.
+   *
+   * @param visitor
+   * @param callback
+   * @returns {*}
+   */
+  getVisitor : function (visitor, callback) {
+    if (typeof user === 'object') {
+      return callback(null, visitor);
+    }
+
+    sails.models.visitor.findOne(visitor, callback);
+  },
+
   register: function (params, callback) {
     sails.services.userservice.wouldBeDuplicate(params, function (error, wouldBe) {
       if (error) {

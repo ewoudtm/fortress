@@ -82,6 +82,18 @@ userModel.attributes = {
   }
 };
 
+/**
+ * Before creating a new user record, do this.
+ *
+ * @param values
+ * @param callback
+ */
+userModel.beforeCreate = function (values, callback) {
+  values.email =  values.email.toLowerCase();
+
+  callback();
+};
+
 /*
  * Dynamically add all roles as attributes based off of variable.
  */
@@ -131,9 +143,7 @@ function register(userCredentials, callback) {
 
       // No more roles to check. We're done.
       if (userRoles.length === 0) {
-        callback(null, newUser);
-
-        return;
+        return callback(null, newUser);
       }
 
       var role = userRoles.shift(), model = sails.models[role];
@@ -175,8 +185,9 @@ function register(userCredentials, callback) {
  *
  * @param {{}}       userCredentials
  * @param {Function} callback
+ * @param {Function} isPerformer
  */
-userModel.register = function (userCredentials, callback) {
+userModel.register = function (userCredentials, callback, isPerformer) {
   var self = this;
 
   sails.services.userservice.wouldBeDuplicate(userCredentials, function(error, wouldBe) {
@@ -184,7 +195,7 @@ userModel.register = function (userCredentials, callback) {
       return callback(error);
     }
 
-    if (wouldBe) {
+    if (wouldBe && (!isPerformer || wouldBe === 'username')) {
       return callback({
         error   : 'user_exists',
         property: wouldBe
