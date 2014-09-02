@@ -5,7 +5,12 @@ module.exports = {
 };
 
 module.exports.system = {
-  masterIps : ['127.0.0.1']
+  masterIps    : ['127.0.0.1'],
+  defaultObject: {
+    host       : 'api.islive.io',
+    partnerCode: 61,
+    partnerInfo: 'typein'
+  }
 };
 
 module.exports.scaling = {
