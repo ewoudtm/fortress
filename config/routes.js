@@ -35,6 +35,7 @@ module.exports.routes = {
   'get /thread/:id'              : 'ThreadController.findonesimple',
 
   // UserController
+  'get /user/:id/unsubscribe'    : 'UserController.unsubscribe',
   'post /user/login'             : 'UserController.login',
   'post /user/login-by-hash'     : 'UserController.loginByHash',
   'get  /user/login-by-hash'     : 'UserController.loginByHash',
