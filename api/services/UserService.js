@@ -71,20 +71,6 @@ userService = {
     });
   },
 
-  register: function (req, res) {
-
-    /**
-     * - role
-     * - username
-     * - email
-     * - password
-     * -
-     */
-    // Check if username or email combo with object Id already exists (in policy)
-    // Check if it's a wallet register, if so, send jsonp to wallet.
-    // Attach object to user
-  },
-
   /**
    * Connect a client and store his/her socket ID.
    *
