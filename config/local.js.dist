@@ -9,7 +9,8 @@ module.exports.system = {
   defaultObject: {
     host       : 'api.islive.io',
     partnerCode: 61,
-    partnerInfo: 'typein'
+    partnerInfo: 'typein',
+    email      : 'abuse@your.domain
   }
 };
 
