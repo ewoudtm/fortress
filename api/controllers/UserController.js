@@ -1,5 +1,6 @@
 var request = require('request'),
     extend  = require('extend'),
+    bcrypt  = require('bcrypt'),
     UserController;
 
 function subscribe(req, model, instance) {
@@ -225,51 +226,57 @@ UserController = {
       }
 
       // User record exists. Is supplied password correct?
-      // @todo implement bcrypt
-      if (credentials.password === result.password) {
+      bcrypt.compare(credentials.password, result.password, function(error, passwordIsValid) {
 
-        // Credentials are valid! Execute remainder of validations.
-        return handleValidCredentials(result);
-      }
-
-      // Does the user have the role that is being authenticated for?
-      if (result.roles.indexOf(role) === -1) {
-        return res.badRequest('missing_role', role);
-      }
-
-      // Only users with walletId are allowed to not have a password, because of import in hashLogin.
-      // Otherwise, credentials were invalid for certain.
-      if (!result[role].walletId) {
-        return res.badRequest('invalid_credentials');
-      }
-
-      // Password is not empty, so it's not an imported user from hashLogin. Invalid credentials.
-      if (result.password) {
-        return res.badRequest('invalid_credentials');
-      }
-
-      // At this point, we know it's a wallet user, with no password (so imported on hashLogin).
-      // We will now try to authenticate with the wallet, to see if the supplied credentials are correct.
-      sails.services.walletservice.login(credentials, function (error, result) {
         if (error) {
-          return res.serverError('server_error', error);
+          return res.serverError('hashing_failed', error);
         }
 
-        // Nope, invalid credentials.
-        if (!result) {
+        if (passwordIsValid) {
+
+          // Credentials are valid! Execute remainder of validations.
+          return handleValidCredentials(result);
+        }
+
+        // Does the user have the role that is being authenticated for?
+        if (result.roles.indexOf(role) === -1) {
+          return res.badRequest('missing_role', role);
+        }
+
+        // Only users with walletId are allowed to not have a password, because of import in hashLogin.
+        // Otherwise, credentials were invalid for certain.
+        if (!result[role].walletId) {
           return res.badRequest('invalid_credentials');
         }
 
-        // Update password for wallet user with the supplied, proven to be the valid, password.
-        sails.models.user.update({
-          email   : credentials.username,
-          password: null
-        }, {password: credentials.password}).exec(function (error) {
+        // Password is not empty, so it's not an imported user from hashLogin. Invalid credentials.
+        if (result.password) {
+          return res.badRequest('invalid_credentials');
+        }
+
+        // At this point, we know it's a wallet user, with no password (so imported on hashLogin).
+        // We will now try to authenticate with the wallet, to see if the supplied credentials are correct.
+        sails.services.walletservice.login(credentials, function (error, result) {
           if (error) {
-            return res.serverError('database_error', error);
+            return res.serverError('server_error', error);
           }
 
-          handleValidCredentials(result);
+          // Nope, invalid credentials.
+          if (!result) {
+            return res.badRequest('invalid_credentials');
+          }
+
+          // Update password for wallet user with the supplied, proven to be the valid, password.
+          sails.models.user.update({
+            email   : credentials.username,
+            password: null
+          }, {password: credentials.password}).exec(function (error) {
+            if (error) {
+              return res.serverError('database_error', error);
+            }
+
+            handleValidCredentials(result);
+          });
         });
       });
     });

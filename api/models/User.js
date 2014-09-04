@@ -1,4 +1,5 @@
 var roles     = ['visitor', 'performer'],
+    bcrypt    = require('bcrypt'),
     userModel = {schema: true};
 
 /**
@@ -6,9 +7,9 @@ var roles     = ['visitor', 'performer'],
  */
 userModel.attributes = {
   username: {
-    type    : 'string',
-    index   : true,
-    regex   : /^[\w\-]{2,14}$/
+    type : 'string',
+    index: true,
+    regex: /^[\w\-]{2,14}$/
   },
 
   password: {
@@ -89,9 +90,20 @@ userModel.attributes = {
  * @param callback
  */
 userModel.beforeCreate = function (values, callback) {
-  values.email =  values.email.toLowerCase();
+  values.email = values.email.toLowerCase();
 
-  callback();
+  bcrypt.hash(values.password, 8, function (error, hash) {
+    if (error) {
+      sails.log.error('Hashing password failed. Row and error follow.');
+      sails.log.error(error, values);
+
+      return callback();
+    }
+
+    values.password = hash;
+
+    callback();
+  });
 };
 
 /*
@@ -190,7 +202,7 @@ function register(userCredentials, callback) {
 userModel.register = function (userCredentials, callback, isPerformer) {
   var self = this;
 
-  sails.services.userservice.wouldBeDuplicate(userCredentials, function(error, wouldBe) {
+  sails.services.userservice.wouldBeDuplicate(userCredentials, function (error, wouldBe) {
     if (error) {
       return callback(error);
     }
