@@ -41,8 +41,11 @@ module.exports = {
     sails.models.thread.update(threadId, {}).exec(function(error, results) {
       next();
 
+      var messageService = sails.services.messageservice;
+
       // Yes, this can be ran after calling next() because the email isn't that important.
-      sails.services.messageservice.sendNotification(newMessage);
+      messageService.sendNotification(newMessage);
+      messageService.abuseCheck(newMessage);
     });
   }
 };

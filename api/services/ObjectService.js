@@ -2,9 +2,14 @@ var objectCache = {};
 
 module.exports = {
   resolve : function(hostname, callback) {
+    callback = callback || function () {
+      // Just here to avoid errors.
+    };
 
     if (objectCache[hostname]) {
-      return callback(null, objectCache[hostname]);
+      callback(null, objectCache[hostname]);
+
+      return objectCache[hostname];
     }
 
     sails.models.object.findOne({host : hostname}, function(error, object) {
