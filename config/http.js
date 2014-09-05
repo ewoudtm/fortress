@@ -13,10 +13,13 @@ module.exports.http = {
 
   middleware: {
 
+    p3p: require('p3p')(require('p3p').recommended),
+
     // The order in which middleware should be run for HTTP request.
     // (the Sails router is invoked by the "router" middleware below.)
     order: [
       'startRequestTimer',
+      'p3p',
       'cookieParser',
       'session',
       'bodyParser',
