@@ -1,5 +1,6 @@
 var globalPolicies = [
-  'setObject'
+  'setObject',
+  'setPartnerInfo'
 ];
 
 function makePolicies(policies) {
