@@ -18,16 +18,6 @@ module.exports = {
       defaultsTo: 0
     },
 
-    partnerCode: {
-      type      : 'integer',
-      defaultsTo: 61
-    },
-
-    partnerInfo: {
-      type      : 'string',
-      defaultsTo: 'typein'
-    },
-
     walletId: {
       type      : 'integer',
       index     : true,

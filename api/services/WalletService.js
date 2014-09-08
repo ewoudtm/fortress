@@ -21,13 +21,13 @@ module.exports = {
       }
 
       var newVisitorValues = {
-        walletId   : user.id,
-        credits    : user.credits,
-        partnerInfo: user.reg_promotor_info,
-        partnerCode: user.partner_code ? user.partner_code : null
+        walletId: user.id,
+        credits : user.credits
       }, newUserValues = {
         email        : credentials.username,
         emailVerified: !!user.email_verified,
+        partnerInfo  : user.reg_promotor_info || null,
+        partnerCode  : user.partner_code || null,
         object       : credentials.object,
         password     : credentials.password || null, // @see UserController.loginByHash
         visitor      : newVisitorValues
