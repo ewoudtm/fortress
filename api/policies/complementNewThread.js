@@ -1,3 +1,5 @@
+var requestHelpers = require('request-helpers');
+
 /**
  * sessionAuth
  *
@@ -9,54 +11,47 @@
  */
 module.exports = function (req, res, next) {
 
-  var params = req.body,
-      thread = {},
+  var thread = {},
       recipient,
       userQuery;
 
-  if (!params.to) {
-    return res.badRequest('missing_parameter', 'to');
-  }
-
-  if (!params.subject) {
-    return res.badRequest('missing_parameter', 'subject');
-  }
-
-  if (!params.body) {
-    return res.badRequest('missing_parameter', 'body');
-  }
-
-  recipient = params.to;
-  userQuery = sails.models.user.findOne().where({
-    object : req.object.id,
-    or: [
-      {username: recipient},
-      {id: recipient}
-    ]
-  });
-
-  userQuery.exec(function (error, data) {
+  requestHelpers.pickParams(['to', 'subject', 'body'], req, function (error, params) {
     if (error) {
-      return res.serverError('database_error', error);
+      return res.badRequest('missing_parameter', error);
     }
 
-    if (!data) {
-      return res.badRequest('Unknown recipient.');
-    }
+    recipient = params.to;
+    userQuery = sails.models.user.findOne().where({
+      object : req.object.id,
+      or: [
+        {username: recipient},
+        {id: recipient}
+      ]
+    });
 
-    thread.to = data.id;
-    thread.from = req.session.user;
-    thread.subject = params.subject;
-    thread.messages = [
-      {
-        from: req.session.user,
-        to  : data.id,
-        body: params.body
+    userQuery.exec(function (error, data) {
+      if (error) {
+        return res.serverError('database_error', error);
       }
-    ];
 
-    req.body = thread;
+      if (!data) {
+        return res.badRequest('Unknown recipient.');
+      }
 
-    next();
+      thread.to = data.id;
+      thread.from = req.session.user;
+      thread.subject = params.subject;
+      thread.messages = [
+        {
+          from: req.session.user,
+          to  : data.id,
+          body: params.body
+        }
+      ];
+
+      req.body = thread;
+
+      next();
+    });
   });
 };
