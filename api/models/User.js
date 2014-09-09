@@ -23,6 +23,12 @@ userModel.attributes = {
     index   : true
   },
 
+  country: {
+    type      : 'string',
+    defaultsTo: null, // Performers, I suppose.
+    index     : true
+  },
+
   object: {
     model   : 'object',
     required: true
@@ -94,15 +100,26 @@ userModel.beforeCreate = function (values, callback) {
 
   bcrypt.hash(values.password, 8, function (error, hash) {
     if (error) {
-      sails.log.error('Hashing password failed. Row and error follow.');
-      sails.log.error(error, values);
-
-      return callback();
+      return callback(error);
     }
 
     values.password = hash;
 
-    callback();
+    if (!values.ip) {
+      return callback();
+    }
+
+    sails.services.geoservice.getCountry(values.ip, function (error, country) {
+      if (error) {
+        return callback(error);
+      }
+
+      values.country = country;
+
+      delete values.ip;
+
+      callback();
+    });
   });
 };
 
@@ -130,7 +147,7 @@ userModel.isValidRole = function (role) {
   return roles.indexOf(role) > -1;
 };
 
-function register(userCredentials, callback) {
+function register (userCredentials, callback) {
   var userRoleObjects = {};
 
   // Populate the roles to be created, because sails changes the references.
@@ -151,7 +168,7 @@ function register(userCredentials, callback) {
     var userRoles = Object.getOwnPropertyNames(userRoleObjects);
 
     // Iterate over roles and create them when needed.
-    (function next() {
+    (function next () {
 
       // No more roles to check. We're done.
       if (userRoles.length === 0) {

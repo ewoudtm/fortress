@@ -3,7 +3,7 @@ var request = require('request'),
     bcrypt  = require('bcrypt'),
     UserController;
 
-function subscribe(req, model, instance) {
+function subscribe (req, model, instance) {
   if (req.isSocket) {
     sails.models[model].subscribe(req, instance);
   }
@@ -158,7 +158,9 @@ UserController = {
 
     credentials = {
       username: req.param('username'),
-      password: req.param('password')
+      password: req.param('password'),
+      object  : req.object.id,
+      ip      : req.ip
     };
 
     criteria = {
@@ -170,7 +172,7 @@ UserController = {
      *
      * @param {{}} result
      */
-    function handleValidCredentials(result) {
+    function handleValidCredentials (result) {
       // Does the user have the role that is being authenticated for?
       if (result.roles.indexOf(role) === -1) {
         return res.badRequest('missing_role', role);
@@ -207,8 +209,6 @@ UserController = {
       // No user found... Check if user has to be imported from the wallet.
       if (!result) {
 
-        credentials.object = req.object.id;
-
         return sails.services.walletservice.login(credentials, function (error, record) {
 
           if (error) {
@@ -226,7 +226,7 @@ UserController = {
       }
 
       // User record exists. Is supplied password correct?
-      bcrypt.compare(credentials.password, result.password, function(error, passwordIsValid) {
+      bcrypt.compare(credentials.password, result.password, function (error, passwordIsValid) {
 
         if (error) {
           return res.serverError('hashing_failed', error);
@@ -315,7 +315,9 @@ UserController = {
     role = req.param('role');
 
     credentials = {
-      username: req.param('email')
+      username: req.param('email'),
+      object  : req.object.id,
+      ip      : req.ip
     };
 
     criteria = {
@@ -334,8 +336,6 @@ UserController = {
 
       // No user found by that email address.
       if (!result) {
-
-        credentials.object = req.object.id;
 
         // try to import user.
         return sails.services.walletservice.importUser(credentials, function (error, record) {
