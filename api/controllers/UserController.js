@@ -181,8 +181,9 @@ UserController = {
       // Store user info in session.
       req.session.user = result.id;
       req.session.userInfo = {
-        username: result.username,
-        roles   : result.roles
+        username         : result.username,
+        roles            : result.roles,
+        authenticatedRole: role
       };
 
       req.session.userInfo[role + 'Id'] = result[role].id;
@@ -367,8 +368,9 @@ UserController = {
 
       req.session.user = result.id;
       req.session.userInfo = {
-        username: result.username,
-        roles   : result.roles
+        username         : result.username,
+        roles            : result.roles,
+        authenticatedRole: role
       };
 
       req.session.userInfo[role + 'Id'] = result[role].id;
