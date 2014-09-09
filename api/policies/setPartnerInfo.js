@@ -2,6 +2,12 @@ module.exports = function (req, res, next) {
   var partnerInfo = req.param('partnerInfo');
 
   if (!partnerInfo) {
+
+    req.partnerInfo = {
+      partnerCode: req.object.partnerCode,
+      partnerInfo: req.object.partnerInfo
+    };
+
     return next();
   }
 
