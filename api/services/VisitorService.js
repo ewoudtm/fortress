@@ -68,6 +68,7 @@ VisitorService = {
           password: params.password,
           object  : params.object.id,
           from_url: params.wallet,
+          ip      : params.ip,
           p       : params.p ? params.p : params.object.partnerCode,
           pi      : params.pi ? params.pi : params.object.partnerInfo
         };

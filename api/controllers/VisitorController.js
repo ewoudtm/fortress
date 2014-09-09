@@ -57,6 +57,7 @@ module.exports = {
 
       // Set object
       params.object = req.object;
+      params.ip     = req.ip;
 
       sails.services.visitorservice.register(params, function (error, record) {
         if (error) {

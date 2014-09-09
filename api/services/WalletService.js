@@ -24,6 +24,7 @@ module.exports = {
         walletId: user.id,
         credits : user.credits
       }, newUserValues = {
+        ip           : credentials.ip,
         email        : credentials.username,
         emailVerified: !!user.email_verified,
         partnerInfo  : user.reg_promotor_info || null,
