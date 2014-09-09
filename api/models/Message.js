@@ -10,18 +10,18 @@ module.exports = {
     thread: {
       model: 'thread'
     },
-    body: 'text',
-    read: {
-      type: 'boolean',
+    body  : 'text',
+    read  : {
+      type      : 'boolean',
       defaultsTo: false
     },
-    from: {
+    from  : {
       model: 'user'
     },
-    to: {
+    to    : {
       model: 'user'
     },
-    toJSON: function() {
+    toJSON: function () {
       var modelInstance = this.toObject();
 
       modelInstance._modelName = 'message';
@@ -30,7 +30,7 @@ module.exports = {
     }
   },
 
-  afterCreate: function(newMessage, next) {
+  afterCreate: function (newMessage, next) {
     var threadId = newMessage.thread;
 
     if (typeof newMessage.thread === 'object') {
@@ -38,14 +38,32 @@ module.exports = {
     }
 
     // Update the updatedAt date for inbox sorting.
-    sails.models.thread.update(threadId, {}).exec(function(error, results) {
+    sails.models.thread.update(threadId, {}).exec(function (error, results) {
       next();
 
-      var messageService = sails.services.messageservice;
+      var messageService = sails.services.messageservice,
+          userService    = sails.services.userservice;
 
-      // Yes, this can be ran after calling next() because the email isn't that important.
-      messageService.sendNotification(newMessage);
-      messageService.abuseCheck(newMessage);
+      // Fetch populated users first. Otherwise every service does it (performance).
+      async.parallel({
+        from: function (callback) {
+          userService.getUser(newMessage.from, callback, true);
+        },
+        to  : function (callback) {
+          userService.getUser(newMessage.to, callback, true);
+        }
+      }, function (error, results) {
+        if (error) {
+          return sails.log.error('afterCreate in Message model failed on fetching `from` and `to`');
+        }
+
+        newMessage.from = results.from;
+        newMessage.to   = results.to;
+
+        // Yes, this can be run after calling next() because the email isn't that important.
+        messageService.sendNotification(newMessage);
+        messageService.abuseCheck(newMessage);
+      });
     });
   }
 };
