@@ -132,7 +132,8 @@ UserController = {
    */
   login: function (req, res) {
 
-    var userModel = sails.models.user,
+    var userModel     = sails.models.user,
+        walletService = sails.services.walletservice,
         role,
         credentials,
         criteria;
@@ -207,22 +208,35 @@ UserController = {
         return res.serverError('database_error', error);
       }
 
-      // No user found... Check if user has to be imported from the wallet.
+      // No user found... Check if user has valid credentials with the wallet.
       if (!result) {
 
-        return sails.services.walletservice.login(credentials, function (error, record) {
+        return walletService.login(credentials, function (error, authenticated) {
 
           if (error) {
             return res.serverError('database_error', error);
           }
 
           // Nope. Alright then, invalid credentials.
-          if (!record) {
+          if (!authenticated) {
             return res.badRequest('invalid_credentials');
           }
 
-          // Simply rethrow, as we've just created the user. Prevents the existence of duplicate logic.
-          UserController.login(req, res);
+          walletService.importUser(credentials, function (error, result) {
+            if (error) {
+              return res.serverError('database_error', error);
+            }
+
+            if (null === result) {
+              // The following should never ever happen. It's not possible. But better safe than sorry.
+              return res.serverError('database_error', {
+                error: 'Wallet auth success, but record not found in the wallet database.'
+              });
+            }
+
+            // Simply rethrow, as we've just created the user. Prevents the existence of duplicate logic.
+            UserController.login(req, res);
+          });
         });
       }
 
@@ -257,10 +271,12 @@ UserController = {
 
         // At this point, we know it's a wallet user, with no password (so imported on hashLogin).
         // We will now try to authenticate with the wallet, to see if the supplied credentials are correct.
-        sails.services.walletservice.login(credentials, function (error, result) {
+        walletService.login(credentials, function (error, result) {
           if (error) {
             return res.serverError('server_error', error);
           }
+
+          self.importUser(credentials, callback);
 
           // Nope, invalid credentials.
           if (!result) {
@@ -291,7 +307,8 @@ UserController = {
    */
   loginByHash: function (req, res) {
 
-    var userModel = sails.models.user,
+    var userModel     = sails.models.user,
+        walletService = sails.services.walletservice,
         role,
         credentials,
         criteria;
@@ -339,7 +356,7 @@ UserController = {
       if (!result) {
 
         // try to import user.
-        return sails.services.walletservice.importUser(credentials, function (error, record) {
+        return walletService.importUser(credentials, function (error, record) {
           if (error) {
             return res.serverError('server_error', error);
           }
