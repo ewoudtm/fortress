@@ -1,0 +1,21 @@
+[
+  {
+    "email"        : "fixture-test@islive.io",
+    "emailVerified": true,
+    "partnerInfo"  : null,
+    "partnerCode"  : "444",
+    "object"       : 1,
+    "password"     : "$2a$08$czD6FPEwJtHY0mmDEkIBm.fOMcu9O9KTHJIc/fIlEbEIYKJHlPlLW",
+    "visitor"      : 888,
+    "username"     : "fixturetest",
+    "country"      : null,
+    "mailable"     : true,
+    "socketId"     : null,
+    "roles"        : [
+      "visitor"
+    ],
+    "createdAt"    : "2014-09-10T10:05:16.700Z",
+    "updatedAt"    : "2014-09-10T10:05:16.700Z",
+    "id"           : 999
+  }
+]

@@ -1,0 +1,8 @@
+[
+  {
+    "host"       : "api.islive.io",
+    "partnerCode": "123",
+    "partnerInfo": "testing",
+    "email"      : "test@islive.nl"
+  }
+]
