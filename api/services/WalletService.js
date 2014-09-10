@@ -175,18 +175,12 @@ module.exports = {
   },
 
   login: function (credentials, callback) {
-    var self = this;
-
     this.request('login', {form: credentials}, function (error, response) {
       if (error) {
         return callback(error);
       }
 
-      if (!response.ok) {
-        return callback(null, false);
-      }
-
-      self.importUser(credentials, callback);
+      callback(null, !!response.ok);
     });
   }
 };
