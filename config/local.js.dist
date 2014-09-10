@@ -46,7 +46,14 @@ module.exports.connections = {
     host        : 'localhost',
     nativeParser: true,
     port        : 27017
-  }
+  },
+  trackthis : {
+      adapter : 'sails-mysql',
+      user    : '',
+      host    : '',
+      password: '',
+      database: ''
+    }
 };
 
 // Sync user credits to this system?
