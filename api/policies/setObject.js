@@ -1,7 +1,7 @@
 module.exports = function(req, res, next) {
 
   var host = req.host,
-      xObjectHost = req.get('X-Object-Host');
+      xObjectHost = req.get ? req.get('X-Object-Host') : null;
 
   if (req.isSocket) {
     host = req.socket.host;
