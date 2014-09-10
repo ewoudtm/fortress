@@ -1,9 +1,18 @@
 module.exports = function(req, res, next) {
 
-  var host = req.host;
+  var host = req.host,
+      xObjectHost = req.get('X-Object-Host');
 
   if (req.isSocket) {
     host = req.socket.host;
+  }
+
+  if (xObjectHost) {
+    host = xObjectHost;
+  }
+
+  if ('127.0.0.1' === host) {
+    host = sails.config.system.defaultObject.host;
   }
 
   sails.services.objectservice.resolve(host, function(error, object) {
