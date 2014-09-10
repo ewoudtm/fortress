@@ -62,6 +62,8 @@ module.exports = {
   },
 
   /**
+   * Check for abuse in a message.
+   * NOTE: Method requires fully populated from, and to.
    * @todo this entire method ew ew ew ew ew. I'm so, so sorry for writing this. Don't hate me.
    *
    * @param message
@@ -80,57 +82,47 @@ module.exports = {
       return;
     }
 
-    var userService = sails.services.userservice;
+    var from = message.from,
+        to = message.to;
 
-    userService.getUser(message.to, function (error, to) {
+    if (!to.visitor) {
+      return callback(null, true); // Not monitoring visitors.
+    }
+
+    var template = '\
+          <table border="1" cellpadding="5">\
+              <tr>\
+                  <th align="left">From</th>\
+                  <th align="left">To</th>\
+                  <th align="left">Message</th>\
+              </tr>\
+              <tr>\
+                  <td><i>' + from.username + '</i></td>\
+                  <td><i>' + to.username + '</i></td>\
+                  <td>' + scan.replace() + '</td>\
+              </tr>\
+          </table>',
+        date = new Date(),
+        dateString = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear() + ' ' + date.toLocaleTimeString(),
+        mailConfig;
+
+    mailConfig = {
+      from   : 'notifications@islive.io',
+      to     : from.object.email,
+      subject: 'Messaging, ' + from.username + ' on ' + dateString,
+      html   : template
+    };
+
+    smtpClient.sendMail(mailConfig, function (error) {
       if (error) {
-        return callback(error);
+        sails.log.error('Failed to sent e-mail', error);
       }
-
-      if (!to.visitor) {
-        return callback(null, true); // Not monitoring visitors.
-      }
-
-      userService.getUser(message.from, function (error, from) {
-        if (error) {
-          return callback(error);
-        }
-
-        var template = '\
-              <table border="1" cellpadding="5">\
-                  <tr>\
-                      <th align="left">From</th>\
-                      <th align="left">To</th>\
-                      <th align="left">Message</th>\
-                  </tr>\
-                  <tr>\
-                      <td><i>' + from.username + '</i></td>\
-                      <td><i>' + to.username + '</i></td>\
-                      <td>' + scan.replace() + '</td>\
-                  </tr>\
-              </table>',
-            date = new Date(),
-            dateString = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear() + ' ' + date.toLocaleTimeString(),
-            mailConfig;
-
-        mailConfig = {
-          from   : 'notifications@islive.io',
-          to     : from.object.email,
-          subject: 'Messaging, ' + from.username + ' on ' + dateString,
-          html   : template
-        };
-
-        smtpClient.sendMail(mailConfig, function (error) {
-          if (error) {
-            sails.log.error('Failed to sent e-mail', error);
-          }
-        });
-      }, true);
-    }, true);
+    });
   },
 
   /**
    * Send an email notification to the user
+   * NOTE: Method requires fully populated from, and to.
    *
    * @todo move this logic elsewhere. It's too message-notification specific.
    *
@@ -142,34 +134,23 @@ module.exports = {
       // Just here to avoid errors.
     };
 
-    var userService = sails.services.userservice;
+    var to = message.to,
+        from = message.from;
 
-    userService.getUser(message.to, function (error, to) {
-      if (error) {
-        return callback(error);
-      }
+    if (!to.visitor) {
+      return callback({
+        error      : 'not_implemented',
+        description: "This feature hasn't been implemented yet."
+      });
+    }
 
-      if (!to.visitor) {
-        return callback({
-          error      : 'not_implemented',
-          description: "This feature hasn't been implemented yet."
-        });
-      }
+    if (!to.mailable) {
+      return callback({
+        error      : 'not_mailable',
+        description: "User indicated not to want to receive anymore mail from us."
+      });
+    }
 
-      if (!to.mailable) {
-        return callback({
-          error      : 'not_mailable',
-          description: "User indicated not to want to receive anymore mail from us."
-        });
-      }
-
-      userService.getUser(message.from, function (error, from) {
-        if (error) {
-          return callback(error);
-        }
-
-        sails.services.walletservice.sendNotification(from, to, callback);
-      }, true); // true = populateAll
-    }, true); // true = populateAll
+    sails.services.walletservice.sendNotification(from, to, callback);
   }
 };

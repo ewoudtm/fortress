@@ -38,6 +38,16 @@ module.exports = function (req, res, next) {
         return res.badRequest('Unknown recipient.');
       }
 
+      if (!req.trackthis) {
+        req.trackthis = {};
+      }
+
+      // We only need the producer if it's not a visitor.
+      if (!data.visitor) {
+        req.trackthis.producer = data;
+        req.trackthis.extraUnique = 'new';
+      }
+
       thread.to = data.id;
       thread.from = req.session.user;
       thread.subject = params.subject;
