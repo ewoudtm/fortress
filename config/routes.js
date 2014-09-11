@@ -36,6 +36,7 @@ module.exports.routes = {
 
   // UserController
   'get /user/:id/unsubscribe'    : 'UserController.unsubscribe',
+  'get /user/logout'             : 'UserController.logout',
   'post /user/login'             : 'UserController.login',
   'post /user/login-by-hash'     : 'UserController.loginByHash',
   'get  /user/login-by-hash'     : 'UserController.loginByHash',
