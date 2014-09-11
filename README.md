@@ -1,4 +1,7 @@
 #Fortress
+
+[![Build Status](https://travis-ci.org/Islive-io/fortress.svg?branch=master)](https://travis-ci.org/Islive-io/fortress)
+
 Backend. Home of all features.
 
 ##Install
