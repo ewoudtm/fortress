@@ -10,7 +10,7 @@ module.exports.system = {
     host       : 'api.islive.io',
     partnerCode: 61,
     partnerInfo: 'typein',
-    email      : 'abuse@your.domain
+    email      : 'abuse@your.domain'
   }
 };
 
