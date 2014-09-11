@@ -150,18 +150,26 @@ module.exports = {
         if (walletError.code === 'email_not_valid') {
           errorType = 'email';
           errorAttribute = errorType;
-        } else {
+        } else if (walletError.code === 'password_not_valid') {
           errorType = walletAccount.password.length < 5 ? 'minLength' : 'maxLength';
           errorAttribute = 'password';
         }
 
-        errorObject = {
-          error            : 'E_VALIDATION',
-          model            : 'User',
-          invalidAttributes: {}
-        };
+        if (errorType) {
+          errorObject = {
+            error            : 'E_VALIDATION',
+            model            : 'User',
+            invalidAttributes: {}
+          };
 
-        errorObject.invalidAttributes[errorAttribute] = [{rule: errorType}];
+          errorObject.invalidAttributes[errorAttribute] = [{rule: errorType}];
+        } else {
+          errorObject = {
+            error : 'unknown_error'
+          };
+
+          sails.log.error(walletError);
+        }
 
         return callback(errorObject);
       }
