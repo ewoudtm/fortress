@@ -26,20 +26,20 @@ module.exports.chat = {
 module.exports.import = {
   enabled    : true,
   credentials: {
-    host    : '',
-    user    : '',
+    host    : 'localhost',
+    user    : 'root',
     password: '',
-    database: ''
+    database: 'islive'
   }
 };
 
 module.exports.connections = {
   chatterbox: {
     adapter : 'sails-mysql',
-    host    : '',
-    user    : '',
+    host    : 'localhost',
+    user    : 'root',
     password: '',
-    database: ''
+    database: 'chatterbox'
   },
   mongoLocal: {
     adapter     : 'sails-mongo',
@@ -48,12 +48,12 @@ module.exports.connections = {
     port        : 27017
   },
   trackthis : {
-      adapter : 'sails-mysql',
-      user    : '',
-      host    : '',
-      password: '',
-      database: ''
-    }
+    adapter : 'sails-mysql',
+    user    : 'root',
+    host    : 'localhost',
+    password: '',
+    database: 'trackthis'
+  }
 };
 
 // Sync user credits to this system?

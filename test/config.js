@@ -35,7 +35,6 @@ module.exports.wallet = {
 };
 
 module.exports.connections = {
-
   test: {
     adapter: 'sails-disk'
   },
@@ -53,3 +52,4 @@ module.exports.connections = {
   }
 };
 
+module.exports.connections.trackthis = module.exports.connections.test; // TrackThis foo!
