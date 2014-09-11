@@ -20,12 +20,24 @@
  */
 
 module.exports.connections = {
-
-  // Local disk storage for DEVELOPMENT ONLY
-  //
-  // Installed by default.
-  //
-  localDiskDb: {
-    adapter: 'sails-disk'
+  chatterbox: {
+    adapter : 'sails-mysql',
+    host    : 'localhost',
+    user    : 'root',
+    password: '',
+    database: 'chatterbox'
+  },
+  mongoLocal: {
+    adapter     : 'sails-mongo',
+    host        : 'localhost',
+    nativeParser: true,
+    port        : 27017
+  },
+  trackthis : {
+    adapter : 'sails-mysql',
+    user    : 'root',
+    host    : 'localhost',
+    password: '',
+    database: 'trackthis'
   }
 };
