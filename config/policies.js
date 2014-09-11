@@ -41,7 +41,8 @@ module.exports.policies = {
     getUsername      : makePolicies(true),
     getIdentity      : makePolicies('isAuthenticated'), // Protected in action
     usernameAvailable: makePolicies(true),
-    unsubscribe      : makePolicies(true)
+    unsubscribe      : makePolicies(true),
+    logout           : true
   },
 
   VisitorController: {
