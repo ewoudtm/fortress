@@ -1,4 +1,7 @@
 module.exports = {
+  _config : {
+    autoWatch: false
+  },
   inbox   : function (req, res) {
     var userId = req.session.user
       , threadCriteria = {

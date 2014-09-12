@@ -7,21 +7,25 @@
 
 module.exports = {
   attributes: {
-    thread: {
+    thread : {
       model: 'thread'
     },
-    body  : 'text',
-    read  : {
+    body   : 'text',
+    read   : {
       type      : 'boolean',
       defaultsTo: false
     },
-    from  : {
+    from   : {
       model: 'user'
     },
-    to    : {
+    to     : {
       model: 'user'
     },
-    toJSON: function () {
+    initial: {
+      type      : 'boolean',
+      defaultsTo: false
+    },
+    toJSON : function () {
       var modelInstance = this.toObject();
 
       modelInstance._modelName = 'message';
@@ -68,7 +72,10 @@ module.exports = {
         // Yes, this can be run after calling next() because the email isn't that important.
         messageService.sendNotification(newMessage);
         messageService.abuseCheck(newMessage);
-        messageService.publishReply(newMessage);
+
+        if (!newMessage.initial) {
+          messageService.publishReply(newMessage);
+        }
       });
     });
   }
