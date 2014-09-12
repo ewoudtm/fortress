@@ -139,7 +139,7 @@ userService = {
       }
 
       return callback(null, !!socketId);
-    })
+    });
   },
 
   getSocketId : function (userId, callback) {
