@@ -18,6 +18,10 @@ module.exports = {
     return scan;
   },
   publishInbox: function (thread, callback) {
+    callback = callback || function () {
+      // Just here to avoid errors.
+    };
+
     var self = this,
         userService = sails.services.userservice,
         target = typeof thread.to === 'object' ? thread.to.id : thread.to;
@@ -45,6 +49,10 @@ module.exports = {
     });
   },
   publishReply: function (message, callback) {
+    callback = callback || function () {
+      // Just here to avoid errors.
+    };
+
     var target = typeof message.to === 'object' ? message.to.id : message.to,
         userService = sails.services.userservice;
 
