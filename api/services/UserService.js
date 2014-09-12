@@ -132,41 +132,81 @@ userService = {
     ].join(''));
   },
 
+  isConnected : function (userId, callback) {
+    this.getSocketId(userId, function (error, socketId) {
+      if (error) {
+        return callback(error);
+      }
+
+      return callback(null, !!socketId);
+    });
+  },
+
+  getSocketId : function (userId, callback) {
+    if (connections[userId]) {
+      return callback(null, connections[userId]);
+    }
+
+    // Performance is key. No need to look up the user if the application isn't scaled anyway.
+    if (!sails.config.scaling.scaled) {
+      return callback(null, null);
+    }
+
+    // Fetch the user and find the socket id.
+    sails.models.user.findOne(userId).exec(function (error, data) {
+      if (error) {
+        return callback(error);
+      }
+
+      if (null === data.socketId) {
+        return callback(null, null);
+      }
+
+      connections[userId] = data.socketId;
+
+      return callback(null, connections[userId]);
+    });
+  },
+
   /**
    * Send an event to a specific user.
    *
-   * @param {String} userId
-   * @param {String} event
-   * @param {*}      data
+   * @param {String}   userId
+   * @param {String}   event
+   * @param {*}        data
+   * @param {Function} callback
    */
-  emitTo: function (userId, event, data) {
+  emitTo: function (userId, event, data, callback) {
+    callback = callback || function () {
+      // Just here to avoid errors.
+    };
 
     function emit() {
       return sails.sockets.emit(connections[userId], event, data);
     }
 
     if (connections[userId]) {
-      return emit();
+      return callback(null, emit());
     }
 
     // Performance is key. No need to look up the user if the application isn't scaled anyway.
     if (!sails.config.scaling.scaled) {
-      return;
+      return callback();
     }
 
     // Fetch the user and find the socket id.
     sails.models.user.findOne(userId).exec(function (error, data) {
       if (error) {
-        // @todo decide what to do with errors
+        return callback(error);
       }
 
       if (null === data.socketId) {
-        return;
+        return callback();
       }
 
       connections[userId] = data.socketId;
 
-      emit();
+      return callback(null, emit());
     });
   }
 };

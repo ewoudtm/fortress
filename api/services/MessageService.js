@@ -5,7 +5,7 @@ var Censoring         = require('censoring'),
     scan;
 
 module.exports = {
-  getScanner: function () {
+  getScanner  : function () {
     if (scan) {
       return scan;
     }
@@ -17,7 +17,57 @@ module.exports = {
 
     return scan;
   },
-  flatten   : function (userId, thread) {
+  publishInbox: function (thread, callback) {
+    var self = this,
+        userService = sails.services.userservice,
+        target = typeof thread.to === 'object' ? thread.to.id : thread.to;
+
+    userService.isConnected(target, function (error, isConnected) {
+      if (error) {
+        return callback(error);
+      }
+
+      if (!isConnected) {
+        return callback();
+      }
+
+      sails.models.thread.findOne(thread.id).populateAll().exec(function (error, result) {
+        if (error) {
+          return callback(error);
+        }
+
+        userService.emitTo(target, 'inbox', {
+          id  : result.id,
+          verb: 'created',
+          data: self.flatten(target, result)
+        }, callback);
+      });
+    });
+  },
+  publishReply: function (message, callback) {
+    var target = typeof message.to === 'object' ? message.to.id : message.to,
+        userService = sails.services.userservice;
+
+    userService.isConnected(target, function (error, isConnected) {
+      if (error) {
+        return callback(error);
+      }
+
+      if (!isConnected) {
+        return callback();
+      }
+
+      var eventData = {
+        id  : message.id,
+        verb: 'created',
+        data: message
+      };
+
+      userService.emitTo(target, message._modelName, eventData, callback);
+    });
+  },
+
+  flatten     : function (userId, thread) {
     var flattened, message, from, to;
 
     // If an array was supplied, call self over every entry.
@@ -47,6 +97,7 @@ module.exports = {
     }
 
     return {
+      _modelName : 'inbox',
       id         : message.id,
       created    : message.createdAt,
       updated    : message.updatedAt,

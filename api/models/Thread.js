@@ -19,5 +19,8 @@ module.exports = {
 
       return modelInstance;
     }
+  },
+  afterCreate : function (values, done) {
+    sails.services.messageservice.publishInbox(values, done);
   }
 };

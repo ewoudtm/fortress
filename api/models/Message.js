@@ -38,11 +38,15 @@ module.exports = {
     }
 
     // Update the updatedAt date for inbox sorting.
-    sails.models.thread.update(threadId, {}).exec(function (error, results) {
+    sails.models.thread.update(threadId, {}).exec(function (error, thread) {
       next();
 
+      if (error) {
+        return sails.log.error(error);
+      }
+
       var messageService = sails.services.messageservice,
-          userService    = sails.services.userservice;
+          userService = sails.services.userservice;
 
       // Fetch populated users first. Otherwise every service does it (performance).
       async.parallel({
@@ -58,11 +62,13 @@ module.exports = {
         }
 
         newMessage.from = results.from;
-        newMessage.to   = results.to;
+        newMessage.to = results.to;
+        newMessage.thread = thread[0];
 
         // Yes, this can be run after calling next() because the email isn't that important.
         messageService.sendNotification(newMessage);
         messageService.abuseCheck(newMessage);
+        messageService.publishReply(newMessage);
       });
     });
   }
