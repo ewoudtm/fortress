@@ -22,8 +22,8 @@ module.exports = function (req, res, next) {
 
     recipient = params.to;
     userQuery = sails.models.user.findOne().where({
-      object : req.object.id,
-      or: [
+      object: req.object.id,
+      or    : [
         {username: recipient},
         {id: recipient}
       ]
@@ -53,9 +53,10 @@ module.exports = function (req, res, next) {
       thread.subject = params.subject;
       thread.messages = [
         {
-          from: req.session.user,
-          to  : data.id,
-          body: params.body
+          from   : req.session.user,
+          to     : data.id,
+          initial: true,
+          body   : params.body
         }
       ];
 
