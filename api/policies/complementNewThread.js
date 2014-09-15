@@ -22,7 +22,7 @@ module.exports = function (req, res, next) {
 
     recipient = params.to;
     userQuery = sails.models.user.findOne().where({
-      object: req.object.id,
+      //object: req.object.id, Disabled until we have default object and an "or"
       or    : [
         {username: recipient},
         {id: recipient}
