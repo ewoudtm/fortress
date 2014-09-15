@@ -32,11 +32,21 @@ module.exports.bootstrap = function (cb) {
     }
   }
 
-  sails.log.info('Starting sync.');
-  if (sails.config.userSync.enabled) {
-    sails.services['syncservice'].run();
-  }
+  var notificationService = sails.services.notificationservice;
 
-  sails.log.info('Initializing chat service.');
-  sails.services.chatservice.initialize(initializeImporter);
+  notificationService.init(function () {
+    notificationService.pushEmergency(
+      'The application just started. ' +
+      'Perhaps Forever kicked in, and this is a restart. ' +
+      'Perhaps it is not. either way, I thought I should let you know.'
+    );
+
+    sails.log.info('Starting sync.');
+    if (sails.config.userSync.enabled) {
+      sails.services.syncservice.run();
+    }
+
+    sails.log.info('Initializing chat service.');
+    sails.services.chatservice.initialize(initializeImporter);
+  });
 };

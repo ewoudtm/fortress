@@ -34,6 +34,10 @@ module.exports.wallet = {
   walletAPIUrl: 'http://mysecurewallet.nl/payment/islive/ajax/wallet'
 };
 
+module.exports.notifications = {
+  enabled: false
+};
+
 module.exports.connections = {
   test: {
     adapter: 'sails-disk'
