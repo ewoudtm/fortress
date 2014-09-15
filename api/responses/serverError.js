@@ -1,17 +1,35 @@
-module.exports = function serverError(data, details) {
+module.exports = function serverError (data, details) {
 
   // Get access to `res`
-  var res = this.res;
+  var res = this.res,
+      notificationMessage,
+      notificationService = sails.services.notificationservice;
 
   // Set status code
   res.status(500);
 
   // Log error to console
-  this.req._sails.log.error('Sent 500 ("Server Error") response');
+  sails.log.error('Sent 500 ("Server Error") response');
+
+  if (data) {
+    if (typeof data === 'string') {
+      notificationMessage = data + ': ';
+    } else if (typeof data.toString === 'function') {
+      notificationMessage = data.toString() + ': ';
+    }
+  }
 
   if (details) {
-    this.req._sails.log.error(details); // Log the error details.
+    if (typeof details === 'string') {
+      notificationMessage += details;
+    } else if (typeof details.toString === 'function') {
+      notificationMessage += details.toString();
+    }
+
+    sails.log.error(details); // Log the error details.
   }
+
+  notificationService.push('serverError', notificationMessage || 'res.serverError() invoked!');
 
   if (!data) {
     return res.jsonp({status: 500});
