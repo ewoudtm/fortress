@@ -65,3 +65,16 @@ module.exports.userSync = {
 module.exports.wallet = {
   salt: '' // Salt goes here.
 };
+
+module.exports.notifications = {
+  enabled: true,
+  push   : {
+    pushover: {
+      userToken       : '',
+      applicationToken: ''
+    },
+    nma     : {
+      tokens: []
+    }
+  }
+};
