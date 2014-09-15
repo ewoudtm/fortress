@@ -7,6 +7,10 @@ module.exports = {
   init: function (callback) {
     config = sails.config.notifications;
 
+    if (!config.enabled) {
+      return callback();
+    }
+
     push = new Push({
       user         : config.push.pushover.userToken,
       token        : config.push.pushover.applicationToken,
