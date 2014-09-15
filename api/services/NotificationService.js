@@ -30,9 +30,6 @@ module.exports = {
    * @param {function} callback
    */
   push: function (title, message, priority, sound, callback) {
-    if (!config.enabled) {
-      return callback();
-    }
 
     if (typeof priority == 'function') {
       callback = priority;
@@ -44,12 +41,16 @@ module.exports = {
       sound = null;
     }
 
-    priority = priority || 0;
-    sound = sound || config.push.pushover.sound || 'persistent';
-
     // Just here to prevent a crash.
     callback = callback || function () {
     };
+
+    if (!config.enabled) {
+      return callback();
+    }
+
+    priority = priority || 0;
+    sound = sound || config.push.pushover.sound || 'persistent';
 
     if (typeof message === 'object' && typeof message.toString === 'function') {
       message = message.toString();
