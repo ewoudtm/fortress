@@ -26,6 +26,10 @@ module.exports = {
    * @param {function} callback
    */
   push: function (title, message, priority, sound, callback) {
+    if (!config.enabled) {
+      return callback();
+    }
+
     if (typeof priority == 'function') {
       callback = priority;
       priority = null;
