@@ -3,7 +3,7 @@ var globalPolicies = [
   'setPartnerInfo'
 ];
 
-function makePolicies(policies) {
+function makePolicies (policies) {
   if (!Array.isArray(policies)) {
     policies = [policies];
   }
@@ -32,7 +32,8 @@ module.exports.policies = {
   },
 
   ConnectController: {
-    getcookie: makePolicies(true)
+    getCookie        : true,
+    'safariGetCookie': true
   },
 
   UserController: {

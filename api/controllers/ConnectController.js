@@ -6,7 +6,7 @@
  */
 
 module.exports = {
-  getcookie: function(req, res) {
+  getCookie: function(req, res) {
     var content = '// C is for Cookie';
 
     res.header('Content-type','text/javascript');
@@ -17,5 +17,9 @@ module.exports = {
     }
 
     res.send(content);
+  },
+
+  safariGetCookie : function (req, res) {
+    return res.redirect(req.header('referrer'));
   }
 };

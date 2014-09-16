@@ -62,5 +62,6 @@ module.exports.routes = {
   'delete /object/:id'           : 'ObjectController.destroy',
 
   // Misc
-  'get /connect/getcookie'       : 'ConnectController.getcookie'
+  'get /connect/getcookie'       : 'ConnectController.getCookie',
+  'get /connect/safari-getcookie': 'ConnectController.safariGetCookie'
 };
