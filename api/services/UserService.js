@@ -32,6 +32,8 @@ userService = {
    * @param {Function} callback
    */
   usernameAvailable: function (username, object, callback) {
+    object = (typeof object === 'object' ? object.id : object);
+
     sails.models.user.find({username: username, object: object}, function (error, matches) {
       if (error) {
         return callback(error);
