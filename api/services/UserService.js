@@ -43,7 +43,7 @@ userService = {
 
   wouldBeDuplicate: function (userCredentials, callback) {
     var duplicateCheckCriteria = {
-      object: userCredentials.object
+      object: (typeof userCredentials.object === 'object' ? userCredentials.object.id : userCredentials.object)
     };
 
     // Probably an import.
