@@ -98,17 +98,7 @@ userModel.attributes = {
 userModel.beforeCreate = function (values, callback) {
   values.email = values.email.toLowerCase();
 
-  bcrypt.hash(values.password, 8, function (error, hash) {
-    if (error) {
-      return callback(error);
-    }
-
-    values.password = hash;
-
-    if (!values.ip) {
-      return callback();
-    }
-
+  function setGeo() {
     sails.services.geoservice.getCountry(values.ip, function (error, country) {
       if (error) {
         return callback(error);
@@ -120,6 +110,24 @@ userModel.beforeCreate = function (values, callback) {
 
       callback();
     });
+  }
+
+  if (!values.password) {
+    return setGeo();
+  }
+
+  bcrypt.hash(values.password, 8, function (error, hash) {
+    if (error) {
+      return callback(error);
+    }
+
+    values.password = hash;
+
+    if (!values.ip) {
+      return callback();
+    }
+
+    setGeo();
   });
 };
 
