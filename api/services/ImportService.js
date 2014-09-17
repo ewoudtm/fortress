@@ -239,27 +239,32 @@ function ImportService() {
    */
   function importPerformerModel(row, rowValues) {
     performerModel.update({username: row.modelnaam}, rowValues).exec(function performerUpdateDone(error, model) {
-      handleError(error, 'Importing performer (update) failed.');
+      handleError(error, 'Importing performer (update performer) failed.');
+
+      var newUser = {
+        email    : row.email_adres.replace(/(^\s+)|(\s+$)/g, ''),
+        password : row.passwd
+      };
 
       // Higher than 0 means we just updated the record.
       if (model.length > 0) {
-        return connection.resume();
+        return userModel.update(model[0].user, newUser).exec(function (error) {
+          handleError(error, 'Importing performer (update user) failed.');
+
+          connection.resume();
+        });
       }
 
-      var newPerformer = {
-        email    : row.email_adres.replace(/(^\s+)|(\s+$)/g, ''),
-        username : row.modelnaam,
-        password : row.passwd,
-        roles    : ['performer'],
-        object   : defaultObject.id,
-        performer: rowValues
-      };
+      newUser.username  = row.modelnaam;
+      newUser.roles     = ['performer'];
+      newUser.object    = defaultObject.id;
+      newUser.performer = rowValues;
 
       // Not higher than 0, we'll have to create a new record.
-      return userModel.register(newPerformer, function onRegisterModel(error, model) {
+      return userModel.register(newUser, function onRegisterModel(error) {
         connection.resume();
 
-        handleError(error, 'Importing performer ' + newPerformer.username + ' (create) failed.');
+        handleError(error, 'Importing performer ' + newUser.username + ' (create) failed.');
       }, true);
     });
   }
