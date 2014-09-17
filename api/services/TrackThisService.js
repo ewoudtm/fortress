@@ -41,7 +41,7 @@ var TrackThisService = {
       sub_type     : product.currency === 'credits' ? 'wallet' : ppm,
       paytype_id   : product.paytype,
       user         : producer.username,
-      sessionid    : md5('i.io' + consumer.id + t.getFullYear() + t.getMonth() + t.getDay()),
+      sessionid    : md5('i.io' + consumer.id + t.getTime()),
       unique       : unique,
       country      : consumer.country || 'NL', // @todo fetch from userService. Maintain ip and country.
       amount       : 1, // @todo secondsElapsed for existing payment (type "access")
