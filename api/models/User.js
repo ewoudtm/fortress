@@ -113,6 +113,10 @@ userModel.hashPassword = hashPassword;
  * @param {function} callback
  */
 userModel.beforeUpdate = function (values, callback) {
+  if (!values.password) {
+    return callback();
+  }
+
   hashPassword(values.password, function (error, hash) {
     if (error) {
       return callback(error);
