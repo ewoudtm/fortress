@@ -90,6 +90,41 @@ userModel.attributes = {
 };
 
 /**
+ * Hash a password
+ *
+ * @param {string}   password
+ * @param {function} callback
+ */
+function hashPassword (password, callback) {
+  bcrypt.hash(password, 8, callback);
+}
+
+/**
+ * Usage for outside-world code
+ *
+ * @type {hashPassword}
+ */
+userModel.hashPassword = hashPassword;
+
+/**
+ * Minor overhead. When updating a user, the password gets re-hashed.
+ *
+ * @param {{}}       values
+ * @param {function} callback
+ */
+userModel.beforeUpdate = function (values, callback) {
+  hashPassword(values.password, function (error, hash) {
+    if (error) {
+      return callback(error);
+    }
+
+    values.password = hash;
+
+    callback();
+  });
+};
+
+/**
  * Before creating a new user record, do this.
  *
  * @param values
@@ -116,7 +151,7 @@ userModel.beforeCreate = function (values, callback) {
     return setGeo();
   }
 
-  bcrypt.hash(values.password, 8, function (error, hash) {
+  hashPassword(values.password, function (error, hash) {
     if (error) {
       return callback(error);
     }
