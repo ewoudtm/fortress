@@ -240,13 +240,7 @@ UserController = {
         });
       }
 
-      // User record exists. Is supplied password correct?
-      bcrypt.compare(credentials.password, result.password, function (error, passwordIsValid) {
-
-        if (error) {
-          return res.serverError('hashing_failed', error);
-        }
-
+      var afterPasswordValidate = function (passwordIsValid) {
         if (passwordIsValid) {
 
           // Credentials are valid! Execute remainder of validations.
@@ -295,6 +289,20 @@ UserController = {
             handleValidCredentials(result);
           });
         });
+      };
+
+      if (!result.password || !credentials.password) {
+        return afterPasswordValidate(false);
+      }
+
+      // User record exists. Is supplied password correct?
+      bcrypt.compare(credentials.password, result.password, function (error, passwordIsValid) {
+
+        if (error) {
+          return res.serverError('hashing_failed', error);
+        }
+
+        afterPasswordValidate(passwordIsValid);
       });
     });
   },
