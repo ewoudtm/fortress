@@ -265,23 +265,20 @@ UserController = {
 
         // At this point, we know it's a wallet user, with no password (so imported on hashLogin).
         // We will now try to authenticate with the wallet, to see if the supplied credentials are correct.
-        walletService.login(credentials, function (error, result) {
+        walletService.login(credentials, function (error, walletResult) {
           if (error) {
             return res.serverError('server_error', error);
           }
 
-          self.importUser(credentials, callback);
-
           // Nope, invalid credentials.
-          if (!result) {
+          if (!walletResult) {
             return res.badRequest('invalid_credentials');
           }
 
           // Update password for wallet user with the supplied, proven to be the valid, password.
-          sails.models.user.update({
-            email   : credentials.username,
-            password: null
-          }, {password: credentials.password}).exec(function (error) {
+          result.password = credentials.password;
+
+          result.save(function (error) {
             if (error) {
               return res.serverError('database_error', error);
             }
