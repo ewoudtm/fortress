@@ -129,6 +129,18 @@ userModel.beforeUpdate = function (values, callback) {
 };
 
 /**
+ * I.. *sigh*.. The wallet has email addresses with trailing spaces...? Just, yeah.
+ *
+ * @param {{}}       values
+ * @param {function} done
+ */
+userModel.beforeValidate = function (values, done) {
+  values.email = values.email.trim();
+
+  done();
+};
+
+/**
  * Before creating a new user record, do this.
  *
  * @param values
