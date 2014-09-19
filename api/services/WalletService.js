@@ -70,10 +70,11 @@ module.exports = {
 
     var visitor = to.visitor,
         notificationData = {
-          hash     : sails.services.userservice.generateHash(to),
-          wallet_id: visitor.walletId,
-          user_id  : to.id,
-          performer: from.username
+          hash            : sails.services.userservice.generateHash(to),
+          wallet_id       : visitor.walletId,
+          visitor_username: to.username,
+          user_id         : to.id,
+          performer       : from.username
         };
 
     this.request('notification', {qs: notificationData}, function (error, response) {
@@ -165,7 +166,7 @@ module.exports = {
           errorObject.invalidAttributes[errorAttribute] = [{rule: errorType}];
         } else {
           errorObject = {
-            error : 'unknown_error'
+            error: 'unknown_error'
           };
 
           sails.log.error(walletError);
