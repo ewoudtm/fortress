@@ -135,6 +135,10 @@ userModel.beforeUpdate = function (values, callback) {
  * @param {function} done
  */
 userModel.beforeValidate = function (values, done) {
+  if (typeof values.email !== 'string') {
+    return done();
+  }
+
   values.email = values.email.trim();
 
   done();
