@@ -414,7 +414,7 @@ function ImportService() {
         importModel.findOrCreate({}, {}, callback);
       },
       defaultObject: function (callback) {
-        objectModel.findOrCreate({host: config.system.defaultObject.host}, config.system.defaultObject, callback);
+        objectModel.findOne({host: config.system.defaultObject.host}, callback);
       }
     }, function (error, results) {
       handleError(error, 'Error during installation.');
@@ -424,6 +424,8 @@ function ImportService() {
       
       lastUpdateString = dateFormat(model.lastUpdate, 'yyyy-mm-dd HH:MM:ss');
       defaultObject = object;
+
+      callback();
 
       performerModel.update({}, {online: false}).exec(function (error) {
         handleError(error, 'Setting performers offline failed.');
