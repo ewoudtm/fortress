@@ -3,11 +3,14 @@
  */
 module.exports = {
 
-  schema: true,
+  schema    : true,
+  connection: 'mongoLocal',
+  migrate   : 'safe',
+  tableName : 'performer',
 
   attributes: {
     user            : {
-      model: 'user'
+      model: 'userold'
     },
     username        : {
       type    : 'string',
@@ -27,10 +30,12 @@ module.exports = {
       index: true
     },
     description     : {
-      type : 'text'
+      type : 'text',
+      index: true
     },
     languages       : {
-      type : 'array'
+      type : 'array',
+      index: true
     },
     eyeColor        : {
       type : 'string',

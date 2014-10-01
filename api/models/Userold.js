@@ -1,6 +1,11 @@
 var roles     = ['visitor', 'performer'],
     bcrypt    = require('bcrypt'),
-    userModel = {schema: true};
+    userModel = {
+      schema    : true,
+      connection: 'mongoLocal',
+      tableName : 'user',
+      migrate   : 'safe'
+    };
 
 /**
  * The attributes for the model.
@@ -30,8 +35,16 @@ userModel.attributes = {
   },
 
   object: {
-    model   : 'object',
+    model   : 'objectold',
     required: true
+  },
+
+  visitor: {
+    model: 'visitorold'
+  },
+
+  performer: {
+    model: 'performerold'
   },
 
   /**
@@ -153,11 +166,7 @@ userModel.beforeValidate = function (values, done) {
 userModel.beforeCreate = function (values, callback) {
   values.email = values.email.toLowerCase();
 
-  function setGeo() {
-    if (values.country && !values.ip) {
-      return callback();
-    }
-
+  function setGeo () {
     sails.services.geoservice.getCountry(values.ip, function (error, country) {
       if (error) {
         return callback(error);
@@ -175,12 +184,6 @@ userModel.beforeCreate = function (values, callback) {
     return setGeo();
   }
 
-  if (values._noHash) {
-    delete values._noHash;
-
-    return setGeo();
-  }
-
   hashPassword(values.password, function (error, hash) {
     if (error) {
       return callback(error);
@@ -195,13 +198,6 @@ userModel.beforeCreate = function (values, callback) {
     setGeo();
   });
 };
-
-/*
- * Dynamically add all roles as attributes based off of variable.
- */
-roles.forEach(function (role) {
-  userModel.attributes[role] = {model: role};
-});
 
 /**
  * Get all valid roles

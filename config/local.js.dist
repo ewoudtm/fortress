@@ -47,6 +47,13 @@ module.exports.connections = {
     nativeParser: true,
     port        : 27017
   },
+  mysqlLocal: {
+    adapter : 'sails-mysql',
+    host    : 'localhost',
+    user    : 'root',
+    password: '',
+    database: 'fortress'
+  },
   trackthis : {
     adapter : 'sails-mysql',
     user    : 'root',
