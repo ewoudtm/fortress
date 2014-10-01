@@ -17,8 +17,17 @@ module.exports.sockets = {
   // Keep in mind that Sails' RESTful simulation for sockets
   // mixes in socket.io events for your routes and blueprints automatically.
   onConnect: function(session, socket) {
-    if (socket.handshake && socket.handshake.headers && socket.handshake.headers.host) {
-      socket.host = socket.handshake.headers.host.replace(/\:\d+$/, ''); //trim port.
+    if (socket.handshake) {
+
+      // Check for host
+      if (socket.handshake.headers && socket.handshake.headers.host) {
+        socket.host = socket.handshake.headers.host.replace(/\:\d+$/, ''); //trim port.
+      }
+
+      // Check for API version
+      if (socket.handshake.query && socket.handshake.query.__api_version) {
+        socket.__api_version = socket.handshake.query.__api_version;
+      }
     }
 
     if (session.user) {
