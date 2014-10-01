@@ -154,6 +154,10 @@ userModel.beforeCreate = function (values, callback) {
   values.email = values.email.toLowerCase();
 
   function setGeo() {
+    if (values.country && !values.ip) {
+      return callback();
+    }
+
     sails.services.geoservice.getCountry(values.ip, function (error, country) {
       if (error) {
         return callback(error);
@@ -168,6 +172,12 @@ userModel.beforeCreate = function (values, callback) {
   }
 
   if (!values.password) {
+    return setGeo();
+  }
+
+  if (values._noHash) {
+    delete values._noHash;
+
     return setGeo();
   }
 
@@ -220,8 +230,14 @@ function register (userCredentials, callback) {
     }
   });
 
+  console.log(userCredentials);
+  process.exit();
+
   // Create the new user.
   this.create(userCredentials).exec(function (error, newUser) {
+
+    console.log(userCredentials, error, newUser);
+    process.exit();
 
     if (error) {
       return callback(error);

@@ -27,12 +27,10 @@ module.exports = {
       index: true
     },
     description     : {
-      type : 'text',
-      index: true
+      type : 'text'
     },
     languages       : {
-      type : 'array',
-      index: true
+      type : 'array'
     },
     eyeColor        : {
       type : 'string',
