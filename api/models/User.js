@@ -230,14 +230,8 @@ function register (userCredentials, callback) {
     }
   });
 
-  console.log(userCredentials);
-  process.exit();
-
   // Create the new user.
   this.create(userCredentials).exec(function (error, newUser) {
-
-    console.log(userCredentials, error, newUser);
-    process.exit();
 
     if (error) {
       return callback(error);
