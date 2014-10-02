@@ -7,8 +7,8 @@ var mysql = require('mysql'),
     };
 
 module.exports = {
-  adapter: 'chatterbox',
-  migrate: 'safe',
+  connection: 'chatterbox',
+  migrate   : 'safe',
 
   findUser: function (username, callback) {
     var query = '' +
@@ -22,7 +22,7 @@ module.exports = {
       'join ' + dbs.user_client + ' uc on u.id = uc.id ' +
       'where u.username=' + mysql.escape(username);
 
-    this.query(query, function findUserQuery(error, data) {
+    this.query(query, function findUserQuery (error, data) {
       if (error) {
         return callback(error);
       }
@@ -81,7 +81,7 @@ module.exports = {
         userIds = [],
         self = this;
 
-    this.query(queueQuery, function fetchQueueQuery(error, data) {
+    this.query(queueQuery, function fetchQueueQuery (error, data) {
       if (error) {
         return callback(error);
       }
