@@ -13,7 +13,7 @@
  */
 
 module.exports.session = {
-  secret: '5f4b3b40df7164bbd111680e5da93c1c',
+  secret: '',
   cookie: {
     maxAge: 365 * 24 * 60 * 60 * 1000
   },

@@ -85,3 +85,16 @@ module.exports.notifications = {
     }
   }
 };
+
+module.exports.session = {
+  secret: '', // Your secret
+  cookie: {
+    maxAge: 365 * 24 * 60 * 60 * 1000
+  },
+  adapter: 'redis'
+};
+
+module.exports.sockets = {
+  db     : 1,
+  adapter: 'redis'
+};
