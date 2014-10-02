@@ -1,5 +1,5 @@
 module.exports = {
-  adapter      : 'trackthis',
+  connection   : 'trackthis',
   tableName    : 'trackthistracker_trackables_payment',
   migrate      : 'safe',
   autoCreatedAt: false,
