@@ -15,6 +15,8 @@ module.exports = {
     var oldVisitorModel = sails.models.visitorold;
     var visitorModel = sails.models.visitor;
     var userModel = sails.models.user;
+    var performerModel = sails.models.performer;
+    var visitorModel = sails.models.visitor;
     var oldUserModel = sails.models.userold;
     var objectModel = sails.models.object;
 
@@ -102,7 +104,7 @@ module.exports = {
           if (typeof result.performer === 'object') {
             cleanUser.performer = clean(result.performer.toObject());
           }
-
+ 
           if (typeof result.visitor === 'object') {
             cleanUser.visitor = clean(result.visitor.toObject());
           }
@@ -121,6 +123,28 @@ module.exports = {
               if (error) {
                 console.log('error!', error);
                 process.exit();
+              }
+
+              if (newlyCreated.performer) {
+                return performerModel.update(newlyCreated.performer, {user: newlyCreated.id}, function (error) {
+                  if (error) {
+                    console.log('error!', error);
+                    process.exit();
+                  }
+
+                  callback(newlyCreated);
+                });
+              }
+
+              if (newlyCreated.visitor) {
+                return visitorModel.update(newlyCreated.visitor, {user: newlyCreated.id}, function (error) {
+                  if (error) {
+                    console.log('error!', error);
+                    process.exit();
+                  }
+
+                  callback(newlyCreated);
+                });
               }
 
               callback(newlyCreated);
