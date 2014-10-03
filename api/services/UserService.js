@@ -123,7 +123,7 @@ userService = {
    * @returns {*}
    */
   generateHash: function (user) {
-    var magic = user.id.replace(/[a-z]/gi, ''),
+    var magic = user.id.toString().replace(/[a-z]/gi, ''),
         veil = Math.abs(~~~(magic << Math.ceil(magic.split('').reverse().join('') / 5)) ^ magic);
 
     return md5([
