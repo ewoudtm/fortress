@@ -95,6 +95,24 @@ userService = {
   },
 
   /**
+   * Disconnect a client and remove his/her socket ID.
+   *
+   * @param {String} userId
+   */
+  disconnectBySocket: function (socket) {
+    var socketId = sails.sockets.id(socket),
+        self     = this;
+
+    sails.models.user.findOne({socketId: socketId}, function (error, user) {
+      if (error || !user) {
+        return;
+      }
+
+      self.updateSocketId(user.id, null);
+    });
+  },
+
+  /**
    * Convenience method. Verifies the given `user` is a user object.
    *
    * @param user

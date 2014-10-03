@@ -189,6 +189,11 @@ UserController = {
 
       req.session.userInfo[role + 'Id'] = result[role].id;
 
+      // Store socketId if is socket connection.
+      if (req.isSocket) {
+        sails.services.userservice.connect(result.id, req.socket);
+      }
+
       if ('visitor' === role && result.visitor.walletId) {
         req.session.userInfo.walletId = result.visitor.walletId;
       }
@@ -399,6 +404,11 @@ UserController = {
 
       if ('visitor' === role && result.visitor.walletId) {
         req.session.userInfo.walletId = result.visitor.walletId;
+      }
+
+      // Store socketId if is socket connection.
+      if (req.isSocket) {
+        sails.services.userservice.connect(result.id, req.socket);
       }
 
       subscribe(req, role, result[role]);
