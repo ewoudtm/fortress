@@ -158,14 +158,14 @@ UserController = {
     role = req.param('role');
 
     credentials = {
-      username: req.param('username'),
+      username: req.param('username').trim(),
       password: req.param('password'),
       object  : req.object.id,
       ip      : req.ip
     };
 
     criteria = {
-      email: req.param('username')
+      email: req.param('username').trim()
     };
 
     /**
@@ -343,13 +343,13 @@ UserController = {
     role = req.param('role');
 
     credentials = {
-      username: req.param('email'),
+      username: req.param('email').trim(),
       object  : req.object.id,
       ip      : req.ip
     };
 
     criteria = {
-      email: req.param('email')
+      email: req.param('email').trim()
     };
 
     /**
