@@ -154,7 +154,7 @@ userModel.beforeCreate = function (values, callback) {
   values.email = values.email.toLowerCase();
 
   function setGeo() {
-    if (values.country && !values.ip) {
+    if (!values.ip) {
       return callback();
     }
 
