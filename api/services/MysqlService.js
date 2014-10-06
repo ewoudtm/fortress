@@ -34,6 +34,11 @@ module.exports = {
         return callback(false);
       }
 
+      var originalParticipants = {
+        to  : thread.to.id,
+        from: thread.from.id
+      };
+
       createUser(thread.to, function (to) {
         createUser(thread.from, function (from) {
           thread = clean(thread.toObject());
@@ -50,7 +55,17 @@ module.exports = {
               process.exit();
             }
 
-            createMessages(created, oldMessages, to, from, callback);
+            var participantData = {
+              to     : {
+                original: originalParticipants.to,
+                renewed : to
+              }, from: {
+                original: originalParticipants.from,
+                renewed : from
+              }
+            };
+
+            createMessages(created, oldMessages, participantData, callback);
           });
         });
       });
@@ -73,9 +88,18 @@ module.exports = {
       });
     }
 
-    function createMessages (thread, messages, to, from, callback) {
+    function createMessages (thread, messages, participantData, callback) {
       async.eachSeries(messages, function (message, next) {
-        createMessage(thread.id, message, to.id, from.id, next);
+        var toId, fromId;
+        if (participantData.to.original === message.to) {
+          toId = participantData.to.renewed;
+          fromId = participantData.from.renewed;
+        } else {
+          toId = participantData.from.renewed;
+          fromId = participantData.to.renewed;
+        }
+
+        createMessage(thread.id, message, toId, fromId, next);
       }, function (error) {
         if (error) {
           console.log('error!', error);
@@ -104,7 +128,7 @@ module.exports = {
           if (typeof result.performer === 'object') {
             cleanUser.performer = clean(result.performer.toObject());
           }
- 
+
           if (typeof result.visitor === 'object') {
             cleanUser.visitor = clean(result.visitor.toObject());
           }
