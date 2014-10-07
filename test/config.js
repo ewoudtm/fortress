@@ -56,4 +56,10 @@ module.exports.connections = {
   }
 };
 
+module.exports.hooks = {
+  grunt: false,
+  i18n : false,
+  views: false
+};
+
 module.exports.connections.trackthis = module.exports.connections.test; // TrackThis foo!

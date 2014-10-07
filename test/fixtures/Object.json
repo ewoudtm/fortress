@@ -1,5 +1,6 @@
 [
   {
+    "id"         : 1,
     "host"       : "api.islive.io",
     "partnerCode": "123",
     "partnerInfo": "testing",
