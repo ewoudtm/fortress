@@ -27,12 +27,6 @@ module.exports.connections = {
     password: '',
     database: 'chatterbox'
   },
-  mongoLocal: {
-    adapter     : 'sails-mongo',
-    host        : 'localhost',
-    nativeParser: true,
-    port        : 27017
-  },
   mysqlLocal: {
     adapter : 'sails-mysql',
     host    : 'localhost',
