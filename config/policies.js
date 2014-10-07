@@ -68,5 +68,9 @@ module.exports.policies = {
     //find         : true,  // Full search
     //findonesimple: true,  // Search based on username
     //count        : true   // Count based on full search
+  },
+
+  SystemController: {
+    '*': 'hasMasterIp'
   }
 };

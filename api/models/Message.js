@@ -12,6 +12,7 @@ module.exports = {
     },
     body   : 'text',
     read   : {
+      index     : true,
       type      : 'boolean',
       defaultsTo: false
     },
