@@ -31,7 +31,7 @@ userModel.attributes = {
 
   object: {
     model   : 'object',
-    required: true
+    notEmpty: true
   },
 
   /**
@@ -153,7 +153,7 @@ userModel.beforeValidate = function (values, done) {
 userModel.beforeCreate = function (values, callback) {
   values.email = values.email.toLowerCase();
 
-  function setGeo() {
+  function setGeo () {
     if (!values.ip) {
       return callback();
     }
