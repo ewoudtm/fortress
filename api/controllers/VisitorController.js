@@ -51,6 +51,7 @@ module.exports = {
     ];
 
     requestHelpers.pickParams(requiredProperties, req, function (error, params) {
+
       if (error) {
         return res.badRequest('missing_parameter', error);
       }
