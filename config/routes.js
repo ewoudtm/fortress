@@ -21,7 +21,6 @@
  */
 
 module.exports.routes = {
-
   // MessageController
   'post /message'                : 'MessageController.create',
   'get /message/inbox'           : 'MessageController.inbox',
@@ -63,5 +62,8 @@ module.exports.routes = {
 
   // Misc
   'get /connect/getcookie'       : 'ConnectController.getCookie',
-  'get /connect/safari-getcookie': 'ConnectController.safariGetCookie'
+  'get /connect/safari-getcookie': 'ConnectController.safariGetCookie',
+
+  // System
+  'get /system/total-connections': 'SystemController.totalConnections'
 };
