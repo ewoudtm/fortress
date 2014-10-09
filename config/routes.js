@@ -35,6 +35,7 @@ module.exports.routes = {
 
   // UserController
   'get /user/:id/unsubscribe'    : 'UserController.unsubscribe',
+  'get /user/:id/verify/:type'   : 'UserController.verify', // /user/123/verify/notification-email
   'get /user/logout'             : 'UserController.logout',
   'post /user/login'             : 'UserController.login',
   'post /user/login-by-hash'     : 'UserController.loginByHash',

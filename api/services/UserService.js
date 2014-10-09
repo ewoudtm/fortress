@@ -9,11 +9,14 @@ userService = {
    *
    * @param {String} userId
    * @param {String} socketId
+   * @param {Function} callback
    */
-  updateSocketId: function (userId, socketId) {
+  updateSocketId: function (userId, socketId, callback) {
+    callback = callback || function () { };
+
     sails.models.user.update(userId, {socketId: socketId}).exec(function (error) {
       if (error) {
-        // @todo decide what to do with errors.
+        callback(error);
       }
 
       if (null === socketId) {
@@ -21,6 +24,8 @@ userService = {
       } else {
         connections[userId] = socketId;
       }
+
+      callback(null, socketId);
     });
   },
 
@@ -137,12 +142,18 @@ userService = {
   /**
    * Generate a hash for the user.
    *
-   * @param user
-   * @returns {*}
+   * @param {{}}      user
+   * @param {String}  [type]
+   *
+   * @returns {String}
    */
-  generateHash: function (user) {
+  generateHash: function (user, type) {
+    type = type || '';
+
     var magic = user.id.toString().replace(/[a-z]/gi, ''),
         veil = Math.abs(~~~(magic << Math.ceil(magic.split('').reverse().join('') / 5)) ^ magic);
+
+    veil = veil.toString() + type;
 
     return md5([
       user.id,

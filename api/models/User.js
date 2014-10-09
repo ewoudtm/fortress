@@ -23,6 +23,20 @@ userModel.attributes = {
     index   : true
   },
 
+  notificationEmail: {
+    type    : 'email',
+    index   : true
+  },
+
+  /**
+   * If user verified the email address.
+   */
+  notificationEmailVerified: {
+    type      : 'boolean',
+    defaultsTo: false,
+    index     : true
+  },
+
   country: {
     type      : 'string',
     defaultsTo: null, // Performers, I suppose.
