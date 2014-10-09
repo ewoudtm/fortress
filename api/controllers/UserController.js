@@ -472,6 +472,3 @@ UserController = {
 };
 
 module.exports = UserController;
-
-// alter table user add column `notificationEmail` varchar(255) DEFAULT NULL;
-// alter table user add KEY `notificationEmail` (`notificationEmail`);
