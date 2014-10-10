@@ -1,6 +1,7 @@
-var request = require('request'),
-    extend  = require('extend'),
-    bcrypt  = require('bcrypt'),
+var request        = require('request'),
+    extend         = require('extend'),
+    bcrypt         = require('bcrypt'),
+    requestHelpers = require('request-helpers'),
     UserController;
 
 function subscribe (req, model, instance) {
@@ -46,7 +47,6 @@ UserController = {
   /**
    * @todo Document this
    * @todo Add support for authenticated users
-   * @todo Build the thing where I tell mysecurewallet to send an email (on new message).
    *
    * @param req
    * @param res
@@ -79,6 +79,47 @@ UserController = {
         }
 
         res.ok();
+      });
+    });
+  },
+
+  verify: function (req, res) {
+    requestHelpers.pickParams(['id', 'type', 'hash'], req, function (error, params) {
+
+      if (error) {
+        return res.badRequest('missing_parameter', error);
+      }
+
+      var user = params.id,
+          type = params.type,
+          hash = params.hash;
+
+      // findOne is safe because the "setter" of the email address will have verified the uniqueness.
+      sails.models.user.findOne(user).exec(function (error, result) {
+        if (error) {
+          return res.negotiate(error);
+        }
+
+        if (!result) {
+          return res.badRequest('invalid_hash'); // Deliberately wrong message to prevent email address scraping.
+        }
+
+        var field = type === 'email' ? 'email' : 'notificationEmail',
+            generatedHash = sails.services.userservice.generateHash(result, 'verify.' + field);
+
+        if (generatedHash !== hash) {
+          return res.badRequest('invalid_hash ' + hash + ', ' + generatedHash);
+        }
+
+        result[field + 'Verified'] = true;
+
+        result.save(function (error) {
+          if (error) {
+            return res.negotiate(error);
+          }
+
+          res.ok();
+        });
       });
     });
   },
@@ -132,7 +173,7 @@ UserController = {
    */
   login: function (req, res) {
 
-    var userModel     = sails.models.user,
+    var userModel = sails.models.user,
         walletService = sails.services.walletservice,
         role,
         credentials,
@@ -317,7 +358,7 @@ UserController = {
    */
   loginByHash: function (req, res) {
 
-    var userModel     = sails.models.user,
+    var userModel = sails.models.user,
         walletService = sails.services.walletservice,
         role,
         credentials,

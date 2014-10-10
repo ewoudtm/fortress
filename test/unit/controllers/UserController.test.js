@@ -18,5 +18,50 @@ describe('UserController', function () {
         })
         .expect(200, done);
     })
-  })
+  });
+
+  describe('.verifyEmail(): GET /user/verify?hash=&email=', function () {
+
+    var userId = 998;
+
+    it('Should set the emailVerified flag on the User model to true', function (done) {
+      request(sails.hooks.http.app)
+        .get('/user/' + userId + '/verify/email/?hash=e75586fc39bf3a782082c0151b998602')
+        .set('Content-Type', 'application/json')
+        .set('X-Object-Host', 'api.islive.io')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end(function (error) {
+          assert.isNull(error, 'Request failed.');
+
+          sails.models.user.findOne(userId, function (error, user) {
+            assert.isNull(error, 'Fetching user failed.');
+            assert.isNotNull(user, 'No user found.');
+            assert.isTrue(user.emailVerified, 'Email wasn\'t verified');
+
+            done();
+          });
+        });
+    });
+
+    it('Should set the notificationEmailVerified flag on the User model to true', function (done) {
+      request(sails.hooks.http.app)
+        .get('/user/' + userId + '/verify/notification-email/?hash=c750f197c6dccea4cf5adfb713ad5e1f')
+        .set('Content-Type', 'application/json')
+        .set('X-Object-Host', 'api.islive.io')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end(function (error) {
+          assert.isNull(error, 'Request failed.');
+
+          sails.models.user.findOne(userId, function (error, user) {
+            assert.isNull(error, 'Fetching user failed.');
+            assert.isNotNull(user, 'No user found.');
+            assert.isTrue(user.notificationEmailVerified, 'NotificationEmail wasn\'t verified');
+
+            done();
+          });
+        });
+    });
+  });
 });

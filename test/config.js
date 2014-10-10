@@ -22,8 +22,7 @@ module.exports.userSync = {
 
 module.exports.models = {
   connection: 'test',
-
-  migrate: 'drop'
+  migrate   : 'drop'
 };
 
 module.exports.log = {
