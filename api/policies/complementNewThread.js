@@ -12,6 +12,7 @@ var requestHelpers = require('request-helpers');
 module.exports = function (req, res, next) {
 
   var thread = {},
+      where,
       recipient,
       userQuery;
 
@@ -20,14 +21,17 @@ module.exports = function (req, res, next) {
       return res.badRequest('missing_parameter', error);
     }
 
+    // @todo add object check when objects are allowed to have their own performers.
+    if (recipient.toString().match(/^\d+$/)) {
+      // Only look based on id
+      where = {id: recipient};
+    } else {
+      // Only look based on username.
+      where = {username: recipient};
+    }
+
     recipient = params.to;
-    userQuery = sails.models.user.findOne().where({
-      //object: req.object.id, Disabled until we have default object and an "or"
-      or    : [
-        {username: recipient},
-        {id: recipient}
-      ]
-    });
+    userQuery = sails.models.user.findOne().where(where);
 
     userQuery.exec(function (error, data) {
       if (error) {
