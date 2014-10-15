@@ -22,5 +22,21 @@
         }
       }
     }
+  },
+  {
+    "id"         : 3,
+    "host"       : "mock.event.handler.islive.io",
+    "partnerCode": "981",
+    "partnerInfo": "event_handler_test",
+    "email"      : "handler.test@islive.nl",
+    "config"     : {
+      "notifications": {
+        "*": {
+          "*": {
+            "handler": "http://localhost:6663"
+          }
+        }
+      }
+    }
   }
 ]

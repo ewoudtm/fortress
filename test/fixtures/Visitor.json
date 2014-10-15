@@ -7,5 +7,23 @@
     "updatedAt": "2014-09-10T10:05:16.704Z",
     "id"       : 888,
     "user"     : 999
+  },
+  {
+    "walletId" : 13,
+    "credits"  : 1234,
+    "username" : "murdercow",
+    "createdAt": "2014-09-10T10:05:16.235Z",
+    "updatedAt": "2014-09-10T10:05:16.704Z",
+    "id"       : 887,
+    "user"     : 998
+  },
+  {
+    "walletId" : 81,
+    "credits"  : 1337,
+    "username" : "baconbabe",
+    "createdAt": "2014-09-10T10:05:16.235Z",
+    "updatedAt": "2014-09-10T10:05:16.704Z",
+    "id"       : 886,
+    "user"     : 997
   }
 ]
