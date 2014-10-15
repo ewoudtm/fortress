@@ -5,5 +5,22 @@
     "partnerCode": "123",
     "partnerInfo": "testing",
     "email"      : "test@islive.nl"
+  },
+  {
+    "id"         : 2,
+    "host"       : "config.islive.io",
+    "partnerCode": "987",
+    "partnerInfo": "config_test",
+    "email"      : "test@islive.nl",
+    "config"     : {
+      "notifications": {
+        "visitor": {
+          "from": {
+            "name" : "Helpdesk",
+            "email": "helpdesk@mysecurewallet.nl"
+          }
+        }
+      }
+    }
   }
 ]
