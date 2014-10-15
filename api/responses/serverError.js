@@ -2,14 +2,20 @@ module.exports = function serverError (data, details) {
 
   // Get access to `res`
   var res = this.res,
-      notificationMessage,
-      notificationService = sails.services.notificationservice;
+      alertService = sails.services.alertservice,
+      m = new Date(),
+      dateString = m.getFullYear() + "/" + (m.getMonth() + 1) + "/" + m.getDate() + " " + m.getHours() + ":" + m.getMinutes() + ":" + m.getSeconds(),
+      notificationMessage;
 
   // Set status code
   res.status(500);
 
   // Log error to console
-  sails.log.error('Sent 500 ("Server Error") response');
+  sails.log.error('[' + dateString + '] Report start');
+  sails.log.error('Sent 500 ("Server Error") response with:');
+  sails.log.error('data - ', data);
+  sails.log.error('details - ', details);
+  sails.log.error('End report');
 
   if (data) {
     if (typeof data === 'string') {
@@ -29,11 +35,12 @@ module.exports = function serverError (data, details) {
     sails.log.error(details); // Log the error details.
   }
 
-  notificationService.push('serverError', notificationMessage || 'res.serverError() invoked!');
+  alertService.push('serverError', notificationMessage || 'res.serverError() invoked!');
 
   if (!data) {
     return res.jsonp({status: 500});
   }
+
   if (typeof data !== 'object' || data instanceof Error) {
     data = {error: data};
   }

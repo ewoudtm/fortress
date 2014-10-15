@@ -11,7 +11,6 @@
 'use strict';
 
 module.exports.bootstrap = function (cb) {
-
   /**
    * Initialize the (performer) importer
    */
@@ -38,10 +37,10 @@ module.exports.bootstrap = function (cb) {
     });
   }
 
-  var notificationService = sails.services.notificationservice;
+  var alertService = sails.services.alertservice;
 
-  notificationService.init(function () {
-    notificationService.pushEmergency(
+  alertService.init(function () {
+    alertService.pushEmergency(
       'The application just started. ' +
       'Perhaps Forever kicked in, and this is a restart. ' +
       'Perhaps it is not. either way, I thought I should let you know.'
