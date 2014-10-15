@@ -1,12 +1,12 @@
 module.exports = {
   run : function() {
     var self = this,
-        notificationService = sails.services.notificationservice;
+        alertService = sails.services.alertservice;
 
     sails.models.wallet.getSyncQueue(function(error, queue, done) {
 
       if (error) {
-        notificationService.pushError(error);
+        alertService.pushError(error);
         return console.error(error);
       }
 
@@ -29,7 +29,7 @@ module.exports = {
           if (error) {
             sails.log.error('error while syncing credits.', error);
 
-            notificationService.pushError('error while syncing credits.');
+            alertService.pushError('error while syncing credits.');
           }
 
           next();

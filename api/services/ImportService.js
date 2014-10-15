@@ -6,7 +6,7 @@ function ImportService() {
       userModel = sails.models.user,
       objectModel = sails.models.object,
       socket = sails.services.chatservice.getSocket(),
-      notificationService = sails.services.notificationservice,
+      alertService = sails.services.alertservice,
       dateFormat = require('dateformat'),
       config = sails.config,
       util = require('util'),
@@ -170,7 +170,7 @@ function ImportService() {
       return;
     }
 
-    notificationService.pushEmergency(message);
+    alertService.pushEmergency(message);
 
     sails.log.error(message);
     sails.log.error(error);
