@@ -15,6 +15,8 @@ module.exports = {
 
     partnerInfo: 'string',
 
+    config: 'json',
+
     email: {
       type : 'email',
       index: true
