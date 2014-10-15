@@ -300,6 +300,7 @@ UserController = {
 
         // Only users with walletId are allowed to not have a password, because of import in hashLogin.
         // Otherwise, credentials were invalid for certain.
+        console.log(result);
         if (!result[role].walletId) {
           return res.badRequest('invalid_credentials');
         }
