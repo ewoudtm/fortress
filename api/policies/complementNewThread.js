@@ -21,6 +21,8 @@ module.exports = function (req, res, next) {
       return res.badRequest('missing_parameter', error);
     }
 
+    recipient = params.to;
+
     // @todo add object check when objects are allowed to have their own performers.
     if (recipient.toString().match(/^\d+$/)) {
       // Only look based on id
@@ -30,7 +32,6 @@ module.exports = function (req, res, next) {
       where = {username: recipient};
     }
 
-    recipient = params.to;
     userQuery = sails.models.user.findOne().where(where);
 
     userQuery.exec(function (error, data) {
