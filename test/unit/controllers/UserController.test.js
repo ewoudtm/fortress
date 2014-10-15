@@ -66,7 +66,7 @@ describe('UserController', function () {
   });
 
   describe('.update(): PUT /user/:id', function () {
-    it('should set a property and return the object for our test user', function (done) {
+    it('Should set a property and return the object for our test user', function (done) {
 
       var requestHook = request(sails.hooks.http.app)
         , testUserId  = 999
