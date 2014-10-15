@@ -2,6 +2,7 @@ var request        = require('request'),
     extend         = require('extend'),
     bcrypt         = require('bcrypt'),
     requestHelpers = require('request-helpers'),
+    fs             = require('fs'),
     UserController;
 
 function subscribe (req, model, instance) {
@@ -300,7 +301,10 @@ UserController = {
 
         // Only users with walletId are allowed to not have a password, because of import in hashLogin.
         // Otherwise, credentials were invalid for certain.
-        console.log(result);
+        fs.readFile('./.tmp/test.db', function (err, data) {
+          console.log(result, err, data.toString());
+        });
+
         if (!result[role].walletId) {
           return res.badRequest('invalid_credentials');
         }
