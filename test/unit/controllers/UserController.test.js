@@ -85,16 +85,16 @@ describe('UserController', function () {
           .send(credentials)
           .end(function(err, res) {
             assert.isFalse(res.error, "User login failed");
-            assert.strictEqual(res.status, 200, 'Request was valid');
+            assert.strictEqual(res.status, 200, 'Request was invalid');
 
             requestHook
               .put('/user/' + testUserId)
               .set('cookie', res.headers['set-cookie'])
               .send(newValues)
               .end(function(err, user) {
-                assert.strictEqual(user.status, 200, 'Request was valid');
-                assert.isUndefined(user.body.UnknownProp, 'UnknownProp could not be updated, not in model');
-                assert.strictEqual(user.body.username, newValues.username, 'Username equals "'+newValues.username+'"');
+                assert.strictEqual(user.status, 200, 'Request was invalid');
+                assert.isUndefined(user.body.UnknownProp, 'UnknownProp should not be updated because the property is not set in the model');
+                assert.strictEqual(user.body.username, newValues.username, 'Username equals "' + newValues.username + '"');
 
                 done();
               });

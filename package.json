@@ -28,7 +28,7 @@
     "socket.io-client": "^0.9.16"
   },
   "devDependencies": {
-    "barrels": "^1.0.1",
+    "barrels": "1.0.1",
     "chai": "^1.9.1",
     "mocha": "^1.21.4",
     "nock": "^0.45.0",

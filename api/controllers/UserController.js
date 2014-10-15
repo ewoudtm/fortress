@@ -2,7 +2,6 @@ var request        = require('request'),
     extend         = require('extend'),
     bcrypt         = require('bcrypt'),
     requestHelpers = require('request-helpers'),
-    fs             = require('fs'),
     UserController;
 
 function subscribe (req, model, instance) {
