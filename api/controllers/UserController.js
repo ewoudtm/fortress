@@ -287,13 +287,6 @@ UserController = {
       }
 
       var afterPasswordValidate = function (passwordIsValid) {
-
-        fs.readFile('./.tmp/test.db', function (err, data) {
-          console.log(err, data.toString());
-        });
-
-        console.log(result, passwordIsValid);
-
         if (passwordIsValid) {
 
           // Credentials are valid! Execute remainder of validations.
