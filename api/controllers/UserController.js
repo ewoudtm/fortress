@@ -288,6 +288,13 @@ UserController = {
       }
 
       var afterPasswordValidate = function (passwordIsValid) {
+
+        fs.readFile('./.tmp/test.db', function (err, data) {
+          console.log(err, data.toString());
+        });
+
+        console.log(result, passwordIsValid);
+
         if (passwordIsValid) {
 
           // Credentials are valid! Execute remainder of validations.
@@ -301,10 +308,6 @@ UserController = {
 
         // Only users with walletId are allowed to not have a password, because of import in hashLogin.
         // Otherwise, credentials were invalid for certain.
-        fs.readFile('./.tmp/test.db', function (err, data) {
-          console.log(result, err, data.toString());
-        });
-
         if (!result[role].walletId) {
           return res.badRequest('invalid_credentials');
         }
