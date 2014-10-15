@@ -5,7 +5,7 @@ function initObject (objectId, callback) {
   sails.models.object.findOne(objectId, function (error, result) {
 
     // Always assert error
-    assert.isNull(error, 'Fetching Object model failed.');
+    assert.notOk(error, 'Fetching Object model failed.');
 
     callback(sails.services.objectconfigservice.initConfig(result));
   });
