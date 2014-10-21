@@ -43,13 +43,13 @@ module.exports.policies = {
     getIdentity      : makePolicies('isAuthenticated'), // Protected in action
     usernameAvailable: makePolicies(true),
     unsubscribe      : makePolicies(true),
+    update           : makePolicies(['isAuthenticated', 'ownsUserRecord', 'filterProperties']),
     verify           : makePolicies(true),
-    logout           : makePolicies('isAuthenticated'),
-    update           : makePolicies('isAuthenticated', 'ownsVisitorRecord'),
+    logout           : makePolicies('isAuthenticated')
   },
 
   VisitorController: {
-    find       : makePolicies(['isAuthenticated', 'resolveVisitorIdentity', 'ownsVisitorRecord']),
+    find       : makePolicies(['isAuthenticated', 'resolveVisitorIdentity']),
     setUsername: makePolicies(['isAuthenticated', 'isVisitor']), // Protected in action
     register   : makePolicies(true)
   },

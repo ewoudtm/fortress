@@ -34,6 +34,7 @@ module.exports.routes = {
   'get /thread/:id'              : 'ThreadController.findonesimple',
 
   // UserController
+  'put /user/:id'                : 'UserController.update',
   'get /user/:id/unsubscribe'    : 'UserController.unsubscribe',
   'get /user/:id/verify/:type'   : 'UserController.verify', // /user/123/verify/notification-email
   'get /user/logout'             : 'UserController.logout',
@@ -43,7 +44,6 @@ module.exports.routes = {
   'get /user/username/:id'       : 'UserController.getUsername',
   'post /user/username-available': 'UserController.usernameAvailable',
   'get /user/identity/:role?'    : 'UserController.getIdentity',
-  'get /user/:id'                : 'UserController.update',
 
   // VisitorController
   'get  /visitor/register'       : 'VisitorController.register',
@@ -54,7 +54,7 @@ module.exports.routes = {
 
   // PerformerController
   'get /performer/count'         : 'PerformerController.count',
-  'get /performer/:username'     : 'PerformerController.findonesimple',
+  'get /performer/:username'     : 'PerformerController.findonesimple'
 
   // ObjectController
   'get /object/:id?'             : 'ObjectController.find',
