@@ -29,8 +29,8 @@
     "partnerCode": "445",
     "object": 1,
     "password": "$2a$08$czD6FPEwJtHY0mmDEkIBm.fOMcu9O9KTHJIc/fIlEbEIYKJHlPlLW",
-    "visitor": 888,
-    "username": "fixturetests",
+    "visitor": 887,
+    "username": "murdercow",
     "country": null,
     "mailable": true,
     "socketId": null,
@@ -40,5 +40,44 @@
     "createdAt": "2014-09-10T10:05:16.700Z",
     "updatedAt": "2014-09-10T10:05:16.700Z",
     "id": 998
+  },
+  {
+    "email": "event.handler@islive.io",
+    "emailVerified": true,
+    "partnerInfo": null,
+    "partnerCode": "446",
+    "object": 3,
+    "password": "$2a$08$czD6FPEwJtHY0mmDEkIBm.fOMcu9O9KTHJIc/fIlEbEIYKJHlPlLW",
+    "visitor": 886,
+    "username": "baconbabe",
+    "country": null,
+    "mailable": true,
+    "socketId": null,
+    "roles": [
+      "visitor"
+    ],
+    "createdAt": "2014-09-10T10:05:16.700Z",
+    "updatedAt": "2014-09-10T10:05:16.700Z",
+    "id": 997
+  },
+  {
+    "email": "event.handler.performer@islive.io",
+    "emailVerified": true,
+    "notificationEmailVerified": false,
+    "partnerInfo": null,
+    "partnerCode": "447",
+    "object": 3,
+    "password": "$2a$08$czD6FPEwJtHY0mmDEkIBm.fOMcu9O9KTHJIc/fIlEbEIYKJHlPlLW",
+    "performer": 555,
+    "username": "badpak",
+    "country": null,
+    "mailable": true,
+    "socketId": null,
+    "roles": [
+      "performer"
+    ],
+    "createdAt": "2014-09-10T10:05:16.700Z",
+    "updatedAt": "2014-09-10T10:05:16.700Z",
+    "id": 996
   }
 ]

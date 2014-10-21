@@ -75,7 +75,7 @@ module.exports = {
     });
   },
 
-  flatten     : function (userId, thread) {
+  flatten: function (userId, thread) {
     var flattened, message, from, to;
 
     // If an array was supplied, call self over every entry.
@@ -183,33 +183,20 @@ module.exports = {
    * Send an email notification to the user
    * NOTE: Method requires fully populated from, and to.
    *
-   * @todo move this logic elsewhere. It's too message-notification specific.
-   *
-   * @param message
-   * @param callback
+   * @param {{}} message
+   * @param {Function} [callback]
    */
   sendNotification: function (message, callback) {
     callback = callback || function () {
       // Just here to avoid errors.
     };
 
-    var to = message.to,
-        from = message.from;
+    var notificationService = sails.services.notificationservice;
 
-    if (!to.visitor) {
-      return callback({
-        error      : 'not_implemented',
-        description: "This feature hasn't been implemented yet."
-      });
-    }
-
-    if (!to.mailable) {
-      return callback({
-        error      : 'not_mailable',
-        description: "User indicated not to want to receive anymore mail from us."
-      });
-    }
-
-    sails.services.walletservice.sendNotification(from, to, callback);
+    notificationService.send('new_message', message.to, {
+      from     : notificationService.composeUserObject(message.from),
+      initial  : message.initial,
+      subject  : message.thread.subject
+    }, callback);
   }
 };

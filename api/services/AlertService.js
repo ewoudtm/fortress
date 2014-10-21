@@ -25,7 +25,7 @@ module.exports = {
    *
    * @param {string}   [title]
    * @param {string}   [message]
-   * @param {integer}  [priority]
+   * @param {int}      [priority]
    * @param {string}   [sound]
    * @param {function} callback
    */
