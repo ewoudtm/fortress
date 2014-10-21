@@ -8,12 +8,40 @@ var request = require('request');
  */
 
 module.exports = {
-  send: function (options, callback) {
+  send: function (type, user, data, callback) {
 
-    options = this.complementOptions(options);
+    callback = callback || function () {
+      // Just here to avoid errors.
+    };
 
-    if (options.endpoint) {
-      return this.delegate(options, callback);
+    if (!user.mailable) {
+      return callback({
+        error      : 'not_mailable',
+        description: "User indicated not to want to receive anymore mail from us."
+      });
+    }
+
+    if (!user.notificationEmailVerified && !user.emailVerified) {
+      return callback({
+        error      : 'not_mailable',
+        description: "User has not verified email address."
+      });
+    }
+
+    var objectConfig = sails.services.objectconfigservice.initConfig(user.object),
+        endpoint = objectConfig.resolve([
+          'notifications',
+          type,
+          user.visitor ? 'visitor' : 'performer',
+          'handler'
+        ].join('.'));
+
+    if (endpoint) {
+      return this.delegate(
+        endpoint,
+        this.createPayload(type, user, data),
+        callback
+      );
     }
 
     callback({
@@ -22,10 +50,8 @@ module.exports = {
     });
   },
 
-  delegate: function (options, callback) {
-    var parameters = {qs: this.createPayload(options)};
-
-    request.get(options.endpoint, parameters, function (error, response, body) {
+  delegate: function (endpoint, payload, callback) {
+    request.get(endpoint, {qs: payload}, function (error, response, body) {
       var responseData;
 
       if (error) {
@@ -42,35 +68,33 @@ module.exports = {
     });
   },
 
-  complementOptions : function (options) {
-    options.recipientRole = options.to.visitor ? 'visitor' : 'performer';
-    options.objectConfig  = sails.services.objectconfigservice.initConfig(options.to.object)
-    options.endpoint      = options.objectConfig.resolve([
-      'notifications',
-      options.type,
-      options.recipientRole,
-      'handler'
-    ].join('.'));
+  composeUserObject: function (user) {
+    var userObject = {
+      role           : user.visitor ? 'visitor' : 'performer',
+      username       : user.username,
+      id             : user.id,
+      unsubscribeHash: sails.services.userservice.generateHash(user)
+    };
 
-    return options;
+    if (user.notificationEmail && user.notificationEmailVerified) {
+      userObject.email = user.notificationEmail;
+    } else {
+      userObject.email = user.email;
+    }
+
+    if (user.visitor && user.visitor.walletId) {
+      userObject.walletId = user.visitor.walletId;
+    }
+
+    return userObject;
   },
 
-  createPayload: function (options) {
+  createPayload: function (type, user, data) {
     return {
       event: 'notification',
-      data : {
-        type         : options.type,
-        from         : {
-          username: options.from.username
-        },
-        to           : {
-          email   : options.to.email,
-          username: options.to.username
-        },
-        newThread    : options.message.initial,
-        subject      : options.message.thread.subject,
-        recipientRole: options.recipientRole
-      }
+      type : type,
+      user : this.composeUserObject(user),
+      data : data
     };
   }
 };
