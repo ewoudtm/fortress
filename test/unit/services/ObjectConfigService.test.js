@@ -43,10 +43,10 @@ describe('ObjectConfigService', function () {
       initObject(2, function (objectConfig) {
 
         // Fallback (wildcard)
-        assert.equal(objectConfig.resolve('notifications.performer.from.name'), 'Notifications', 'The config is different.');
+        assert.equal(objectConfig.resolve('notifications.something.performer.from.name'), 'Notifications', 'The config is different.');
 
         // Override by Object
-        assert.equal(objectConfig.resolve('notifications.visitor.from.name'), 'Helpdesk', 'The config is different.');
+        assert.equal(objectConfig.resolve('notifications.something.visitor.from.name'), 'Helpdesk', 'The config is different.');
 
         done();
       });
@@ -60,23 +60,22 @@ describe('ObjectConfigService', function () {
         var override = 'Override';
 
         // Fallback (wildcard) check if value initially already is as expected.
-        assert.equal(objectConfig.resolve('notifications.performer.from.name'), 'Notifications', 'The config is different.');
+        assert.equal(objectConfig.resolve('notifications.something.performer.from.name'), 'Notifications', 'The config is different.');
 
         // Override wildcard (dirty).
-        objectConfig.config.notifications.performer = {from: {}};
-        objectConfig.config.notifications.performer.from.name = override;
+        objectConfig.config.notifications.something = {performer: {from: {name: override}}};
 
         // Fetch object again...
         initObject(2, function (objectConfig) {
 
           // ... and check if override took effect.
-          assert.equal(objectConfig.resolve('notifications.performer.from.name'), override, 'The config is different.');
+          assert.equal(objectConfig.resolve('notifications.something.performer.from.name'), override, 'The config is different.');
 
           // Clean up after ourselves for future tests.
-          delete objectConfig.config.notifications.performer;
+          delete objectConfig.config.notifications.something;
 
           // Check if cleanup went ok.
-          assert.equal(objectConfig.resolve('notifications.performer.from.name'), 'Notifications', 'We did not clean up properly.');
+          assert.equal(objectConfig.resolve('notifications.something.performer.from.name'), 'Notifications', 'We did not clean up properly.');
 
           done();
         });
@@ -96,16 +95,18 @@ describe('ObjectConfigService', function () {
                 }
               },
               notifications: {
-                visitor: {
-                  from: {
-                    email: 'my.awesome@test.org'
+                something: {
+                  visitor: {
+                    from: {
+                      email: 'my.awesome@test.org'
+                    }
                   }
                 }
               }
             };
 
         // Should start with helpdesk@mysecurewallet.nl
-        assert.equal(objectConfig.resolve('notifications.visitor.from.email'), 'helpdesk@mysecurewallet.nl', 'The config is different.');
+        assert.equal(objectConfig.resolve('notifications.something.visitor.from.email'), 'helpdesk@mysecurewallet.nl', 'The config is different.');
 
         // Now merge in the new values
         objectConfig.merge(extra);
@@ -117,13 +118,13 @@ describe('ObjectConfigService', function () {
         assert.equal(objectConfig.resolve('bacon.really.is'), 'Amazing', 'The config is different.');
 
         // And have changed email.
-        assert.equal(objectConfig.resolve('notifications.visitor.from.email'), 'my.awesome@test.org', 'The config is different.');
+        assert.equal(objectConfig.resolve('notifications.something.visitor.from.email'), 'my.awesome@test.org', 'The config is different.');
 
         // Now let's clean up again...
         objectConfig.config = configBackup;
 
         // ... And verify that we actually did.
-        assert.equal(objectConfig.resolve('notifications.visitor.from.email'), 'helpdesk@mysecurewallet.nl', 'The config is different.');
+        assert.equal(objectConfig.resolve('notifications.something.visitor.from.email'), 'helpdesk@mysecurewallet.nl', 'The config is different.');
         assert.isNull(objectConfig.resolve('bacon.really.is'), 'Config not cleaned up properly.');
 
         // We made it!

@@ -14,10 +14,12 @@
     "email"      : "test@islive.nl",
     "config"     : {
       "notifications": {
-        "visitor": {
-          "from": {
-            "name" : "Helpdesk",
-            "email": "helpdesk@mysecurewallet.nl"
+        "*" : {
+          "visitor": {
+            "from": {
+              "name": "Helpdesk",
+              "email": "helpdesk@mysecurewallet.nl"
+            }
           }
         }
       }
