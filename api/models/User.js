@@ -127,6 +127,15 @@ userModel.hashPassword = hashPassword;
  * @param {function} callback
  */
 userModel.beforeUpdate = function (values, callback) {
+
+  if (values.notificationEmail) {
+    values.notificationEmailVerified = false;
+  }
+
+  if (values.email) {
+    values.emailVerified = false;
+  }
+
   if (!values.password) {
     return callback();
   }
