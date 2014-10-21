@@ -129,10 +129,12 @@ userModel.hashPassword = hashPassword;
 userModel.beforeUpdate = function (values, callback) {
 
   if (values.notificationEmail) {
+    // @todo call notificationService to send out email_changed (with confirm link)
     values.notificationEmailVerified = false;
   }
 
   if (values.email) {
+    // @todo call notificationService to send out notification_email_changed (with confirm link)
     values.emailVerified = false;
   }
 
