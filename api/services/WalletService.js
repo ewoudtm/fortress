@@ -51,41 +51,6 @@ module.exports = {
     });
   },
 
-  /**
-   * @param {{}}       from     Populated user object
-   * @param {{}}       to       Populated user object
-   * @param {Function} callback
-   */
-  sendNotification: function (from, to, callback) {
-    callback = callback || function () {
-      // Just here to avoid errors.
-    };
-
-    if (typeof to.visitor !== 'object') {
-      return callback({
-        error      : 'invalid_argument',
-        description: 'Expected a populated user entity.'
-      });
-    }
-
-    var visitor = to.visitor,
-        notificationData = {
-          hash            : sails.services.userservice.generateHash(to),
-          wallet_id       : visitor.walletId,
-          visitor_username: to.username,
-          user_id         : to.id,
-          performer       : from.username
-        };
-
-    this.request('notification', {qs: notificationData}, function (error, response) {
-      if (error) {
-        return callback(error);
-      }
-
-      callback(null);
-    }, 'get');
-  },
-
   request: function (action, parameters, callback, method) {
     method = method || 'post';
 
