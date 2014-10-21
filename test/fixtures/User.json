@@ -43,6 +43,7 @@
   },
   {
     "email": "event.handler@islive.io",
+    "emailVerified": true,
     "partnerInfo": null,
     "partnerCode": "446",
     "object": 3,
@@ -61,7 +62,7 @@
   },
   {
     "email": "event.handler.performer@islive.io",
-    "emailVerified": false,
+    "emailVerified": true,
     "notificationEmailVerified": false,
     "partnerInfo": null,
     "partnerCode": "447",
