@@ -54,7 +54,7 @@ module.exports.routes = {
 
   // PerformerController
   'get /performer/count'         : 'PerformerController.count',
-  'get /performer/:username'     : 'PerformerController.findonesimple'
+  'get /performer/:username'     : 'PerformerController.findonesimple',
 
   // ObjectController
   'get /object/:id?'             : 'ObjectController.find',
