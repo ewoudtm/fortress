@@ -3,7 +3,7 @@ var request = require('supertest'),
 
 describe('UserController', function () {
   describe('.getUsername(): GET /user/username/:id', function () {
-    it('should return the username for our test user.', function (done) {
+    it('should return the username for our test user', function (done) {
 
       var testUserId = 999;
 
@@ -62,6 +62,43 @@ describe('UserController', function () {
             done();
           });
         });
+    });
+  });
+
+  describe('.update(): PUT /user/:id', function () {
+    it('Should set a property and return the object for our test user', function (done) {
+
+      var requestHook = request(sails.hooks.http.app)
+        , testUserId  = 999
+        , newValues   = {
+            username   :'Bob',
+            UnknownProp:'.|.'
+          }
+        , credentials = {
+            role    : 'visitor',
+            username: 'fixture-test@islive.io',
+            password: 'keeshond'
+          };
+
+        requestHook
+          .post('/user/login')
+          .send(credentials)
+          .end(function(err, res) {
+            assert.isFalse(res.error, "User login failed");
+            assert.strictEqual(res.status, 200, 'Request was invalid');
+
+            requestHook
+              .put('/user/' + testUserId)
+              .set('cookie', res.headers['set-cookie'])
+              .send(newValues)
+              .end(function(err, user) {
+                assert.strictEqual(user.status, 200, 'Request was invalid');
+                assert.isUndefined(user.body.UnknownProp, 'UnknownProp should not be updated because the property is not set in the model');
+                assert.strictEqual(user.body.username, newValues.username, 'Username equals "' + newValues.username + '"');
+
+                done();
+              });
+          });
     });
   });
 });

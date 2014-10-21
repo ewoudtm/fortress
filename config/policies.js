@@ -44,7 +44,8 @@ module.exports.policies = {
     usernameAvailable: makePolicies(true),
     unsubscribe      : makePolicies(true),
     verify           : makePolicies(true),
-    logout           : makePolicies('isAuthenticated')
+    logout           : makePolicies('isAuthenticated'),
+    update           : makePolicies('isAuthenticated', 'ownsVisitorRecord'),
   },
 
   VisitorController: {

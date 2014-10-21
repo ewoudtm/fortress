@@ -43,6 +43,7 @@ module.exports.routes = {
   'get /user/username/:id'       : 'UserController.getUsername',
   'post /user/username-available': 'UserController.usernameAvailable',
   'get /user/identity/:role?'    : 'UserController.getIdentity',
+  'get /user/:id'                : 'UserController.update',
 
   // VisitorController
   'get  /visitor/register'       : 'VisitorController.register',
