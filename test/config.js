@@ -62,3 +62,5 @@ module.exports.hooks = {
 };
 
 module.exports.connections.trackthis = module.exports.connections.test; // TrackThis foo!
+
+module.exports.policies = require('../config/policies.js').policies;
