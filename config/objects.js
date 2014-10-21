@@ -1,10 +1,12 @@
 module.exports.objects = {
   defaultConfig: {
     notifications: {
-      '*': {
-        from: {
-          name: 'Notifications',
-          email: 'notifications@islive.io'
+      '*': { // Notification type
+        '*': { // Recipient role
+          from: {
+            name : 'Notifications',
+            email: 'notifications@islive.io'
+          }
         }
       }
     }
