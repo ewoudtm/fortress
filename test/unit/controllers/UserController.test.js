@@ -100,5 +100,38 @@ describe('UserController', function () {
             });
         });
     });
+
+    it('Should attempt to change the username, but fail because it is not whitelisted', function (done) {
+      var requestHook = request(sails.hooks.http.app),
+          testUserId = 999,
+          newValues = {
+            username: 'Bob'
+          },
+          credentials = {
+            role    : 'visitor',
+            username: 'fixture-test@islive.io',
+            password: 'keeshond'
+          };
+
+      requestHook
+        .post('/user/login')
+        .send(credentials)
+        .end(function (err, res) {
+          assert.isFalse(res.error, "User login failed");
+          assert.strictEqual(res.status, 200, 'Request was invalid');
+
+          requestHook
+            .put('/user/' + testUserId)
+            .set('cookie', res.headers['set-cookie'])
+            .send(newValues)
+            .end(function (err, user) {
+              assert.strictEqual(user.status, 200, 'Request was invalid');
+              assert.isUndefined(user.body.UnknownProp, 'UnknownProp should not be updated because the property is not set in the model');
+              assert.strictEqual(user.body.username, 'fixturetest', 'Username does not equal fixturetest');
+
+              done();
+            });
+        });
+    });
   });
 });
