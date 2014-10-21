@@ -111,9 +111,11 @@ UserController = {
           return res.badRequest('invalid_hash ' + hash + ', ' + generatedHash);
         }
 
-        result[field + 'Verified'] = true;
+        var newValue = {};
 
-        result.save(function (error) {
+        newValue[field + 'Verified'] = true;
+
+        sails.models.user.update(result.id, newValue, function (error) {
           if (error) {
             return res.negotiate(error);
           }
