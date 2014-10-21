@@ -18,12 +18,17 @@ function getTestParticipants (callback) {
 }
 
 describe('NotificationService', function () {
-  var mockPayloadOptions = {
-    from         : {
-      username: 'Marco',
-      email   : 'some-test@email.com',
+  var mockOptions = {
+    data: {
+      from: {
+        id      : 135,
+        username: 'Marco',
+        email   : 'some-test@email.com',
+        visitor : {}
+      }
     },
-    to           : {
+    user: {
+      id       : 246,
       performer: {},
       username : 'Polo',
       email    : 'some-awesome-test@email.com',
@@ -31,23 +36,15 @@ describe('NotificationService', function () {
         id: 'not-a-real-id'
       }
     },
-    recipientRole: 'performer',
-    type         : 'newMessage',
-    message      : {
-      will   : 'be this',
-      initial: true,
-      thread : {
-        subject: 'lorem'
-      }
-    }
+    type: 'new_message'
   };
 
-  // Test .send method
+  // Test .send method (also tests .delegate())
   describe('.send()', function () {
     it('Should fail when no handler was supplied', function (done) {
       var notificationService = sails.services.notificationservice;
 
-      notificationService.send(mockPayloadOptions, function (error) {
+      notificationService.send(mockOptions.type, mockOptions.user, mockOptions.data, function (error) {
         assert.isObject(error);
         assert.property(error, 'error');
 
@@ -55,19 +52,31 @@ describe('NotificationService', function () {
       });
     });
 
+    it('Should fail on mailable: false for recipient', function (done) {
+
+      var notificationService = sails.services.notificationservice;
+
+      notificationService.send('does_not_matter', {mailable: false}, {}, function (error) {
+        assert.deepEqual(error, {
+          error      : 'not_mailable',
+          description: "User indicated not to want to receive anymore mail from us."
+        }, 'Error for mailable: false not thrown.');
+      });
+
+      done();
+    });
+
     it('Should call the supplied endpoint for events', function (done) {
       getTestParticipants(function (results) {
         var notificationService = sails.services.notificationservice,
             app = express(),
-            payloadOptions = {
-              to     : results.visitor,
-              from   : results.performer,
-              type   : 'newMessage',
-              message: {
+            options = {
+              user: results.visitor,
+              type: 'new_message',
+              data: {
+                from   : notificationService.composeUserObject(results.performer),
                 initial: false,
-                thread : {
-                  subject: 'Test message'
-                }
+                subject: 'Test message'
               }
             },
             server;
@@ -76,13 +85,25 @@ describe('NotificationService', function () {
           try {
             assert.deepEqual(req.query, {
               event: 'notification',
+              type : 'new_message',
+              user : {
+                email          : 'event.handler@islive.io',
+                id             : '997',
+                unsubscribeHash: 'd57f802938aa32a0a43db3664d7bef8e',
+                username       : 'baconbabe',
+                walletId       : '81',
+                role           : 'visitor'
+              },
               data : {
-                type         : 'newMessage',
-                from         : {username: 'badpak'},
-                to           : {email: 'event.handler@islive.io', username: 'baconbabe'},
-                newThread    : 'false',
-                subject      : 'Test message',
-                recipientRole: 'visitor'
+                from   : {
+                  username       : 'badpak',
+                  email          : 'event.handler.performer@islive.io',
+                  id             : '996',
+                  unsubscribeHash: 'ae5bb2762bce3c31edd5794cb4575400',
+                  role           : 'performer'
+                },
+                initial: 'false',
+                subject: 'Test message'
               }
             }, 'Did not receive expected payload');
           } catch (error) {
@@ -94,7 +115,7 @@ describe('NotificationService', function () {
 
         server = app.listen(6663); //the port you want to use
 
-        notificationService.send(payloadOptions, function (error, response) {
+        notificationService.send(options.type, options.user, options.data, function (error, response) {
           assert.notOk(error, 'Sending out payload failed');
 
           if (response.error) {
@@ -108,28 +129,70 @@ describe('NotificationService', function () {
     });
   });
 
-  describe('.complementOptions', function () {
-    it('Should complement the supplied options', function (done) {
-      getTestParticipants(function (results) {
-        var payloadOptions = {
-          to     : results.visitor,
-          from   : results.performer,
-          type   : 'newMessage',
-          message: {
-            initial: true,
-            thread : {
-              subject: 'Test message'
-            }
-          }
-        };
+  // Test .composeUserObject
+  describe('.composeUserObject()', function () {
+    it('Should correctly build the userObject into a format suitable for transfer', function (done) {
+      assert.deepEqual(
+        sails.services.notificationservice.composeUserObject(mockOptions.user),
+        {
+          role           : 'performer',
+          username       : 'Polo',
+          email          : 'some-awesome-test@email.com',
+          id             : 246,
+          unsubscribeHash: 'e604a44729cf8fd47dc9262d6ba393b7'
+        },
+        'Built user object does not equal expected object.'
+      );
 
-        payloadOptions = sails.services.notificationservice.complementOptions(payloadOptions);
+      done();
+    });
 
-        assert.equal(payloadOptions.endpoint, 'http://localhost:6663', 'Complemented options do not contain expected endpoint');
-        assert.equal(payloadOptions.recipientRole, 'visitor', 'Complemented options do not contain expected visitor');
+    it('Should correctly build the userObject into a format suitable for transfer with notificationEmail', function (done) {
 
-        done();
-      });
+      var differentUser = _.cloneDeep(mockOptions.user);
+
+      differentUser.notificationEmail
+
+      assert.deepEqual(
+        sails.services.notificationservice.composeUserObject(mockOptions.user),
+        {
+          role           : 'performer',
+          username       : 'Polo',
+          email          : 'some-awesome-test@email.com',
+          id             : 246,
+          unsubscribeHash: 'e604a44729cf8fd47dc9262d6ba393b7'
+        },
+        'Built user object does not equal expected object.'
+      );
+
+      done();
+    });
+
+    it('Should not include the walletId for performers (if set)', function (done) {
+
+      var mockUser = _.cloneDeep(mockOptions.user);
+
+      mockUser.performer.walletId = 123;
+
+      var composed = sails.services.notificationservice.composeUserObject(mockUser);
+
+      assert.equal(composed.walletId, undefined, 'Wallet ID not set');
+
+      done();
+    });
+
+    it('Should include the walletId for visitors (if set)', function (done) {
+
+      var mockUser = _.cloneDeep(mockOptions.user);
+
+      delete mockUser.performer;
+      mockUser.visitor = {walletId: 123};
+
+      var composed = sails.services.notificationservice.composeUserObject(mockUser);
+
+      assert.equal(composed.walletId, 123, 'Wallet ID not set');
+
+      done();
     });
   });
 
@@ -137,57 +200,16 @@ describe('NotificationService', function () {
   describe('.createPayload()', function () {
     it('Should create an object which is a valid payload for a notification handler', function (done) {
       var notificationService = sails.services.notificationservice,
-          payload = notificationService.createPayload(mockPayloadOptions);
+          payload = notificationService.createPayload(mockOptions.type, mockOptions.user, mockOptions.data);
 
       assert.deepEqual(payload, {
         event: 'notification',
-        data : {
-          type         : 'newMessage',
-          from         : {
-            username: 'Marco'
-          },
-          to           : {
-            username: 'Polo',
-            email   : 'some-awesome-test@email.com'
-          },
-          subject      : 'lorem',
-          newThread    : true,
-          recipientRole: 'performer'
-        }
+        type : 'new_message',
+        user : notificationService.composeUserObject(mockOptions.user),
+        data : mockOptions.data
       }, 'Did not get the expected payload.');
 
       done();
-    });
-
-    it('Should function properly with complemented options', function (done) {
-      getTestParticipants(function (results) {
-        var notificationService = sails.services.notificationservice,
-            payloadOptions = {
-              to     : results.visitor,
-              from   : results.performer,
-              type   : 'newMessage',
-              message: {
-                initial: true,
-                thread : {
-                  subject: 'Test message'
-                }
-              }
-            };
-
-        assert.deepEqual(notificationService.createPayload(notificationService.complementOptions(payloadOptions)), {
-          event: 'notification',
-          data : {
-            type         : 'newMessage',
-            from         : {username: 'badpak'},
-            to           : {email: 'event.handler@islive.io', username: 'baconbabe'},
-            newThread    : true,
-            subject      : 'Test message',
-            recipientRole: 'visitor'
-          }
-        }, 'Complemented options do not equal expected options');
-
-        done();
-      });
     });
   });
 });
