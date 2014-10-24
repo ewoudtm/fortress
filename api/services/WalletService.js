@@ -94,7 +94,7 @@ module.exports = {
     delete walletAccount.email;
     delete walletAccount.object;
 
-    this.request('register', {form: walletAccount}, function (error, response) {
+    this.request('register', {qs: walletAccount}, function (error, response) {
       if (error) {
         return callback(error);
       }
@@ -145,7 +145,7 @@ module.exports = {
       }
 
       self.importUser(credentials, callback);
-    });
+    }, 'get');
   },
 
   login: function (credentials, callback) {
