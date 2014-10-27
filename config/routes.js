@@ -67,5 +67,6 @@ module.exports.routes = {
   'get /connect/safari-getcookie': 'ConnectController.safariGetCookie',
 
   // System
-  'get /system/total-connections': 'SystemController.totalConnections'
+  'get /system/total-connections': 'SystemController.totalConnections',
+  'get /system/verify/:type'     : 'SystemController.verify'
 };
