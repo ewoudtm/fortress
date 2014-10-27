@@ -362,101 +362,107 @@ UserController = {
 
     var userModel = sails.models.user,
         walletService = sails.services.walletservice,
+        requiredProperties,
         role,
         credentials,
         criteria;
 
+    requiredProperties = [
+      'role',
+      'email',
+      'hash',
+      {required: false, param: 'username'}
+    ];
+
     // Verify that all required parameters have been supplied.
-    if (!req.param('role')) {
-      return res.badRequest('missing_parameter', 'role');
-    }
-
-    if (!req.param('email')) {
-      return res.badRequest('missing_parameter', 'email');
-    }
-
-    if (!req.param('hash')) {
-      return res.badRequest('missing_parameter', 'hash');
-    }
-
-    if (!userModel.isValidRole(req.param('role'))) {
-      return res.badRequest('invalid_parameter', 'role');
-    }
-
-    role = req.param('role');
-
-    credentials = {
-      username: req.param('email').trim(),
-      object  : req.object.id,
-      ip      : req.ip
-    };
-
-    criteria = {
-      email: req.param('email').trim()
-    };
-
-    /**
-     * Authenticate.
-     */
-    userModel.findOne(criteria).populate(role).exec(function (error, result) {
-
-      // Something went wrong in the backend.
+    requestHelpers.pickParams(requiredProperties, req, function (error, params) {
       if (error) {
-        return res.serverError('database_error', error);
+        return res.badRequest('missing_parameter', error);
       }
 
-      // No user found by that email address.
-      if (!result) {
+      if (!userModel.isValidRole(params.role)) {
+        return res.badRequest('invalid_parameter', 'role');
+      }
 
-        // try to import user.
-        return walletService.importUser(credentials, function (error, record) {
-          if (error) {
-            return res.serverError('server_error', error);
-          }
+      role = params.role;
 
-          if (!record) {
+      credentials = {
+        username: params.email.trim(),
+        object  : req.object.id,
+        ip      : req.ip
+      };
+
+      criteria = {
+        email: params.email.trim()
+      };
+
+      if (params.username) {
+        criteria['username'] = params.username;
+      }
+
+      /**
+       * Authenticate.
+       */
+      userModel.findOne(criteria).populate(role).exec(function (error, result) {
+
+        // Something went wrong in the backend.
+        if (error) {
+          return res.serverError('database_error', error);
+        }
+
+        // No user found by that email address.
+        if (!result) {
+
+          if (role === 'performer') {
             return res.badRequest('invalid_credentials');
           }
 
-          UserController.loginByHash(req, res);
-        });
-      }
+          // try to import user.
+          return walletService.importUser(credentials, function (error, record) {
+            if (error) {
+              return res.serverError('server_error', error);
+            }
 
-      var hashService = sails.services.hashservice;
+            UserController.loginByHash(req, res);
+          });
+        }
 
-      // Check if the specified hash is correct.
-      if (!hashService.verifyLoginHash(req.param('hash'), credentials.username)) {
+        var hashService = sails.services.hashservice;
 
-        // It's not. Invalid credentials.
-        return res.badRequest('invalid_credentials');
-      }
+        // Check if the specified hash is correct.
+        if (!hashService.verifyLoginHash(params.hash, credentials.username)) {
 
-      // Does the supplied role exist?
-      if (result.roles.indexOf(role) === -1) {
-        return res.badRequest('missing_role', role);
-      }
+          // It's not. Invalid credentials.
+          return res.badRequest('invalid_credentials');
+        }
 
-      req.session.user = result.id;
-      req.session.userInfo = {
-        username         : result.username,
-        roles            : result.roles,
-        authenticatedRole: role
-      };
+        // Does the supplied role exist?
+        if (result.roles.indexOf(role) === -1) {
+          return res.badRequest('missing_role', role);
+        }
 
-      req.session.userInfo[role + 'Id'] = result[role].id;
+        req.session.user = result.id;
+        req.session.userInfo = {
+          username         : result.username,
+          roles            : result.roles,
+          authenticatedRole: role
+        };
 
-      if ('visitor' === role && result.visitor.walletId) {
-        req.session.userInfo.walletId = result.visitor.walletId;
-      }
+        req.session.userInfo[role + 'Id'] = result[role].id;
 
-      // Store socketId if is socket connection.
-      if (req.isSocket) {
-        sails.services.userservice.connect(result.id, req.socket);
-      }
+        if ('visitor' === role && result.visitor.walletId) {
+          req.session.userInfo.walletId = result.visitor.walletId;
+        }
 
-      subscribe(req, role, result[role]);
+        // Store socketId if is socket connection.
+        if (req.isSocket) {
+          sails.services.userservice.connect(result.id, req.socket);
+        }
 
-      return res.ok(result);
+        subscribe(req, role, result[role]);
+
+        return res.ok(result);
+      });
     });
   },
 
