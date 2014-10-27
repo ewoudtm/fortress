@@ -44,6 +44,10 @@ module.exports = {
             return res.negotiate(error);
           }
 
+          if (!visitor) {
+            return res.negotiate('unknown_user');
+          }
+
           verify(visitor.user, field);
         });
       }
