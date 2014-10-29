@@ -33,3 +33,16 @@ In project folder
 npm install connect-redis@1.4.5
 ```
 
+## Optimize DB
+
+Due to lack of compound keys in waterline, run these manually:
+
+Run:
+
+```sql
+alter table message add key `read_to` (`read`,`to`);
+alter table message add key `to_thread` (`to`,`thread`);
+alter table message add key `createdAt` (`createdAt`);
+alter table thread add KEY `updatedAt` (`updatedAt`);
+```
+
