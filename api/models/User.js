@@ -45,6 +45,7 @@ userModel.attributes = {
 
   object: {
     model   : 'object',
+    index   : true,
     notEmpty: true
   },
 
@@ -68,6 +69,7 @@ userModel.attributes = {
 
   socketId: {
     type      : 'string',
+    index     : true,
     defaultsTo: null
   },
 
