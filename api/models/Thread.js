@@ -7,10 +7,12 @@ module.exports = {
     },
     subject: 'string',
     from: {
-      model: 'user'
+      model: 'user',
+      index: true
     },
     to: {
-      model: 'user'
+      model: 'user',
+      index: true
     },
     toJSON: function() {
       var modelInstance = this.toObject();

@@ -48,33 +48,50 @@ userService = {
     });
   },
 
-  wouldBeDuplicate: function (userCredentials, callback) {
-    var duplicateCheckCriteria = {
-      object: (typeof userCredentials.object === 'object' ? userCredentials.object.id : userCredentials.object)
-    };
+  wouldBeDuplicate: function (userCredentials, done) {
+    function doDuplicateCheck(field, value, callback) {
+      var criteria = {
+        object : (typeof userCredentials.object === 'object' ? userCredentials.object.id : userCredentials.object)
+      };
 
-    // Probably an import.
-    if (!userCredentials.username) {
-      duplicateCheckCriteria.email = userCredentials.email;
-    } else {
-      duplicateCheckCriteria.or = [
-        {username: userCredentials.username},
-        {email: userCredentials.email}
-      ];
+      criteria[field] = value;
+
+      sails.models.user.find(criteria, function (error, results) {
+        if (error) {
+          return callback(error);
+        }
+
+        return callback(null, !!results.length ? field : false);
+      });
     }
 
-    sails.models.user.find(duplicateCheckCriteria, function (error, results) {
+    // If there's no username supplied, only check if email exists
+    if (!userCredentials.username) {
+      return doDuplicateCheck({email: userCredentials.email}, done);
+    }
+
+    // Check both username and email.
+    async.parallel({
+      user: function (callback) {
+        doDuplicateCheck('username', userCredentials.username, callback);
+      },
+      email: function (callback) {
+        doDuplicateCheck('email', userCredentials.email, callback);
+      }
+    }, function (error, result) {
       if (error) {
-        return callback(error);
+        return done(error);
       }
 
-      var isDuplicate = !!results.length;
-
-      if (!isDuplicate) {
-        return callback(null, false);
+      if (result.user) {
+        return done(null, result.user);
       }
 
-      callback(null, results[0].email === userCredentials.email.toLowerCase() ? 'email' : 'username');
+      if (result.email) {
+        return done(null, result.email);
+      }
+
+      done(error, false);
     });
   },
 

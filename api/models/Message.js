@@ -8,7 +8,8 @@
 module.exports = {
   attributes: {
     thread : {
-      model: 'thread'
+      model: 'thread',
+      index: true
     },
     body   : 'text',
     read   : {
@@ -17,10 +18,12 @@ module.exports = {
       defaultsTo: false
     },
     from   : {
-      model: 'user'
+      model: 'user',
+      index: true
     },
     to     : {
-      model: 'user'
+      model: 'user',
+      index: true
     },
     initial: {
       type      : 'boolean',
