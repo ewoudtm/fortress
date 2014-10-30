@@ -67,7 +67,7 @@ userService = {
 
     // If there's no username supplied, only check if email exists
     if (!userCredentials.username) {
-      return doDuplicateCheck({email: userCredentials.email}, done);
+      return doDuplicateCheck('email', userCredentials.email, done);
     }
 
     // Check both username and email.
