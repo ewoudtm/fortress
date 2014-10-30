@@ -151,8 +151,6 @@ describe('NotificationService', function () {
 
       var differentUser = _.cloneDeep(mockOptions.user);
 
-      differentUser.notificationEmail
-
       assert.deepEqual(
         sails.services.notificationservice.composeUserObject(mockOptions.user),
         {
