@@ -91,7 +91,7 @@ userService = {
         return done(null, result.email);
       }
 
-      done(error, result);
+      done(error, false);
     });
   },
 
