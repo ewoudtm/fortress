@@ -25,6 +25,70 @@ describe('UserService', function () {
     });
   });
 
+  describe('.wouldBeDuplicate()', function () {
+    it ('Should verify this will not be a duplicate on email address.', function (done) {
+      var userService = sails.services.userservice;
+      userService.wouldBeDuplicate ({email : 'doesnotexist@islive.io', object: 1}, function (error, isDuplicate) {
+        assert.notOk(error, 'There was an error');
+        assert.notOk(isDuplicate, 'This is a duplicate');
+
+        done();
+      });
+    });
+
+    it ('Should verify this will be a duplicate on email address.', function (done) {
+      var userService = sails.services.userservice;
+      userService.wouldBeDuplicate ({email : 'fixture-test@islive.io', object: 1}, function (error, isDuplicate) {
+        assert.notOk(error, 'There was an error');
+        assert.isString(isDuplicate, 'User is not a duplicate');
+        assert.equal(isDuplicate, 'email', 'Other unexpected field given.');
+
+        done();
+      });
+    });
+
+    it ('Should verify this will not be a duplicate on same email address but different object.', function (done) {
+      var userService = sails.services.userservice;
+      userService.wouldBeDuplicate ({email : 'fixture-test@islive.io', object: 2}, function (error, isDuplicate) {
+        assert.notOk(error, 'There was an error');
+        assert.notOk(isDuplicate, 'This is a duplicate');
+
+        done();
+      });
+    });
+
+    it ('Should verify this will not be a duplicate on username.', function (done) {
+      var userService = sails.services.userservice;
+      userService.wouldBeDuplicate ({email : 'doesnotexist@islive.io', username: 'doesntexist', object: 1}, function (error, isDuplicate) {
+        assert.notOk(error, 'There was an error');
+        assert.notOk(isDuplicate, 'This is a duplicate');
+
+        done();
+      });
+    });
+
+    it ('Should verify this will be a duplicate on username.', function (done) {
+      var userService = sails.services.userservice;
+      userService.wouldBeDuplicate ({email : 'doesnotexist@islive.io', username: 'fixturetest', object: 1}, function (error, isDuplicate) {
+        assert.notOk(error, 'There was an error');
+        assert.isString(isDuplicate, 'User is not a duplicate');
+        assert.equal(isDuplicate, 'username', 'Other unexpected field given.');
+
+        done();
+      });
+    });
+
+    it ('Should verify this will not be a duplicate on same username but different object.', function (done) {
+      var userService = sails.services.userservice;
+      userService.wouldBeDuplicate ({email : 'fixture-test@islive.io', username: 'fixturetest', object: 2}, function (error, isDuplicate) {
+        assert.notOk(error, 'There was an error');
+        assert.notOk(isDuplicate, 'This is a duplicate');
+
+        done();
+      });
+    });
+  });
+
   /**
    * Generate hash cases
    */
