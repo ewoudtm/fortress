@@ -87,6 +87,16 @@ describe('UserService', function () {
         done();
       });
     });
+
+    it('Should gracefully handle missing parameters.', function (done) {
+      var userService = sails.services.userservice;
+      userService.wouldBeDuplicate ({unknownproperty : 'unknownvalue', object: 2}, function (error, isDuplicate) {
+        assert.notOk(error, 'There was an error');
+        assert.notOk(isDuplicate, 'This is a duplicate');
+
+        done();
+      });
+    });
   });
 
   /**
