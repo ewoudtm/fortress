@@ -1,3 +1,3 @@
 module.exports.propertyPolicies = {
-  user: ['notificationEmail', 'email'] // Whitelist for model `user`
+  user: ['notificationEmail', 'email', 'mailable'] // Whitelist for model `user`
 };
