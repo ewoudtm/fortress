@@ -40,5 +40,19 @@
         }
       }
     }
+  },
+  {
+    "id"         : 4,
+    "host"       : "objectservice.by.hostname.islive.io",
+    "partnerCode": "1234",
+    "partnerInfo": "objserv",
+    "email"      : "test@islive.nl"
+  },
+  {
+    "id"         : 5,
+    "host"       : "objectservice.by.id.islive.io",
+    "partnerCode": "1235",
+    "partnerInfo": "objservdiff",
+    "email"      : "test@islive.nl"
   }
 ]
