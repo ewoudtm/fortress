@@ -8,45 +8,79 @@ var request = require('request');
  */
 
 module.exports = {
-  send: function (type, user, data, callback) {
+  send: function (type, user, data, done) {
 
-    callback = callback || function () {
+    var self = this;
+
+    done = done || function () {
       // Just here to avoid errors.
     };
 
-    if (!user.mailable) {
-      return callback({
-        error      : 'not_mailable',
-        description: "User indicated not to want to receive anymore mail from us."
+    async.waterfall([
+
+      // Make sure we have a user instance.
+      function (callback) {
+        if (typeof user === 'object') {
+          return callback(null, user);
+        }
+
+        sails.models.user.findOne(user).populate('visitor').exec(callback);
+      },
+
+      // User hasn't un-subscribed from mailings.
+      function (userInstance, callback) {
+        user = userInstance;
+
+        if (user.mailable) {
+          return callback(null);
+        }
+
+        callback({
+          error      : 'not_mailable',
+          description: "User indicated not to want to receive anymore mail from us."
+        });
+      },
+
+      // User has at least one mailable address
+      function (callback) {
+        if (user.notificationEmailVerified || user.emailVerified) {
+          return callback(null);
+        }
+
+        callback({
+          error      : 'not_mailable',
+          description: "User has not verified email address."
+        });
+      },
+
+      // Init objectConfig
+      function(callback) {
+        sails.services.objectconfigservice.initConfig(user.object, callback);
+      }
+    ], function (error, objectConfig) {
+      if (error) {
+        return done(error);
+      }
+
+      var endpoint = objectConfig.resolve([
+            'notifications',
+            type,
+            user.visitor ? 'visitor' : 'performer',
+            'handler'
+          ].join('.'));
+
+      if (endpoint) {
+        return self.delegate(
+          endpoint,
+          self.createPayload(type, user, data),
+          done
+        );
+      }
+
+      done({
+        error      : 'not_implemented',
+        description: "This feature hasn't been implemented yet."
       });
-    }
-
-    if (!user.notificationEmailVerified && !user.emailVerified) {
-      return callback({
-        error      : 'not_mailable',
-        description: "User has not verified email address."
-      });
-    }
-
-    var objectConfig = sails.services.objectconfigservice.initConfig(user.object),
-        endpoint = objectConfig.resolve([
-          'notifications',
-          type,
-          user.visitor ? 'visitor' : 'performer',
-          'handler'
-        ].join('.'));
-
-    if (endpoint) {
-      return this.delegate(
-        endpoint,
-        this.createPayload(type, user, data),
-        callback
-      );
-    }
-
-    callback({
-      error      : 'not_implemented',
-      description: "This feature hasn't been implemented yet."
     });
   },
 
