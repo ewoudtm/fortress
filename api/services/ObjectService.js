@@ -1,18 +1,30 @@
-var objectCache = {};
+var objectCache = {},
+    objectIdMap = {};
 
 module.exports = {
-  resolve : function(hostname, callback) {
+
+  resolve : function(hostOrId, callback) {
     callback = callback || function () {
       // Just here to avoid errors.
     };
 
-    if (objectCache[hostname]) {
-      callback(null, objectCache[hostname]);
-
-      return objectCache[hostname];
+    // First check by hostname
+    if (objectCache[hostOrId]) {
+      return callback(null, objectCache[hostOrId]);
     }
 
-    sails.models.object.findOne({host : hostname}, function(error, object) {
+    // Then check by object ID
+    if (objectIdMap[hostOrId]) {
+      return callback(null, objectIdMap[hostOrId]);
+    }
+
+    // Ids (not even in mongo) don't contains dots.
+    if (hostOrId.toString().search(/\./) > -1) {
+      hostOrId = {host: hostOrId};
+    }
+
+    sails.models.object.findOne(hostOrId, function(error, object) {
+
       if (error) {
         return callback(error);
       }
@@ -21,9 +33,10 @@ module.exports = {
         return callback({error: 'unknown_object'});
       }
 
-      objectCache[hostname] = object;
+      objectCache[object.host] = object;
+      objectIdMap[object.id]   = object;
 
-      callback(null, objectCache[hostname]);
+      callback(null, object);
     });
   }
 };
