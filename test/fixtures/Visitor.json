@@ -25,5 +25,14 @@
     "updatedAt": "2014-09-10T10:05:16.704Z",
     "id"       : 886,
     "user"     : 997
+  },
+  {
+    "walletId" : 82,
+    "credits"  : 1337,
+    "username" : "somethingcruel",
+    "createdAt": "2014-09-10T10:05:16.235Z",
+    "updatedAt": "2014-09-10T10:05:16.704Z",
+    "id"       : 885,
+    "user"     : 995
   }
 ]
