@@ -26,7 +26,7 @@ module.exports.models = {
 };
 
 module.exports.log = {
-  level: 'error'
+  level: 'silent'
 };
 
 module.exports.wallet = {
