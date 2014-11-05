@@ -29,10 +29,10 @@ describe('sendNotifications', function () {
           .put('/user/999')
           .set('cookie', res.headers['set-cookie'])
           .send({notificationEmail: 'something.few@and.blue'})
-          .end(function (error, reponse) {
-            assert.strictEqual(reponse.status, 500, 'Request was successful, but should not have been.');
+          .end(function (error, response) {
+            assert.strictEqual(response.status, 500, 'Request was successful, but should not have been.');
 
-            assert.deepEqual(reponse.body, {
+            assert.deepEqual(response.body, {
               error      : 'not_implemented',
               description: 'This feature hasn\'t been implemented yet.'
             }, 'Did not get the expected error response.');
@@ -68,7 +68,8 @@ describe('sendNotifications', function () {
             role           : 'visitor',
             id             : '995',
             unsubscribeHash: actualUnsubscribeHash,
-            email          : 'something.few@and.blue'
+            email          : 'something.few@and.blue',
+            username       : 'somethingcruel'
           },
           data : {
             verificationHash: actualVerificationHash
@@ -134,7 +135,8 @@ describe('sendNotifications', function () {
             role           : 'visitor',
             id             : '995',
             unsubscribeHash: actualUnsubscribeHash,
-            email          : 'something.else@and.welsh'
+            email          : 'something.else@and.welsh',
+            username       : 'somethingcruel'
           },
           data : {
             verificationHash: actualVerificationHash
