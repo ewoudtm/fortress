@@ -10,12 +10,36 @@ function subscribe (req, model, instance) {
   }
 }
 
+function setupUserSession (req, result, role) {
+  // Store user info in session.
+  req.session.user = result.id;
+  req.session.userInfo = {
+    username         : result.username,
+    roles            : result.roles,
+    authenticatedRole: role,
+    objectId         : result.object,
+    email            : result.email
+  };
+
+  req.session.userInfo[role + 'Id'] = result[role].id;
+
+  if ('visitor' === role && result.visitor.walletId) {
+    req.session.userInfo.walletId = result.visitor.walletId;
+  }
+
+  if (req.isSocket) {
+    sails.services.userservice.connect(result.id, req.socket);
+  }
+
+  subscribe(req, role, result[role]);
+}
+
 UserController = {
   getIdentity: function (req, res) {
     var query, role;
 
     query = sails.models.user.findOne({id: req.session.user});
-    role = req.param('role');
+    role  = req.param('role');
 
     if (role) {
       query.populate(role);
@@ -177,177 +201,159 @@ UserController = {
 
     var userModel = sails.models.user,
         walletService = sails.services.walletservice,
+        requiredProperties,
         role,
         credentials,
         criteria;
 
-    // Verify that all required parameters have been supplied.
-    if (!req.param('role')) {
-      return res.badRequest('missing_parameter', 'role');
-    }
+    requiredProperties = [
+      'role',
+      'username',
+      'password'
+    ];
 
-    if (!req.param('username')) {
-      return res.badRequest('missing_parameter', 'username');
-    }
+    requestHelpers.pickParams(requiredProperties, req, function (error, params) {
 
-    if (!req.param('password')) {
-      return res.badRequest('missing_parameter', 'password');
-    }
-
-    if (!userModel.isValidRole(req.param('role'))) {
-      return res.badRequest('invalid_parameter', 'role');
-    }
-
-    role = req.param('role');
-
-    credentials = {
-      username: req.param('username').trim(),
-      password: req.param('password'),
-      object  : req.object.id,
-      ip      : req.ip
-    };
-
-    criteria = {
-      email: req.param('username').trim()
-    };
-
-    /**
-     * Generic function for login, that checks the role and sets session data.
-     *
-     * @param {{}} result
-     */
-    function handleValidCredentials (result) {
-      // Does the user have the role that is being authenticated for?
-      if (result.roles.indexOf(role) === -1) {
-        return res.badRequest('missing_role', role);
+      // Verify that all required parameters have been supplied.
+      if (error) {
+        return res.badRequest('missing_parameter', error);
       }
 
-      // Store user info in session.
-      req.session.user = result.id;
-      req.session.userInfo = {
-        username         : result.username,
-        roles            : result.roles,
-        authenticatedRole: role
+      if (!userModel.isValidRole(params.role)) {
+        return res.badRequest('invalid_parameter', 'role');
+      }
+
+      role = params.role;
+
+      credentials = {
+        username: params.username.trim(),
+        password: params.password,
+        object  : req.object.id,
+        ip      : req.ip
       };
 
-      req.session.userInfo[role + 'Id'] = result[role].id;
+      criteria = {
+        email: params.username.trim()
+      };
 
-      // Store socketId if is socket connection.
-      if (req.isSocket) {
-        sails.services.userservice.connect(result.id, req.socket);
-      }
-
-      if ('visitor' === role && result.visitor.walletId) {
-        req.session.userInfo.walletId = result.visitor.walletId;
-      }
-
-      // Subscribe to events.
-      subscribe(req, role, result[role]);
-
-      // all done and authenticated.
-      return res.ok(result);
-    }
-
-    // Fetch the user from the database.
-    userModel.findOne(criteria).populate(role).exec(function (error, result) {
-
-      // Something went wrong in the backend.
-      if (error) {
-        return res.serverError('database_error', error);
-      }
-
-      // No user found... Check if user has valid credentials with the wallet.
-      if (!result) {
-
-        return walletService.login(credentials, function (error, authenticated) {
-
-          if (error) {
-            return res.serverError('database_error', error);
-          }
-
-          // Nope. Alright then, invalid credentials.
-          if (!authenticated) {
-            return res.badRequest('invalid_credentials');
-          }
-
-          walletService.importUser(credentials, function (error, result) {
-            if (error) {
-              return res.serverError('database_error', error);
-            }
-
-            if (null === result) {
-              // The following should never ever happen. It's not possible. But better safe than sorry.
-              return res.serverError('database_error', {
-                error: 'Wallet auth success, but record not found in the wallet database.'
-              });
-            }
-
-            // Simply rethrow, as we've just created the user. Prevents the existence of duplicate logic.
-            UserController.login(req, res);
-          });
-        });
-      }
-
-      var afterPasswordValidate = function (passwordIsValid) {
-        if (passwordIsValid) {
-
-          // Credentials are valid! Execute remainder of validations.
-          return handleValidCredentials(result);
-        }
-
+      /**
+       * Generic function for login, that checks the role and sets session data.
+       *
+       * @param {{}} result
+       */
+      function handleValidCredentials (result) {
         // Does the user have the role that is being authenticated for?
         if (result.roles.indexOf(role) === -1) {
           return res.badRequest('missing_role', role);
         }
 
-        // Only users with walletId are allowed to not have a password, because of import in hashLogin.
-        // Otherwise, credentials were invalid for certain.
-        if (!result[role].walletId) {
-          return res.badRequest('invalid_credentials');
+        setupUserSession(req, result, role);
+
+        // all done and authenticated.
+        return res.ok(result);
+      }
+
+      // Fetch the user from the database.
+      userModel.findOne(criteria).populate(role).exec(function (error, result) {
+
+        // Something went wrong in the backend.
+        if (error) {
+          return res.serverError('database_error', error);
         }
 
-        // Password is not empty, so it's not an imported user from hashLogin. Invalid credentials.
-        if (result.password) {
-          return res.badRequest('invalid_credentials');
-        }
+        // No user found... Check if user has valid credentials with the wallet.
+        if (!result) {
 
-        // At this point, we know it's a wallet user, with no password (so imported on hashLogin).
-        // We will now try to authenticate with the wallet, to see if the supplied credentials are correct.
-        walletService.login(credentials, function (error, walletResult) {
-          if (error) {
-            return res.serverError('server_error', error);
-          }
+          return walletService.login(credentials, function (error, authenticated) {
 
-          // Nope, invalid credentials.
-          if (!walletResult) {
-            return res.badRequest('invalid_credentials');
-          }
-
-          // Update password for wallet user with the supplied, proven to be the valid, password.
-          result.password = credentials.password;
-
-          result.save(function (error) {
             if (error) {
               return res.serverError('database_error', error);
             }
 
-            handleValidCredentials(result);
+            // Nope. Alright then, invalid credentials.
+            if (!authenticated) {
+              return res.badRequest('invalid_credentials');
+            }
+
+            walletService.importUser(credentials, function (error, result) {
+              if (error) {
+                return res.serverError('database_error', error);
+              }
+
+              if (null === result) {
+                // The following should never ever happen. It's not possible. But better safe than sorry.
+                return res.serverError('database_error', {
+                  error: 'Wallet auth success, but record not found in the wallet database.'
+                });
+              }
+
+              // Simply rethrow, as we've just created the user. Prevents the existence of duplicate logic.
+              UserController.login(req, res);
+            });
           });
-        });
-      };
-
-      if (!result.password || !credentials.password) {
-        return afterPasswordValidate(false);
-      }
-
-      // User record exists. Is supplied password correct?
-      bcrypt.compare(credentials.password, result.password, function (error, passwordIsValid) {
-
-        if (error) {
-          return res.serverError('hashing_failed', error);
         }
 
-        afterPasswordValidate(passwordIsValid);
+        var afterPasswordValidate = function (passwordIsValid) {
+          if (passwordIsValid) {
+
+            // Credentials are valid! Execute remainder of validations.
+            return handleValidCredentials(result);
+          }
+
+          // Does the user have the role that is being authenticated for?
+          if (result.roles.indexOf(role) === -1) {
+            return res.badRequest('missing_role', role);
+          }
+
+          // Only users with walletId are allowed to not have a password, because of import in hashLogin.
+          // Otherwise, credentials were invalid for certain.
+          if (!result[role].walletId) {
+            return res.badRequest('invalid_credentials');
+          }
+
+          // Password is not empty, so it's not an imported user from hashLogin. Invalid credentials.
+          if (result.password) {
+            return res.badRequest('invalid_credentials');
+          }
+
+          // At this point, we know it's a wallet user, with no password (so imported on hashLogin).
+          // We will now try to authenticate with the wallet, to see if the supplied credentials are correct.
+          walletService.login(credentials, function (error, walletResult) {
+            if (error) {
+              return res.serverError('server_error', error);
+            }
+
+            // Nope, invalid credentials.
+            if (!walletResult) {
+              return res.badRequest('invalid_credentials');
+            }
+
+            // Update password for wallet user with the supplied, proven to be the valid, password.
+            result.password = credentials.password;
+
+            result.save(function (error) {
+              if (error) {
+                return res.serverError('database_error', error);
+              }
+
+              handleValidCredentials(result);
+            });
+          });
+        };
+
+        if (!result.password || !credentials.password) {
+          return afterPasswordValidate(false);
+        }
+
+        // User record exists. Is supplied password correct?
+        bcrypt.compare(credentials.password, result.password, function (error, passwordIsValid) {
+
+          if (error) {
+            return res.serverError('hashing_failed', error);
+          }
+
+          afterPasswordValidate(passwordIsValid);
+        });
       });
     });
   },
@@ -441,25 +447,7 @@ UserController = {
           return res.badRequest('missing_role', role);
         }
 
-        req.session.user = result.id;
-        req.session.userInfo = {
-          username         : result.username,
-          roles            : result.roles,
-          authenticatedRole: role
-        };
-
-        req.session.userInfo[role + 'Id'] = result[role].id;
-
-        if ('visitor' === role && result.visitor.walletId) {
-          req.session.userInfo.walletId = result.visitor.walletId;
-        }
-
-        // Store socketId if is socket connection.
-        if (req.isSocket) {
-          sails.services.userservice.connect(result.id, req.socket);
-        }
-
-        subscribe(req, role, result[role]);
+        setupUserSession(req, result, role);
 
         return res.ok(result);
       });
