@@ -95,7 +95,8 @@ module.exports = {
       try {
         responseData = JSON.parse(body);
       } catch (error) {
-        return callback(error);
+        sails.services.logservice.error(error);
+        responseData = null;
       }
 
       callback(null, responseData);
