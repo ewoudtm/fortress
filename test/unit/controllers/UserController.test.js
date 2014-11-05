@@ -83,7 +83,7 @@ describe('UserController', function () {
       requestHook
         .post('/user/login')
         .send(credentials)
-        .end(function (err,  res) {
+        .end(function (err, res) {
           assert.isFalse(res.error, "User login failed");
           assert.strictEqual(res.status, 200, 'Request was invalid');
 
