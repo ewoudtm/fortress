@@ -95,7 +95,7 @@ module.exports = {
       try {
         responseData = JSON.parse(body);
       } catch (error) {
-        sails.services.logservice.error('Got invalid JSON format from endpoint.', error);
+        sails.services.logservice.error('Got invalid JSON format from endpoint.', error, body);
         responseData = null;
       }
 
