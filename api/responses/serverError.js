@@ -3,19 +3,12 @@ module.exports = function serverError (data, details) {
   // Get access to `res`
   var res = this.res,
       alertService = sails.services.alertservice,
-      m = new Date(),
-      dateString = m.getFullYear() + "/" + (m.getMonth() + 1) + "/" + m.getDate() + " " + m.getHours() + ":" + m.getMinutes() + ":" + m.getSeconds(),
       notificationMessage;
 
   // Set status code
   res.status(500);
 
-  // Log error to console
-  sails.log.error('[' + dateString + '] Report start');
-  sails.log.error('Sent 500 ("Server Error") response with:');
-  sails.log.error('data - ', data);
-  sails.log.error('details - ', details);
-  sails.log.error('End report');
+  sails.services.logservice.error('Sent 500 ("Server Error") response with:', data, details);
 
   if (data) {
     if (typeof data === 'string') {

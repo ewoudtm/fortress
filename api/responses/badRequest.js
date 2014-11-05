@@ -1,28 +1,15 @@
 module.exports = function badRequest(name, details) {
 
   // Get access to `res`
-  var res = this.res,
-      m = new Date(),
-      dateString = m.getFullYear() + "/" + (m.getMonth() + 1) + "/" + m.getDate() + " " + m.getHours() + ":" + m.getMinutes() + ":" + m.getSeconds();
-
+  var res = this.res;
   // Set status code
   res.status(400);
 
-
-  // Log error to console
-  sails.log.error('[' + dateString + '] Report start');
-  sails.log.error('Sent 400 ("Bad Request") response with:');
-  sails.log.error('name - ', name);
-  sails.log.error('details - ', details);
-  sails.log.error('End report');
+  sails.services.logservice.error('Sent 400 ("Bad Request") response with:', name, details);
 
   if (!name) {
     return res.jsonp({status: 400});
   }
-
-  // Log error to console
-  this.req._sails.log.verbose('Sent 400 ("Bad Request") response');
-  this.req._sails.log.verbose(name);
 
   res.jsonp(createResponse(name, details));
 };
