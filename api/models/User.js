@@ -200,12 +200,6 @@ userModel.beforeCreate = function (values, callback) {
     return setGeo();
   }
 
-  if (values._noHash) {
-    delete values._noHash;
-
-    return setGeo();
-  }
-
   hashPassword(values.password, function (error, hash) {
     if (error) {
       return callback(error);
