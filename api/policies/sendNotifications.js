@@ -27,6 +27,7 @@ module.exports = function (req, res, next) {
           field = type === 'email' ? 'email' : 'notificationEmail',
           userMock = {
             id      : req.session.user,
+            username: req.session.userInfo.username,
             object  : req.session.userInfo.objectId || req.object.id,
             mailable: true,
             email   : req.session.userInfo.email
