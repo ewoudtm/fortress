@@ -11,8 +11,10 @@ Object.defineProperty(global, '__logInfo', {
     };
 
     error = new Error;
+
     Error.captureStackTrace(error, arguments.callee);
-    stack = error.stack;
+
+    stack                   = error.stack;
     Error.prepareStackTrace = original;
 
     stack = stack[3];
