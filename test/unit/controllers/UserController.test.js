@@ -71,8 +71,8 @@ describe('UserController', function () {
       var requestHook = request(sails.hooks.http.app),
           testUserId = 999,
           newValues = {
-            notificationEmail: 'Bob@notifications.org',
-            UnknownProp      : '.|.'
+            mailable   : false,
+            UnknownProp: '.|.'
           },
           credentials = {
             role    : 'visitor',
@@ -83,7 +83,7 @@ describe('UserController', function () {
       requestHook
         .post('/user/login')
         .send(credentials)
-        .end(function (err, res) {
+        .end(function (err,  res) {
           assert.isFalse(res.error, "User login failed");
           assert.strictEqual(res.status, 200, 'Request was invalid');
 
@@ -94,7 +94,7 @@ describe('UserController', function () {
             .end(function (err, user) {
               assert.strictEqual(user.status, 200, 'Request was invalid');
               assert.isUndefined(user.body.UnknownProp, 'UnknownProp should not be updated because the property is not set in the model');
-              assert.strictEqual(user.body.notificationEmail, newValues.notificationEmail, 'Username does not equal "' + newValues.username + '"');
+              assert.strictEqual(user.body.mailable, newValues.mailable, 'Mailable does not equal "' + newValues.mailable + '"');
 
               done();
             });
