@@ -7,7 +7,11 @@ function initObject (objectId, callback) {
     // Always assert error
     assert.notOk(error, 'Fetching Object model failed.');
 
-    callback(sails.services.objectconfigservice.initConfig(result));
+    sails.services.objectconfigservice.initConfig(result, function (error, objectConfig) {
+      assert.notOk(error, 'Initializing objectConfig failed.');
+
+      callback(objectConfig);
+    });
   });
 }
 

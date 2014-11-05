@@ -68,26 +68,40 @@ ObjectConfig.prototype = {
 module.exports = {
 
   /**
-   * Initialize (or return cached) Object cache.
+   * Initialize (or return cached) Object config.
    *
-   * @param {{}} object
-   *
-   * @returns {*}
+   * @param {{}}       object
+   * @param {Function} done
    */
-  initConfig: function (object) {
-    if (objectConfigs[object.id]) {
-      return objectConfigs[object.id];
+  initConfig: function (object, done) {
+
+    if (typeof object === 'object') {
+      return doInit(object, done);
     }
 
-    var defaultConfig = getDefaultConfig(),
-        config        = new ObjectConfig(defaultConfig);
+    sails.services.objectservice.resolve(object, function (error, resolved) {
+      if (error) {
+        return done(error);
+      }
 
-    if (object.config) {
-      config.merge(object.config);
+      doInit(resolved, done);
+    });
+
+    function doInit(object, callback) {
+      if (objectConfigs[object.id]) {
+        return callback(null, objectConfigs[object.id]);
+      }
+
+      var defaultConfig = getDefaultConfig(),
+          config        = new ObjectConfig(defaultConfig);
+
+      if (object.config) {
+        config.merge(object.config);
+      }
+
+      objectConfigs[object.id] = config;
+
+      callback(null, config);
     }
-
-    objectConfigs[object.id] = config;
-
-    return config;
   }
 };

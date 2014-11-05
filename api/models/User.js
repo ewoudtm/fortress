@@ -131,12 +131,10 @@ userModel.hashPassword = hashPassword;
 userModel.beforeUpdate = function (values, callback) {
 
   if (values.notificationEmail) {
-    // @todo call notificationService to send out email_changed (with confirm link)
     values.notificationEmailVerified = false;
   }
 
   if (values.email) {
-    // @todo call notificationService to send out notification_email_changed (with confirm link)
     values.emailVerified = false;
   }
 
@@ -199,12 +197,6 @@ userModel.beforeCreate = function (values, callback) {
   }
 
   if (!values.password) {
-    return setGeo();
-  }
-
-  if (values._noHash) {
-    delete values._noHash;
-
     return setGeo();
   }
 

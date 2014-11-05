@@ -43,7 +43,7 @@ module.exports.policies = {
     getIdentity      : makePolicies('isAuthenticated'), // Protected in action
     usernameAvailable: makePolicies(true),
     unsubscribe      : makePolicies(true),
-    update           : makePolicies(['isAuthenticated', 'ownsUserRecord', 'filterProperties']),
+    update           : makePolicies(['isAuthenticated', 'ownsUserRecord', 'filterProperties', 'sendNotifications']),
     verify           : makePolicies(true),
     logout           : makePolicies('isAuthenticated')
   },
