@@ -12,6 +12,7 @@ module.exports = function badRequest(name, details) {
     '- name:', name,
     '- details:', details,
     '- Session:', _.omit(req.session, ['save', 'cookie']),
+    '- Url:', req.url,
     '- IP address:', req.ip || 'No IP!'
   );
 
