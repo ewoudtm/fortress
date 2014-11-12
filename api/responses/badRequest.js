@@ -11,7 +11,7 @@ module.exports = function badRequest(name, details) {
     ':: Sent 400 ("Bad Request") response with:',
     '- name:', name,
     '- details:', details,
-    '- Session:', req.session || 'No session!',
+    '- Session:', _.omit(req.session, ['save', 'cookie']),
     '- IP address:', req.ip || 'No IP!'
   );
 

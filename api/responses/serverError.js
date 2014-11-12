@@ -12,7 +12,7 @@ module.exports = function serverError (data, details) {
     ':: Sent 500 ("Server Error") response with:',
     '- data:', data,
     '- details:', details,
-    '- Session:', req.session || 'No session!',
+    '- Session:', _.omit(req.session, ['save', 'cookie']),
     '- IP address:', req.ip || 'No IP!'
   );
 
