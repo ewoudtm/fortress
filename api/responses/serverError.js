@@ -8,13 +8,10 @@ module.exports = function serverError (data, details) {
   // Set status code
   res.status(500);
 
-  sails.services.logservice.error(
+  sails.services.logservice.reqError(req,
     ':: Sent 500 ("Server Error") response with:',
     '- data:', data,
-    '- details:', details,
-    '- Session:', _.omit(req.session, ['save', 'cookie']),
-    '- Url:', req.url,
-    '- IP address:', req.ip || 'No IP!'
+    '- details:', details
   );
 
   if (data) {

@@ -68,5 +68,6 @@ module.exports.routes = {
 
   // System
   'get /system/total-connections': 'SystemController.totalConnections',
-  'get /system/verify/:type'     : 'SystemController.verify'
+  'get /system/verify/:type'     : 'SystemController.verify',
+  'get /system/debug/:toggle'    : 'SystemController.debug'
 };

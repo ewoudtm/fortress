@@ -6,6 +6,7 @@ module.exports = {
 
 module.exports.system = {
   masterIps    : ['127.0.0.1'],
+  debug        : false,
   defaultObject: {
     host       : 'api.islive.io',
     partnerCode: 61,
