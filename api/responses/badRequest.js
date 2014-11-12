@@ -1,11 +1,19 @@
 module.exports = function badRequest(name, details) {
 
-  // Get access to `res`
-  var res = this.res;
+  // Get access to `res` and `req`.
+  var req = this.req,
+      res = this.res;
+
   // Set status code
   res.status(400);
 
-  sails.services.logservice.error('Sent 400 ("Bad Request") response with:', name, details);
+  sails.services.logservice.error(
+    ':: Sent 400 ("Bad Request") response with:',
+    '- name:', name,
+    '- details:', details,
+    '- Session:', req.session || 'No session!',
+    '- IP address:', req.ip || 'No IP!'
+  );
 
   if (!name) {
     return res.jsonp({status: 400});
