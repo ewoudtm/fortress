@@ -1,14 +1,20 @@
 module.exports = function serverError (data, details) {
 
-  // Get access to `res`
-  var res = this.res,
+  var req = this.req,
+      res = this.res,
       alertService = sails.services.alertservice,
       notificationMessage;
 
   // Set status code
   res.status(500);
 
-  sails.services.logservice.error('Sent 500 ("Server Error") response with:', data, details);
+  sails.services.logservice.error(
+    ':: Sent 500 ("Server Error") response with:',
+    '- data:', data,
+    '- details:', details,
+    '- Session:', _.omit(req.session, ['save', 'cookie']),
+    '- IP address:', req.ip || 'No IP!'
+  );
 
   if (data) {
     if (typeof data === 'string') {
