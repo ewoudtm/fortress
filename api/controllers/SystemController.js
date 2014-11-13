@@ -55,5 +55,10 @@ module.exports = {
       // All failed, error.
       res.negotiate('missing_parameter', 'user or wallet-user');
     });
+  },
+  debug           : function (req, res) {
+    sails.config.system.debug = req.param('toggle') === 'on';
+
+    res.ok();
   }
 };

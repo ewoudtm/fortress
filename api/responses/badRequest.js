@@ -1,4 +1,4 @@
-module.exports = function badRequest(name, details) {
+module.exports = function badRequest (name, details) {
 
   // Get access to `res` and `req`.
   var req = this.req,
@@ -7,14 +7,13 @@ module.exports = function badRequest(name, details) {
   // Set status code
   res.status(400);
 
-  sails.services.logservice.error(
-    ':: Sent 400 ("Bad Request") response with:',
-    '- name:', name,
-    '- details:', details,
-    '- Session:', _.omit(req.session, ['save', 'cookie']),
-    '- Url:', req.url,
-    '- IP address:', req.ip || 'No IP!'
-  );
+  if (sails.config.system.debug) {
+    sails.services.logservice.reqError(req,
+      ':: Sent 400 ("Bad Request") response with:',
+      '- name:', name,
+      '- details:', details
+    );
+  }
 
   if (!name) {
     return res.jsonp({status: 400});
@@ -30,7 +29,7 @@ module.exports = function badRequest(name, details) {
  * @param details
  * @returns {{error: *, message: *, info: *}}
  */
-function createResponse(error, details) {
+function createResponse (error, details) {
   var response;
 
   if ('object' === typeof error) {
@@ -39,13 +38,13 @@ function createResponse(error, details) {
 
   response = {
     status: 400,
-    error: error
+    error : error
   };
 
   switch (error) {
     // Uniform response for missing parameters.
     case 'missing_parameter':
-      response.summary = 'Required parameter ' + (details ? ('"'+details+'" ') : '') + 'not supplied.';
+      response.summary = 'Required parameter ' + (details ? ('"' + details + '" ') : '') + 'not supplied.';
       response.parameter = details;
       break;
 
@@ -57,7 +56,7 @@ function createResponse(error, details) {
 
     // Uniform response for invalid parameters.
     case 'invalid_parameter':
-      response.summary = 'Invalid value for parameter' + (details ? ' "'+details+'".' : '.');
+      response.summary = 'Invalid value for parameter' + (details ? ' "' + details + '".' : '.');
       response.parameter = details;
       break;
 
