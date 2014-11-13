@@ -73,7 +73,9 @@ module.exports = {
       logEntries = logEntries.concat([
         '- Is socket: ', 'Yes',
         '- Socket referrer: ', socketReferrer,
-        '- Socket host:', req.socket.host
+        '- Socket host:', assign(function () {
+          return req.socket.host;
+        })
       ]);
     }
 
