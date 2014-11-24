@@ -7,7 +7,7 @@ module.exports = {
   init: function (callback) {
     config = sails.config.notifications;
 
-    if (!config.enabled) {
+    if (!config.enabled || process.env.NODE_ENV === 'test') {
       return callback();
     }
 
@@ -30,7 +30,6 @@ module.exports = {
    * @param {function} callback
    */
   push: function (title, message, priority, sound, callback) {
-
     if (typeof priority == 'function') {
       callback = priority;
       priority = null;
