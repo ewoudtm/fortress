@@ -34,7 +34,16 @@ module.exports.wallet = {
 };
 
 module.exports.notifications = {
-  enabled: false
+  enabled: true,
+  push   : {
+    pushover: {
+      userToken       : 'test',
+      applicationToken: 'test'
+    },
+    nma     : {
+      tokens: ['test']
+    }
+  }
 };
 
 module.exports.connections = {

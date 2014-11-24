@@ -17,7 +17,7 @@ module.exports = {
       update_sounds: true
     });
 
-    callback();
+    callback(null, push);
   },
 
   /**
@@ -62,6 +62,10 @@ module.exports = {
       sound   : sound,
       priority: priority
     };
+
+    if (process.env.NODE_ENV === 'test') {
+      return callback(null, notification);
+    }
 
     // Pushover
     push.send(notification, callback);
