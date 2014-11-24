@@ -41,7 +41,7 @@ VisitorService = {
    * @returns {*}
    */
   getVisitor : function (visitor, callback) {
-    if (typeof user === 'object') {
+    if (typeof visitor === 'object') {
       return callback(null, visitor);
     }
 
