@@ -15,11 +15,10 @@ describe('PerformerService', function () {
     });
 
     context('id of existing performer', function() {
-      it('Should call back with the country code of the IP.', function (done) {
+      it('Should call back with the performer.', function (done) {
         var performerservice = sails.services.performerservice;
         performerservice.getPerformer(555, function(err, performer) {
           assert.isNull(err);
-          console.log(performer);
           assert.strictEqual(performer.username, 'badpak');
           done();
         });
@@ -27,7 +26,7 @@ describe('PerformerService', function () {
     });
 
     context('id of non existent performer', function() {
-      it('Should call back with null.', function (done) {
+      it('Should call back with undefined.', function (done) {
         var performerservice = sails.services.performerservice;
         performerservice.getPerformer(556, function(err, performer) {
           assert.isUndefined(err);
