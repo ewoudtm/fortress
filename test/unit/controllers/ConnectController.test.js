@@ -23,6 +23,7 @@ describe('ConnectController', function () {
       request(sails.hooks.http.app)
         .get('/connect/safari-getcookie')
         .set('Referrer', 'http://islive.io/some-page')
+        .expect('Set-Cookie', /sails\.sid/)
         .expect('Location', 'http://islive.io/some-page')
         .expect(302, done);
     })
