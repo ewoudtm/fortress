@@ -9,6 +9,10 @@ module.exports = {
   initialize: function (callback) {
     var config = sails.config.chat;
 
+    if (socket) {
+      return callback(null, socket);
+    }
+
     socket = io.connect(config.server, config.socket);
 
     socket.emit('hello', { type: 'admin' }, function (data) {

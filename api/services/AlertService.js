@@ -7,7 +7,7 @@ module.exports = {
   init: function (callback) {
     config = sails.config.notifications;
 
-    if (!config.enabled) {
+    if (!config.enabled || process.env.NODE_ENV === 'test') {
       return callback();
     }
 
@@ -17,7 +17,7 @@ module.exports = {
       update_sounds: true
     });
 
-    callback();
+    callback(null, push);
   },
 
   /**
@@ -30,7 +30,6 @@ module.exports = {
    * @param {function} callback
    */
   push: function (title, message, priority, sound, callback) {
-
     if (typeof priority == 'function') {
       callback = priority;
       priority = null;
@@ -62,6 +61,10 @@ module.exports = {
       sound   : sound,
       priority: priority
     };
+
+    if (process.env.NODE_ENV === 'test') {
+      return callback(null, notification);
+    }
 
     // Pushover
     push.send(notification, callback);
