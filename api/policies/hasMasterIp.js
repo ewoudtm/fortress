@@ -1,4 +1,5 @@
 module.exports = function(req, res, next) {
+  console.log(req.ip);
   if (sails.config.system.masterIps.indexOf(req.ip) > -1) {
     return next();
   }
