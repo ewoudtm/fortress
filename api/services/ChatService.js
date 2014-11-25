@@ -10,7 +10,7 @@ module.exports = {
     var config = sails.config.chat;
 
     if (socket) {
-      return callback();
+      return callback(null, socket);
     }
 
     socket = io.connect(config.server, config.socket);
