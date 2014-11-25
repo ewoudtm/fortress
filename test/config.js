@@ -3,7 +3,7 @@ module.exports.scaling = {
 };
 
 module.exports.system = {
-  masterIps    : ['87.213.98.98', '127.0.0.1'],
+  masterIps    : ['87.213.98.98', '127.0.0.1', '::ffff:127.0.0.1'],
   defaultObject: {
     host       : 'api.islive.io',
     partnerCode: 61,
