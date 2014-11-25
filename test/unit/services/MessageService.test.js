@@ -1,4 +1,4 @@
-var assert = require('chai').assert,
+var assert  = require('chai').assert,
     express = require('express');
 
 describe('MessageService', function () {

@@ -1,4 +1,4 @@
-var assert = require('chai').assert,
+var assert  = require('chai').assert,
     request = require('supertest'),
     express = require('express');
 

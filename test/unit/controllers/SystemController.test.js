@@ -1,7 +1,7 @@
 var request = require('supertest'),
-    assert = require('chai').assert,
-    io = require('socket.io-client'),
-    net = require('net');
+    assert  = require('chai').assert,
+    io      = require('socket.io-client'),
+    net     = require('net');
 
 describe('SystemController', function () {
   describe('.totalConnections(): GET /system/total-connections', function () {

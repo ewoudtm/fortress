@@ -1,5 +1,5 @@
 var assert = require('chai').assert,
-    io = require('socket.io-client');
+    io     = require('socket.io-client');
 
 describe('ChatService', function () {
   describe('.initialize()', function () {

@@ -1,5 +1,5 @@
 var request = require('supertest'),
-    assert = require('chai').assert;
+    assert  = require('chai').assert;
 
 describe('UserController', function () {
   describe('.getUsername(): GET /user/username/:id', function () {
