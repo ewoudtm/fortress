@@ -38,6 +38,4 @@ describe('VisitorService', function () {
       });
     });
   });
-  describe('.register()', function () {
-  });
 });
