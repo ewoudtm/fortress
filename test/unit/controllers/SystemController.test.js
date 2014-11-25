@@ -35,9 +35,13 @@ describe('SystemController', function () {
               assert.strictEqual(req.body.status, 200);
             })
             .expect(200, function (err) {
-              if (err) return done(err);
+              if (err) {
+                return done(err);
+              }
               sails.models.user.findOne({id: 998}, function (err, user) {
-                if (err) return done(err);
+                if (err) {
+                  return done(err);
+                }
                 assert.strictEqual(user.emailVerified, true);
                 done();
               });
@@ -54,9 +58,13 @@ describe('SystemController', function () {
               assert.strictEqual(req.body.status, 200);
             })
             .expect(200, function (err) {
-              if (err) return done(err);
+              if (err) {
+                return done(err);
+              }
               sails.models.user.findOne({id: 998}, function (err, user) {
-                if (err) return done(err);
+                if (err) {
+                  return done(err);
+                }
                 assert.strictEqual(user.notificationEmailVerified, true);
                 done();
               });
@@ -75,9 +83,13 @@ describe('SystemController', function () {
               assert.strictEqual(req.body.status, 200);
             })
             .expect(200, function (err) {
-              if (err) return done(err);
+              if (err) {
+                return done(err);
+              }
               sails.models.user.findOne({id: 998}, function (err, user) {
-                if (err) return done(err);
+                if (err) {
+                  return done(err);
+                }
                 assert.strictEqual(user.emailVerified, true);
                 done();
               });
@@ -94,9 +106,13 @@ describe('SystemController', function () {
               assert.strictEqual(req.body.status, 200);
             })
             .expect(200, function (err) {
-              if (err) return done(err);
+              if (err) {
+                return done(err);
+              }
               sails.models.user.findOne({id: 998}, function (err, user) {
-                if (err) return done(err);
+                if (err) {
+                  return done(err);
+                }
                 assert.strictEqual(user.notificationEmailVerified, true);
                 done();
               });
@@ -117,7 +133,9 @@ describe('SystemController', function () {
             assert.strictEqual(req.body.status, 200);
           })
           .expect(200, function (err) {
-            if (err) return done(err);
+            if (err) {
+              return done(err);
+            }
             assert.isTrue(sails.config.system.debug);
             done();
           });
@@ -134,7 +152,9 @@ describe('SystemController', function () {
             assert.strictEqual(req.body.status, 200);
           })
           .expect(200, function (err) {
-            if (err) return done(err);
+            if (err) {
+              return done(err);
+            }
             assert.isFalse(sails.config.system.debug);
             done();
           });
@@ -151,7 +171,9 @@ describe('SystemController', function () {
             assert.strictEqual(req.body.status, 200);
           })
           .expect(200, function (err) {
-            if (err) return done(err);
+            if (err) {
+              return done(err);
+            }
             assert.isFalse(sails.config.system.debug);
             done();
           });
