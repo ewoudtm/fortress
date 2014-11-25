@@ -1,8 +1,6 @@
 var assert = require('chai').assert;
 
 describe('VisitorService', function () {
-  describe('.updateCredits()', function () {
-  });
   describe('.getVisitor()', function () {
     context('visitor object', function() {
       it('Should call back with the same object.', function (done) {
