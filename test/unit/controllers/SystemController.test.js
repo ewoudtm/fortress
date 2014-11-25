@@ -1,5 +1,5 @@
 var request = require('supertest'),
-    assert  = require('chai').assert,
+    assert = require('chai').assert,
     io = require('socket.io-client'),
     net = require('net');
 

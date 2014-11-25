@@ -1,4 +1,4 @@
-var assert  = require('chai').assert;
+var assert = require('chai').assert;
 
 describe('VisitorService', function () {
   describe('.updateCredits()', function () {
@@ -8,6 +8,7 @@ describe('VisitorService', function () {
       it('Should call back with the same object.', function (done) {
         var visitorservice = sails.services.visitorservice,
             visitorObject = {username: 'someone'};
+
         visitorservice.getVisitor(visitorObject, function(err, visitor) {
           assert.isNull(err);
           assert.strictEqual(visitor, visitorObject);

@@ -1,5 +1,5 @@
 var request = require('supertest'),
-    assert  = require('chai').assert;
+    assert = require('chai').assert;
 
 describe('ConnectController', function () {
   describe('.getCookie(): GET /connect/getcookie', function () {

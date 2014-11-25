@@ -1,4 +1,4 @@
-var assert  = require('chai').assert;
+var assert = require('chai').assert;
 
 describe('HashService', function () {
   describe('.getSalt()', function () {

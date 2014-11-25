@@ -1,4 +1,4 @@
-var assert  = require('chai').assert;
+var assert = require('chai').assert;
 
 describe('GeoService', function () {
   describe('.getCountry()', function () {

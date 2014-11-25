@@ -1,4 +1,4 @@
-var assert  = require('chai').assert;
+var assert = require('chai').assert;
 
 describe('PerformerService', function () {
   describe('.getPerformer()', function () {
@@ -6,8 +6,9 @@ describe('PerformerService', function () {
       it('Should call back with the same object.', function (done) {
         var performerservice = sails.services.performerservice,
             performerObject = {username: 'someone'};
-        performerservice.getPerformer(performerObject, function(err, performer) {
-          assert.isNull(err);
+
+        performerservice.getPerformer(performerObject, function(error, performer) {
+          assert.isNull(error);
           assert.strictEqual(performer, performerObject);
           done();
         });
@@ -17,8 +18,8 @@ describe('PerformerService', function () {
     context('id of existing performer', function() {
       it('Should call back with the performer.', function (done) {
         var performerservice = sails.services.performerservice;
-        performerservice.getPerformer(555, function(err, performer) {
-          assert.isNull(err);
+        performerservice.getPerformer(555, function(error, performer) {
+          assert.isNull(error);
           assert.strictEqual(performer.username, 'badpak');
           done();
         });
@@ -28,8 +29,8 @@ describe('PerformerService', function () {
     context('id of non existent performer', function() {
       it('Should call back with undefined.', function (done) {
         var performerservice = sails.services.performerservice;
-        performerservice.getPerformer(556, function(err, performer) {
-          assert.isUndefined(err);
+        performerservice.getPerformer(556, function(error, performer) {
+          assert.isUndefined(error);
           assert.isUndefined(performer);
           done();
         });
