@@ -69,7 +69,7 @@ before(function (done) {
     }
 
     sails = new SailsApp();
-    sails.load(config, function (error, sails) {
+    sails.lift(config, function (error, sails) {
       if (error) {
         return done(error);
       }

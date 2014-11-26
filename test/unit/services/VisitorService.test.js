@@ -1,6 +1,65 @@
-var assert = require('chai').assert;
+var assert = require('chai').assert,
+    io     = require('socket.io-client');
 
 describe('VisitorService', function () {
+  describe.only('.updateCredits()', function () {
+    context('without req parameter', function() {
+      it('Should update the credits of the visitor.', function (done) {
+        var visitorservice = sails.services.visitorservice;
+
+        visitorservice.updateCredits(888, 25, function (error, updated) {
+          assert.isNull(error);
+          assert.strictEqual(updated.length, 1);
+          assert.strictEqual(updated[0].credits, 25);
+          done();
+        });
+      });
+    });
+    context('with req parameter', function() {
+      it('Should update the credits of the visitor.', function (done) {
+        var visitorservice = sails.services.visitorservice;
+
+        visitorservice.updateCredits(888, 26, {}, function (error, updated) {
+          assert.isNull(error);
+          assert.strictEqual(updated.length, 1);
+          assert.strictEqual(updated[0].credits, 26);
+          done();
+        });
+      });
+    });
+    context('listening via socket.io', function() {
+      var socket,
+          credentials = {
+            role    : 'visitor',
+            username: 'fixture-test@islive.io',
+            password: 'keeshond'
+          };
+
+      before(function (done) {
+        socket = io.connect('http://localhost:1337/');
+        socket.once('connect', done);
+      });
+
+      after(function () {
+        socket.disconnect();
+      });
+
+      it('Should send an update to the clients.', function(done) {
+        var visitorservice = sails.services.visitorservice;
+
+        socket.emit('post', JSON.stringify({url: '/user/login', data: credentials}), function() {
+          console.log(arguments);
+          socket.on('message', function() {
+            console.log(arguments);
+            done();
+          });
+          visitorservice.updateCredits(888, 26, {}, function () {});
+          done();
+        });
+      });
+    })
+  });
+
   describe('.getVisitor()', function () {
     context('visitor object', function() {
       it('Should call back with the same object.', function (done) {
