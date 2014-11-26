@@ -43,4 +43,52 @@ describe('WalletService', function () {
       });
     });
   });
+
+  describe('.remoteChangePassword()', function () {
+    it('Should change the wallet password', function (done) {
+      var walletservice = sails.services.walletservice,
+          email         = 'fortress-test+changepass@ratus.nl';
+
+      async.series({
+        resetWalletPassword: function (callback) {
+          walletservice.remoteChangePassword(email, 'keeshond',
+          sails.services.hashservice.generateLoginHash(email),
+          function (error, success) {
+            assert.isNull(error);
+            assert.isTrue(success);
+            callback();
+          });
+        },
+        walletLogInWithOriginalPassword: function (callback) {
+          walletservice.login({
+            username: email,
+            password: 'keeshond'
+          }, function (error, success) {
+            assert.isNull(error);
+            assert.isTrue(success);
+            callback();
+          });
+        },
+        setNewWalletPassword: function (callback) {
+          walletservice.remoteChangePassword(email, 'something else',
+          sails.services.hashservice.generateLoginHash(email),
+          function (error, success) {
+            assert.isNull(error);
+            assert.isTrue(success);
+            callback();
+          });
+        },
+        walletLogInWithNewPassword: function (callback) {
+          walletservice.login({
+            username: email,
+            password: 'something else'
+          }, function (error, success) {
+            assert.isNull(error);
+            assert.isTrue(success);
+            callback();
+          });
+        }
+      }, done);
+    });
+  });
 });

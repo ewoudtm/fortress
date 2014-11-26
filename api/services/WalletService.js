@@ -153,7 +153,19 @@ module.exports = {
       if (error) {
         return callback(error);
       }
+      callback(null, !!response.ok);
+    });
+  },
 
+  remoteChangePassword: function(email, password, token, callback) {
+    this.request('remoteChangePassword', {form: {
+      email: email,
+      password: password,
+      token: token
+    }}, function(error, response) {
+      if (error) {
+        return callback(error);
+      }
       callback(null, !!response.ok);
     });
   }
