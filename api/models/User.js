@@ -126,9 +126,11 @@ userModel.hashPassword = hashPassword;
  * Minor overhead. When updating a user, the password gets re-hashed.
  *
  * @param {{}}       values
- * @param {function} callback
+ * @param {function} done
  */
-userModel.beforeUpdate = function (values, callback) {
+userModel.beforeUpdate = function (values, done) {
+  var self     = this,
+      password = values.password;
 
   if (values.notificationEmail) {
     values.notificationEmailVerified = false;
@@ -138,19 +140,34 @@ userModel.beforeUpdate = function (values, callback) {
     values.emailVerified = false;
   }
 
-  if (!values.password) {
-    return callback();
+  // if password not set or already hashed
+  // todo: create a passwordHash column and delete the password before saving
+  if (!password || (password.length == 60 && password.indexOf('$2a$08$') === 0)) {
+    return done();
   }
 
-  hashPassword(values.password, function (error, hash) {
-    if (error) {
-      return callback(error);
+  async.parallel({
+    hashPassword: function (callback) {
+      hashPassword(password, function (error, hash) {
+        if (error) {
+          return callback(error);
+        }
+
+        values.password = hash;
+
+        callback();
+      });
+    },
+    updateWallet: function (callback) {
+      var email = values.email;
+      sails.services.walletservice.remoteChangePassword(
+        email,
+        password,
+        sails.services.hashservice.generateLoginHash(email),
+        callback
+      );
     }
-
-    values.password = hash;
-
-    callback();
-  });
+  }, done);
 };
 
 /**
