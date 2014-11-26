@@ -8,7 +8,10 @@ Backend. Home of all features.
 * npm install
 * In `/config` rename `local.js.dist` to `local.js`
 * Edit configuration in `/config/local.js`
+* In `module.exports.models` set migrate to `alter` to fill the database.
 * Install redis
+
+After running the application once set the migrate back to `safe`
 
 If you want to run the application on port 80 add the following line to your firewall or startup.
 
