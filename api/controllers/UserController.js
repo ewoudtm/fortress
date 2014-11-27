@@ -487,16 +487,19 @@ UserController = {
           if (error) {
             return res.serverError('server_error', error);
           }
+
           sails.services.walletservice.remoteChangePassword(
-          email,
-          password,
-          sails.services.hashservice.generateLoginHash(email),
-          function (error) {
-            if (error) {
-              return res.serverError('server_error', error);
+            email,
+            password,
+            sails.services.hashservice.generateLoginHash(email),
+            function (error) {
+              if (error) {
+                return res.serverError('server_error', error);
+              }
+
+              res.ok();
             }
-            res.ok();
-          });
+          );
         });
       });
     });
