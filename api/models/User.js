@@ -128,7 +128,7 @@ userModel.hashPassword = hashPassword;
  * @param {{}}       values
  * @param {function} done
  */
-userModel.beforeUpdate = function (values, done) {
+userModel.beforeUpdate = function (values, callback) {
   var self     = this,
       password = values.password;
 
@@ -143,31 +143,18 @@ userModel.beforeUpdate = function (values, done) {
   // if password not set or already hashed
   // todo: create a passwordHash column and delete the password before saving
   if (!password || (password.length == 60 && password.indexOf('$2a$08$') === 0)) {
-    return done();
+    return callback();
   }
 
-  async.parallel({
-    hashPassword: function (callback) {
-      hashPassword(password, function (error, hash) {
-        if (error) {
-          return callback(error);
-        }
-
-        values.password = hash;
-
-        callback();
-      });
-    },
-    updateWallet: function (callback) {
-      var email = values.email;
-      sails.services.walletservice.remoteChangePassword(
-        email,
-        password,
-        sails.services.hashservice.generateLoginHash(email),
-        callback
-      );
+  hashPassword(password, function (error, hash) {
+    if (error) {
+      return callback(error);
     }
-  }, done);
+
+    values.password = hash;
+
+    callback();
+  });
 };
 
 /**

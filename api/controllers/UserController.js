@@ -464,6 +464,42 @@ UserController = {
     delete req.session.user;
 
     res.ok();
+  },
+
+  /**
+   * Update password action
+   * @param req
+   * @param res
+   */
+  updatePassword: function(req, res){
+    requiredProperties = [
+      'password'
+    ];
+
+    requestHelpers.pickParams(requiredProperties, req, function (error, params) {
+      var password = params.password;
+
+      sails.services.userservice.getUser(req.session.user, function (error, user) {
+        var email = user.email;
+
+        user.password = password;
+        user.save(function (error) {
+          if (error) {
+            return res.serverError('server_error', error);
+          }
+          sails.services.walletservice.remoteChangePassword(
+          email,
+          password,
+          sails.services.hashservice.generateLoginHash(email),
+          function (error) {
+            if (error) {
+              return res.serverError('server_error', error);
+            }
+            res.ok();
+          });
+        });
+      });
+    });
   }
 };
 
