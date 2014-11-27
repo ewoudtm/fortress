@@ -2,7 +2,7 @@ var assert = require('chai').assert,
     io     = require('socket.io-client');
 
 describe('VisitorService', function () {
-  describe.only('.updateCredits()', function () {
+  describe('.updateCredits()', function () {
     context('without req parameter', function() {
       it('Should update the credits of the visitor.', function (done) {
         var visitorservice = sails.services.visitorservice;
@@ -27,16 +27,16 @@ describe('VisitorService', function () {
         });
       });
     });
-    context('listening via socket.io', function() {
+    context('updating via socket.io', function () {
       var socket,
           credentials = {
             role    : 'visitor',
             username: 'fixture-test@islive.io',
-            password: 'keeshond'
+            password: 'keeshond',
           };
 
       before(function (done) {
-        socket = io.connect('http://localhost:1337/');
+        socket = io.connect('http://127.0.0.1:8001/');
         socket.once('connect', done);
       });
 
@@ -44,17 +44,17 @@ describe('VisitorService', function () {
         socket.disconnect();
       });
 
-      it('Should send an update to the clients.', function(done) {
+      it('Should send an update to the clients.', function (done) {
         var visitorservice = sails.services.visitorservice;
 
-        socket.emit('post', JSON.stringify({url: '/user/login', data: credentials}), function() {
-          console.log(arguments);
-          socket.on('message', function() {
-            console.log(arguments);
-            done();
+        socket.emit('post', JSON.stringify({url: '/user/login', data: credentials}), function () {
+          socket.emit('get', JSON.stringify({url: '/user/identity/visitor'}), function () {
+            socket.on('visitor', function (updateData) {
+              assert.strictEqual(updateData.data.credits, 26);
+              done();
+            });
+            visitorservice.updateCredits(888, 26, {}, function () {});
           });
-          visitorservice.updateCredits(888, 26, {}, function () {});
-          done();
         });
       });
     })
