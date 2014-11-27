@@ -499,13 +499,12 @@ UserController = {
         loginHash = sails.services.hashservice.generateLoginHash(userInfo.email);
 
         sails.services.walletservice.remoteChangePassword(userInfo.email, password, loginHash, function (error) {
-            if (error) {
-              return res.negotiate('server_error', error);
-            }
-
-            res.ok();
+          if (error) {
+            return res.negotiate('server_error', error);
           }
-        );
+
+          res.ok();
+        });
       });
     });
   }
