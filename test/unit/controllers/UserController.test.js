@@ -157,7 +157,7 @@ describe('UserController', function () {
           sails.services.hashservice.generateLoginHash(email),
           function (error, success) {
             assert.isNull(error);
-            assert.isTrue(success);
+            assert.isTrue(success, 'Resetting password failed.');
             callback();
           });
         },
@@ -176,7 +176,7 @@ describe('UserController', function () {
             password: 'keeshond'
           }, function (error, success) {
             assert.isNull(error);
-            assert.isTrue(success);
+            assert.isTrue(success, 'Logging in with origin password failed.');
             callback();
           });
         },
@@ -222,7 +222,7 @@ describe('UserController', function () {
             password: 'something else'
           }, function (error, success) {
             assert.isNull(error);
-            assert.isTrue(success);
+            assert.isTrue(success, 'Logging in with new password failed.');
             callback();
           });
         }
