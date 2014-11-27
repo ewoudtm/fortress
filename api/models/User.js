@@ -126,7 +126,7 @@ userModel.hashPassword = hashPassword;
  * Minor overhead. When updating a user, the password gets re-hashed.
  *
  * @param {{}}       values
- * @param {function} done
+ * @param {function} callback
  */
 userModel.beforeUpdate = function (values, callback) {
   var self     = this,
