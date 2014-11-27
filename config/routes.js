@@ -34,6 +34,7 @@ module.exports.routes = {
   'get /thread/:id'              : 'ThreadController.findonesimple',
 
   // UserController
+  'put /user/password'           : 'UserController.updatePassword',
   'put /user/:id'                : 'UserController.update',
   'get /user/:id/unsubscribe'    : 'UserController.unsubscribe',
   'get /user/:id/verify/:type'   : 'UserController.verify', // /user/123/verify/notification-email?hash=

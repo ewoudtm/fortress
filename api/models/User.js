@@ -129,6 +129,8 @@ userModel.hashPassword = hashPassword;
  * @param {function} callback
  */
 userModel.beforeUpdate = function (values, callback) {
+  var self     = this,
+      password = values.password;
 
   if (values.notificationEmail) {
     values.notificationEmailVerified = false;
@@ -138,11 +140,13 @@ userModel.beforeUpdate = function (values, callback) {
     values.emailVerified = false;
   }
 
-  if (!values.password) {
+  // if password not set or already hashed
+  // todo: create a passwordHash column and delete the password before saving
+  if (!password || (password.length == 60 && password.indexOf('$2a$08$') === 0)) {
     return callback();
   }
 
-  hashPassword(values.password, function (error, hash) {
+  hashPassword(password, function (error, hash) {
     if (error) {
       return callback(error);
     }

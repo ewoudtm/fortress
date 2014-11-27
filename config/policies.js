@@ -44,6 +44,7 @@ module.exports.policies = {
     usernameAvailable: makePolicies(true),
     unsubscribe      : makePolicies(true),
     update           : makePolicies(['isAuthenticated', 'ownsUserRecord', 'filterProperties', 'sendNotifications']),
+    updatePassword   : makePolicies(['isAuthenticated']),
     verify           : makePolicies(true),
     logout           : makePolicies('isAuthenticated')
   },
