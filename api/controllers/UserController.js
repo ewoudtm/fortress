@@ -471,36 +471,41 @@ UserController = {
    * @param req
    * @param res
    */
-  updatePassword: function(req, res){
-    requiredProperties = [
-      'password'
-    ];
+  updatePassword: function (req, res){
+    var userInfo = req.session.userInfo,
+        requiredProperties = [
+          'password',
+          {required: false, param: 'skipWallet'}
+        ];
 
     requestHelpers.pickParams(requiredProperties, req, function (error, params) {
       var password = params.password;
 
-      sails.services.userservice.getUser(req.session.user, function (error, user) {
-        var email = user.email;
+      sails.models.user.update(req.session.user, {password: password}, function (error, result) {
+        var loginHash;
 
-        user.password = password;
-        user.save(function (error) {
-          if (error) {
-            return res.serverError('server_error', error);
-          }
+        if (error) {
+          return res.negotiate(error);
+        }
 
-          sails.services.walletservice.remoteChangePassword(
-            email,
-            password,
-            sails.services.hashservice.generateLoginHash(email),
-            function (error) {
-              if (error) {
-                return res.serverError('server_error', error);
-              }
+        if (!result) {
+          return res.negotiate('unknown_user');
+        }
 
-              res.ok();
+        if ('visitor' !== userInfo.authenticatedRole || !userInfo.walletId || params.skipWallet) {
+          return res.ok();
+        }
+
+        loginHash = sails.services.hashservice.generateLoginHash(userInfo.email);
+
+        sails.services.walletservice.remoteChangePassword(userInfo.email, password, loginHash, function (error) {
+            if (error) {
+              return res.negotiate('server_error', error);
             }
-          );
-        });
+
+            res.ok();
+          }
+        );
       });
     });
   }
