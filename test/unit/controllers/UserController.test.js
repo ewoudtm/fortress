@@ -341,4 +341,148 @@ describe('UserController', function () {
       });
     });
   });
+
+  describe('.getIdentity(): GET /user/identity/:role?', function () {
+    context('role not specified', function () {
+      it('Should return the user without populated identity.', function(done) {
+        var requestHook = request(sails.hooks.http.app),
+            credentials = {
+              role    : 'visitor',
+              username: 'fixture-test@islive.io',
+              password: 'keeshond'
+            };
+
+        requestHook
+          .post('/user/login')
+          .send(credentials)
+          .end(function (error, res) {
+            assert.isFalse(res.error, "User login failed");
+            assert.strictEqual(res.status, 200, 'Request was invalid');
+            requestHook
+              .get('/user/identity')
+              .set('cookie', res.headers['set-cookie'])
+              .end(function (error, res) {
+                var user = res.body;
+                assert.isNull(error);
+                assert.strictEqual(user.visitor, 888);
+                done();
+              });
+          });
+      });
+    });
+
+    context('visitor role specified', function () {
+      it('Should return the user without populated identity.', function(done) {
+        var requestHook = request(sails.hooks.http.app),
+            credentials = {
+              role    : 'visitor',
+              username: 'fixture-test@islive.io',
+              password: 'keeshond'
+            };
+
+        requestHook
+          .post('/user/login')
+          .send(credentials)
+          .end(function (error, res) {
+            assert.isFalse(res.error, "User login failed");
+            assert.strictEqual(res.status, 200, 'Request was invalid');
+            requestHook
+              .get('/user/identity/visitor')
+              .set('cookie', res.headers['set-cookie'])
+              .end(function (error, res) {
+                var user = res.body;
+                assert.isNull(error);
+                assert.strictEqual(user.visitor.id, 888);
+                done();
+              });
+          });
+      });
+    });
+
+    context('performer role specified', function () {
+      it('Should return the user without populated identity.', function(done) {
+        var requestHook = request(sails.hooks.http.app),
+            credentials = {
+              role    : 'performer',
+              username: 'event.handler.performer@islive.io',
+              password: 'keeshond'
+            };
+
+        requestHook
+          .post('/user/login')
+          .send(credentials)
+          .end(function (error, res) {
+            assert.isFalse(res.error, "User login failed");
+            assert.strictEqual(res.status, 200, 'Request was invalid');
+            requestHook
+              .get('/user/identity/performer')
+              .set('cookie', res.headers['set-cookie'])
+              .end(function (error, res) {
+                var user = res.body;
+                assert.isNull(error);
+                assert.strictEqual(user.performer.id, 555);
+                done();
+              });
+          });
+      });
+    });
+
+    context('missing role specified', function () {
+      it('Should return bad request.', function(done) {
+        var requestHook = request(sails.hooks.http.app),
+            credentials = {
+              role    : 'visitor',
+              username: 'fixture-test@islive.io',
+              password: 'keeshond'
+            };
+
+        requestHook
+          .post('/user/login')
+          .send(credentials)
+          .end(function (error, res) {
+            assert.isFalse(res.error, "User login failed");
+            assert.strictEqual(res.status, 200, 'Request was invalid');
+            requestHook
+              .get('/user/identity/performer')
+              .set('cookie', res.headers['set-cookie'])
+              .end(function (error, res) {
+                var user = res.body;
+                assert.isNull(error);
+                assert.strictEqual(res.status, 400);
+                assert.strictEqual(res.body.error, 'missing_role');
+                done();
+              });
+          });
+      });
+    });
+
+    context('non-existent role specified', function () {
+      it('Should return bad request.', function(done) {
+        var requestHook = request(sails.hooks.http.app),
+            credentials = {
+              role    : 'visitor',
+              username: 'fixture-test@islive.io',
+              password: 'keeshond'
+            };
+
+        requestHook
+          .post('/user/login')
+          .send(credentials)
+          .end(function (error, res) {
+            assert.isFalse(res.error, "User login failed");
+            assert.strictEqual(res.status, 200, 'Request was invalid');
+            requestHook
+              .get('/user/identity/abuser')
+              .set('cookie', res.headers['set-cookie'])
+              .end(function (error, res) {
+                var user = res.body;
+                assert.isNull(error);
+                assert.strictEqual(res.status, 400);
+                assert.strictEqual(res.body.error, 'invalid_role');
+                done();
+              });
+          });
+      });
+    });
+  });
 });
