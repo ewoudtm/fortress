@@ -20,7 +20,7 @@ describe('UserController', function () {
     })
   });
 
-  describe('.verifyEmail(): GET /user/verify?hash=&email=', function () {
+  describe('.verify(): GET /user/:id/verify/:type?hash=', function () {
 
     var userId = 998;
 
@@ -481,6 +481,306 @@ describe('UserController', function () {
                 assert.strictEqual(res.body.error, 'invalid_role');
                 done();
               });
+          });
+      });
+    });
+  });
+
+  describe('.unsubscribe(): GET /user/:id/unsubscribe', function() {
+    context('invalid hash', function () {
+      it('Should return bad request.', function (done) {
+        request(sails.hooks.http.app)
+          .get('/user/994/unsubscribe?hash=dac554280f50dd6b4d784620d373e7f8')
+          .expect(400)
+          .end(done);
+      });
+    });
+    context('valid hash', function () {
+      it('Should unsubscribe the user from mailing.', function (done) {
+        var userModel = sails.models.user;
+
+        userModel.findOne(994, function (error, user) {
+          var hash;
+
+          assert.isNull(error);
+          assert.isTrue(user.mailable);
+          hash = sails.services.userservice.generateHash(user);
+
+          request(sails.hooks.http.app)
+            .get('/user/994/unsubscribe?hash=' + hash)
+            .expect(200)
+            .end(function (error) {
+              assert.isNull(error);
+
+              userModel.findOne(994, function (error, user) {
+                assert.isFalse(user.mailable);
+                done();
+              });
+            });
+        });
+      });
+    });
+  });
+
+  describe('.usernameAvailable(): POST /user/username-available', function() {
+    context('username is available', function () {
+      it('Should return available', function (done) {
+        request(sails.hooks.http.app)
+          .post('/user/username-available')
+          .send({username: 'available.username'})
+          .expect(200)
+          .end(function (error, response) {
+            assert.isNull(error);
+            assert.isTrue(response.body.available);
+            done();
+          });
+      });
+    });
+
+    context('username is not available', function () {
+      it('Should return unavailable', function (done) {
+        request(sails.hooks.http.app)
+          .post('/user/username-available')
+          .send({username: 'fixturetest'})
+          .expect(200)
+          .end(function (error, response) {
+            assert.isNull(error);
+            assert.isFalse(response.body.available);
+            done();
+          });
+      });
+    });
+
+    context('username is not specified', function () {
+      it('Should return bad request', function (done) {
+        request(sails.hooks.http.app)
+          .post('/user/username-available')
+          .expect(400)
+          .end(done);
+      });
+    });
+  });
+
+  describe('.login() POST /user/login', function () {
+    context('no credentials', function () {
+      it('Should return bad request', function (done) {
+        request(sails.hooks.http.app)
+          .post('/user/login')
+          .expect(400)
+          .end(function (error, response) {
+            assert.isNull(error);
+            assert.strictEqual(response.body.error, 'missing_parameter');
+            done();
+          });
+      });
+    });
+
+    context('no role', function () {
+      it('Should return bad request', function (done) {
+        request(sails.hooks.http.app)
+          .post('/user/login')
+          .send({
+            username: 'fixture-test@islive.io',
+            password: 'keeshond'
+          })
+          .expect(400)
+          .end(function (error, response) {
+            assert.isNull(error);
+            assert.strictEqual(response.body.error, 'missing_parameter');
+            done();
+          });
+      });
+    });
+
+    context('invalid role', function () {
+      it('Should return bad request', function (done) {
+        request(sails.hooks.http.app)
+          .post('/user/login')
+          .send({
+            username: 'fixture-test@islive.io',
+            password: 'keeshond',
+            role: 'abuser'
+          })
+          .expect(400)
+          .end(function (error, response) {
+            assert.isNull(error);
+            assert.strictEqual(response.body.error, 'invalid_parameter');
+            done();
+          });
+      });
+    });
+
+    context('invalid password', function () {
+      it('Should return bad request', function (done) {
+        request(sails.hooks.http.app)
+          .post('/user/login')
+          .send({
+            username: 'fixture-test@islive.io',
+            password: 'keeshondje',
+            role: 'visitor'
+          })
+          .expect(400)
+          .end(function (error, response) {
+            assert.isNull(error);
+            assert.strictEqual(response.body.error, 'invalid_credentials');
+            done();
+          });
+      });
+    });
+
+    context('missing role for user', function () {
+      it('Should return bad request', function (done) {
+        request(sails.hooks.http.app)
+          .post('/user/login')
+          .send({
+            username: 'fixture-test@islive.io',
+            password: 'keeshondje',
+            role: 'performer'
+          })
+          .expect(400)
+          .end(function (error, response) {
+            assert.isNull(error);
+            assert.strictEqual(response.body.error, 'missing_role');
+            done();
+          });
+      });
+    });
+
+    context('valid credentials', function () {
+      it('Should authenticate and return the user', function (done) {
+        var requestHook = request(sails.hooks.http.app);
+
+        requestHook
+          .post('/user/login')
+          .send({
+            username: 'fixture-test@islive.io',
+            password: 'keeshond',
+            role: 'visitor'
+          })
+          .expect(200)
+          .end(function (error, response) {
+            assert.isNull(error);
+            assert.strictEqual(response.body.id, 999);
+            requestHook
+              .get('/user/identity')
+              .set('cookie', response.headers['set-cookie'])
+              .expect(200, done);
+          });
+      });
+    });
+  });
+
+  describe('.loginByHash() POST /user/login-by-hash', function () {
+    context('no credentials', function () {
+      it('Should return bad request', function (done) {
+        request(sails.hooks.http.app)
+          .post('/user/login-by-hash')
+          .expect(400)
+          .end(function (error, response) {
+            assert.isNull(error);
+            assert.strictEqual(response.body.error, 'missing_parameter');
+            done();
+          });
+      });
+    });
+
+    context('no role', function () {
+      it('Should return bad request', function (done) {
+        var loginHash = sails.services.hashservice.generateLoginHash('fixture-test@islive.io');
+
+        request(sails.hooks.http.app)
+          .post('/user/login-by-hash')
+          .send({
+           email: 'fixture-test@islive.io',
+            hash: loginHash
+          })
+          .expect(400)
+          .end(function (error, response) {
+            assert.isNull(error);
+            assert.strictEqual(response.body.error, 'missing_parameter');
+            done();
+          });
+      });
+    });
+
+    context('invalid role', function () {
+      it('Should return bad request', function (done) {
+        var loginHash = sails.services.hashservice.generateLoginHash('fixture-test@islive.io');
+
+        request(sails.hooks.http.app)
+          .post('/user/login-by-hash')
+          .send({
+            email: 'fixture-test@islive.io',
+            hash: loginHash,
+            role: 'abuser'
+          })
+          .expect(400)
+          .end(function (error, response) {
+            assert.isNull(error);
+            assert.strictEqual(response.body.error, 'invalid_parameter');
+            done();
+          });
+      });
+    });
+
+    context('invalid hash', function () {
+      it('Should return bad request', function (done) {
+        request(sails.hooks.http.app)
+          .post('/user/login-by-hash')
+          .send({
+            email: 'fixture-test@islive.io',
+            hash: 'sUS7SFkNQv0Xp29SIofOrg',
+            role: 'visitor'
+          })
+          .expect(400)
+          .end(function (error, response) {
+            assert.isNull(error);
+            assert.strictEqual(response.body.error, 'invalid_credentials');
+            done();
+          });
+      });
+    });
+
+    context('missing role for user', function () {
+      it('Should return bad request', function (done) {
+        var loginHash = sails.services.hashservice.generateLoginHash('fixture-test@islive.io');
+
+        request(sails.hooks.http.app)
+          .post('/user/login-by-hash')
+          .send({
+            email: 'fixture-test@islive.io',
+            hash: loginHash,
+            role: 'performer'
+          })
+          .expect(400)
+          .end(function (error, response) {
+            assert.isNull(error);
+            assert.strictEqual(response.body.error, 'missing_role');
+            done();
+          });
+      });
+    });
+
+    context('valid credentials', function () {
+      it('Should authenticate and return the user', function (done) {
+        var requestHook = request(sails.hooks.http.app),
+            loginHash   = sails.services.hashservice.generateLoginHash('fixture-test@islive.io');
+
+        requestHook
+          .post('/user/login-by-hash')
+          .send({
+            email: 'fixture-test@islive.io',
+            hash: loginHash,
+            role: 'visitor'
+          })
+          .expect(200)
+          .end(function (error, response) {
+            assert.isNull(error);
+            assert.strictEqual(response.body.id, 999);
+            requestHook
+              .get('/user/identity')
+              .set('cookie', response.headers['set-cookie'])
+              .expect(200, done);
           });
       });
     });
