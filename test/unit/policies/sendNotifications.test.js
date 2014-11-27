@@ -34,7 +34,8 @@ describe('sendNotifications', function () {
 
             assert.deepEqual(response.body, {
               error      : 'not_implemented',
-              description: 'This feature hasn\'t been implemented yet.'
+              description: 'This feature hasn\'t been implemented yet.',
+              status: 500
             }, 'Did not get the expected error response.');
 
             server.close();
