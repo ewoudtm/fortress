@@ -180,4 +180,51 @@ describe('VisitorController', function() {
       });
     });
   });
+
+  describe('.register(): POST /visitor/register', function () {
+    context('missing parameters', function() {
+      it('Should return bad request', function (done) {
+        request(sails.hooks.http.app)
+          .post('/visitor/register')
+          .expect(400)
+          .end(done);
+      });
+    });
+
+    context('already existing user', function () {
+      it('Should return bad request', function (done) {
+        request(sails.hooks.http.app)
+          .post('/visitor/register')
+          .send({
+            email: 'fixture-test@islive.io',
+            username: 'fixturetest',
+            password: 'keeshond'
+          })
+          .expect(400)
+          .end(function (error, response) {
+            assert.isNull(error);
+            assert.strictEqual(response.body.error, 'user_exists');
+            done();
+          });
+      });
+    });
+
+    context('new valid visitor without wallet', function () {
+      it('Should return bad request', function (done) {
+        request(sails.hooks.http.app)
+          .post('/visitor/register')
+          .send({
+            email: 'new-test-user@islive.io',
+            username: 'newtestuser',
+            password: 'keeshond'
+          })
+          .expect(400)
+          .end(function (error, response) {
+            assert.isNull(error);
+            assert.strictEqual(response.body.error, 'not_implemented');
+            done();
+          });
+      });
+    });
+  });
 });
