@@ -785,4 +785,45 @@ describe('UserController', function () {
       });
     });
   });
+
+  describe('.logout() GET /user/logout', function () {
+    context('user logged in', function () {
+      it('Should log out the user', function (done) {
+        var requestHook = request(sails.hooks.http.app);
+
+        requestHook
+          .post('/user/login')
+          .send({
+            username: 'fixture-test@islive.io',
+            password: 'keeshond',
+            role: 'visitor'
+          })
+          .expect(200)
+          .end(function (error, loginResponse) {
+            assert.isNull(error);
+            assert.strictEqual(loginResponse.body.id, 999);
+            requestHook
+              .get('/user/logout')
+              .set('cookie', loginResponse.headers['set-cookie'])
+              .expect(200)
+              .end(function (error, response) {
+                assert.isNull(error);
+                requestHook
+                  .get('/user/identity')
+                  .set('cookie', loginResponse.headers['set-cookie'])
+                  .expect(403, done);
+              });
+          });
+      });
+    });
+
+    context('user not logged in', function () {
+      it('Should return forbidden', function (done) {
+        request(sails.hooks.http.app)
+          .get('/user/logout')
+          .expect(403)
+          .end(done);
+      });
+    });
+  });
 });
