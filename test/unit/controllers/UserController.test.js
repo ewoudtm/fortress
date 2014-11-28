@@ -134,99 +134,211 @@ describe('UserController', function () {
         });
     });
   });
-  describe('.updatePassword(): PUT /user/password', function () {
-    it('Should update the password in the user and the wallet', function (done) {
-      var requestHook   = request(sails.hooks.http.app),
-          walletservice = sails.services.walletservice,
-          email         = 'fortress-test+changepass@ratus.nl',
-          credentials   = {
-            username: '____changepass',
-            email   : email,
-            password: 'keeshond',
-            object  : 1,
-            from_url: 'test.net',
-            ip      : '127.0.0.1',
-            p       : 123,
-            pi      : 'testing'
-          },
-          walletUser;
 
-      async.series({
-        resetWalletPassword: function (callback) {
-          walletservice.remoteChangePassword(email, 'keeshond',
-          sails.services.hashservice.generateLoginHash(email),
-          function (error, success) {
-            assert.isNull(error);
-            assert.isTrue(success, 'Resetting password failed.');
-            callback();
-          });
-        },
-        importWalletUser: function (callback) {
-          walletservice.importUser(credentials, function (error, user) {
-            walletUser = user;
-            assert.isNull(error);
-            assert.isNotNull(walletUser);
-            assert.isObject(walletUser);
-            callback();
-          });
-        },
-        walletLogInWithOriginalPassword: function (callback) {
-          walletservice.login({
-            username: email,
-            password: 'keeshond'
-          }, function (error, success) {
-            assert.isNull(error);
-            assert.isTrue(success, 'Logging in with origin password failed.');
-            callback();
-          });
-        },
-        changeUserPassword: function (callback) {
-          requestHook
-            .post('/user/login')
-            .send({
-              role    : 'visitor',
-              username: email,
+  describe('.updatePassword(): PUT /user/password', function () {
+    context('not skipping wallet update', function () {
+      it('Should update the password in the user and the wallet', function (done) {
+        var requestHook   = request(sails.hooks.http.app),
+            walletservice = sails.services.walletservice,
+            email         = 'fortress-test+changepass@ratus.nl',
+            credentials   = {
+              username: '____changepass',
+              email   : email,
               password: 'keeshond',
-            }).end(function (error, res) {
+              object  : 1,
+              from_url: 'test.net',
+              ip      : '127.0.0.1',
+              p       : 123,
+              pi      : 'testing'
+            },
+            walletUser;
+
+        async.series({
+          resetWalletPassword: function (callback) {
+            walletservice.remoteChangePassword(email, 'keeshond',
+            sails.services.hashservice.generateLoginHash(email),
+            function (error, success) {
               assert.isNull(error);
-              assert.isFalse(res.error, "User login failed");
-              assert.strictEqual(res.status, 200, 'Request was invalid');
-              requestHook
-                .put('/user/password')
-                .set('cookie', res.headers['set-cookie'])
-                .send({password: 'something else'})
-                .end(function (error, response) {
-                  assert.isNull(error);
-                  assert.strictEqual(response.status, 200, 'Request was invalid');
-                  callback();
-                });
-              });
-        },
-        fortressLoginWithNewPassword: function (callback) {
-          requestHook
-            .post('/user/login')
-            .send({
-              role    : 'visitor',
-              username: email,
-              password: 'something else',
-            }).end(function (error, res) {
-              assert.isNull(error);
-              assert.isFalse(res.error, "User login failed");
-              assert.strictEqual(res.status, 200, 'Request was invalid');
+              assert.isTrue(success, 'Resetting password failed.');
               callback();
             });
-        },
-        walletLoginWithNewPassword: function (callback) {
-          walletservice.login({
-            username: email,
-            password: 'something else'
-          }, function (error, success) {
-            assert.isNull(error);
-            assert.isTrue(success, 'Logging in with new password failed.');
-            callback();
-          });
-        }
-      }, done);
+          },
+          importWalletUser: function (callback) {
+            sails.models.user.destroy({username: '____changepass'}, function (error) {
+              assert.isNull(error);
+              walletservice.importUser(credentials, function (error, user) {
+                walletUser = user;
+                assert.isNull(error);
+                assert.isNotNull(walletUser);
+                assert.isObject(walletUser);
+                callback();
+              });
+            });
+          },
+          walletLogInWithOriginalPassword: function (callback) {
+            walletservice.login({
+              username: email,
+              password: 'keeshond'
+            }, function (error, success) {
+              assert.isNull(error);
+              assert.isTrue(success, 'Logging in with origin password failed.');
+              callback();
+            });
+          },
+          changeUserPassword: function (callback) {
+            requestHook
+              .post('/user/login')
+              .send({
+                role    : 'visitor',
+                username: email,
+                password: 'keeshond'
+              })
+              .end(function (error, res) {
+                assert.isNull(error);
+                assert.isFalse(res.error, "User login failed");
+                assert.strictEqual(res.status, 200, 'Request was invalid');
+                requestHook
+                  .put('/user/password')
+                  .set('cookie', res.headers['set-cookie'])
+                  .send({password: 'something else'})
+                  .end(function (error, response) {
+                    assert.isNull(error);
+                    assert.strictEqual(response.status, 200, 'Request was invalid');
+                    callback();
+                  });
+                });
+          },
+          fortressLoginWithNewPassword: function (callback) {
+            requestHook
+              .post('/user/login')
+              .send({
+                role    : 'visitor',
+                username: email,
+                password: 'something else'
+              })
+              .end(function (error, res) {
+                assert.isNull(error);
+                assert.isFalse(res.error, "User login failed");
+                assert.strictEqual(res.status, 200, 'Request was invalid');
+                callback();
+              });
+          },
+          walletLoginWithNewPassword: function (callback) {
+            walletservice.login({
+              username: email,
+              password: 'something else'
+            }, function (error, success) {
+              assert.isNull(error);
+              assert.isTrue(success, 'Logging in with new password failed.');
+              callback();
+            });
+          }
+        }, done);
+      });
+    });
+
+    context('skipping wallet update', function () {
+      it('Should update the password in the user', function (done) {
+        var requestHook   = request(sails.hooks.http.app),
+            walletservice = sails.services.walletservice,
+            email         = 'fortress-test+changepass@ratus.nl',
+            credentials   = {
+              username: '____changepass',
+              email   : email,
+              password: 'keeshond',
+              object  : 1,
+              from_url: 'test.net',
+              ip      : '127.0.0.1',
+              p       : 123,
+              pi      : 'testing'
+            },
+            walletUser;
+
+        async.series({
+          resetWalletPassword: function (callback) {
+            walletservice.remoteChangePassword(email, 'keeshond',
+            sails.services.hashservice.generateLoginHash(email),
+            function (error, success) {
+              assert.isNull(error);
+              assert.isTrue(success, 'Resetting password failed.');
+              callback();
+            });
+          },
+          importWalletUser: function (callback) {
+            sails.models.user.destroy({username: '____changepass'}, function (error) {
+              assert.isNull(error);
+              walletservice.importUser(credentials, function (error, user) {
+                walletUser = user;
+                assert.isNull(error);
+                assert.isNotNull(walletUser);
+                assert.isObject(walletUser);
+                callback();
+              });
+            });
+          },
+          walletLogInWithOriginalPassword: function (callback) {
+            walletservice.login({
+              username: email,
+              password: 'keeshond'
+            }, function (error, success) {
+              assert.isNull(error);
+              assert.isTrue(success, 'Logging in with origin password failed.');
+              callback();
+            });
+          },
+          changeUserPassword: function (callback) {
+            requestHook
+              .post('/user/login')
+              .send({
+                role      : 'visitor',
+                username  : email,
+                password  : 'keeshond',
+              })
+              .end(function (error, res) {
+                assert.isNull(error);
+                assert.isFalse(res.error, "User login failed");
+                assert.strictEqual(res.status, 200, 'Request was invalid');
+                requestHook
+                  .put('/user/password')
+                  .set('cookie', res.headers['set-cookie'])
+                  .send({
+                    password: 'something else',
+                    skipWallet: true
+                  })
+                  .end(function (error, response) {
+                    assert.isNull(error);
+                    assert.strictEqual(response.status, 200, 'Request was invalid');
+                    callback();
+                  });
+                });
+          },
+          fortressLoginWithNewPassword: function (callback) {
+            requestHook
+              .post('/user/login')
+              .send({
+                role    : 'visitor',
+                username: email,
+                password: 'something else',
+              })
+              .end(function (error, res) {
+                assert.isNull(error);
+                assert.isFalse(res.error, "User login failed");
+                assert.strictEqual(res.status, 200, 'Request was invalid');
+                callback();
+              });
+          },
+          walletLoginWithNewPassword: function (callback) {
+            walletservice.login({
+              username: email,
+              password: 'something else'
+            }, function (error, success) {
+              assert.isNull(error);
+              assert.isFalse(success, 'Logging in with new password succeeded.');
+              callback();
+            });
+          }
+        }, done);
+      });
     });
   });
 });
