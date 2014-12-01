@@ -196,7 +196,7 @@ describe('ThreadController', function () {
               .expect(200)
               .end(function (error, response) {
                 assert.isNull(error);
-                assert.strictEqual(response.body.count, 3);
+                assert.strictEqual(response.body.count, 4);
                 done();
               });
           });
