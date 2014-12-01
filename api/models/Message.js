@@ -49,6 +49,11 @@ module.exports = {
     sails.models.thread.update(threadId, {}).exec(function (error, thread) {
       next();
 
+      // In test environment we don't need to send notifications
+      if (process.env.NODE_ENV === 'test') {
+        return;
+      }
+
       if (error) {
         return sails.log.error(error);
       }
