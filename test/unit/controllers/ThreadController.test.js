@@ -1,7 +1,7 @@
 var request = require('supertest'),
     assert  = require('chai').assert;
 
-describe.only('ThreadController', function () {
+describe('ThreadController', function () {
   describe('.markRead(): PUT /thread/mark-read', function () {
     context('user not logged in', function () {
       it('should return forbidden', function (done) {
