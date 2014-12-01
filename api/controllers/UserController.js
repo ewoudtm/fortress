@@ -429,6 +429,10 @@ UserController = {
               return res.serverError('server_error', error);
             }
 
+            if (!record) {
+              return res.badRequest('invalid_credentials');
+            }
+
             UserController.loginByHash(req, res);
           });
         }
