@@ -182,5 +182,26 @@
     "createdAt": "2014-09-10T10:05:16.700Z",
     "updatedAt": "2014-09-10T10:05:16.700Z",
     "id": 991
+  },
+  {
+    "email": "fixture-test+changepassword@islive.io",
+    "notificationEmail": "fixture-test+notifications@islive.io",
+    "emailVerified": true,
+    "notificationEmailVerified": true,
+    "partnerInfo": null,
+    "partnerCode": "444",
+    "object": 1,
+    "password": "keeshond",
+    "visitor": 882,
+    "username": "changepassword",
+    "country": null,
+    "mailable": true,
+    "socketId": null,
+    "roles": [
+      "visitor"
+    ],
+    "createdAt": "2014-09-10T10:05:16.700Z",
+    "updatedAt": "2014-09-10T10:05:16.700Z",
+    "id": 990
   }
 ]

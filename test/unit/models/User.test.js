@@ -15,7 +15,7 @@ describe('UserModel', function () {
   describe('.update()', function () {
     context('password supplied', function () {
       it('Should hash the password', function (done) {
-        sails.models.user.findOne(999, function (error, user) {
+        sails.models.user.findOne(990, function (error, user) {
           assert.isNull(error);
           bcrypt.compare('keeshond', user.password, function (error, passwordIsValid) {
             assert.isUndefined(error);
