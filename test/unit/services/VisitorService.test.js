@@ -36,7 +36,7 @@ describe('VisitorService', function () {
           };
 
       before(function (done) {
-        socket = io.connect('http://127.0.0.1:' + sails.config.port + '/');
+        socket = io.connect('http://127.0.0.1:' + sails.config.port + '/', {'force new connection': true});
         socket.once('connect', done);
       });
 
