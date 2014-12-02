@@ -169,4 +169,4 @@ describe('setObject()', function () {
       });
     });
   });
-})
+});
