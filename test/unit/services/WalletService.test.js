@@ -47,17 +47,17 @@ describe('WalletService', function () {
   describe.skip('.remoteChangePassword()', function () {
     it('Should change the wallet password', function (done) {
       var walletservice = sails.services.walletservice,
-          email         = 'fortress-test+changepass@ratus.nl';
+          email = 'fortress-test+changepass@ratus.nl';
 
       async.series({
-        resetWalletPassword: function (callback) {
+        resetWalletPassword            : function (callback) {
           walletservice.remoteChangePassword(email, 'keeshond',
-          sails.services.hashservice.generateLoginHash(email),
-          function (error, success) {
-            assert.isNull(error);
-            assert.isTrue(success);
-            callback();
-          });
+            sails.services.hashservice.generateLoginHash(email),
+            function (error, success) {
+              assert.isNull(error);
+              assert.isTrue(success);
+              callback();
+            });
         },
         walletLogInWithOriginalPassword: function (callback) {
           walletservice.login({
@@ -69,16 +69,16 @@ describe('WalletService', function () {
             callback();
           });
         },
-        setNewWalletPassword: function (callback) {
+        setNewWalletPassword           : function (callback) {
           walletservice.remoteChangePassword(email, 'something else',
-          sails.services.hashservice.generateLoginHash(email),
-          function (error, success) {
-            assert.isNull(error);
-            assert.isTrue(success);
-            callback();
-          });
+            sails.services.hashservice.generateLoginHash(email),
+            function (error, success) {
+              assert.isNull(error);
+              assert.isTrue(success);
+              callback();
+            });
         },
-        walletLogInWithNewPassword: function (callback) {
+        walletLogInWithNewPassword     : function (callback) {
           walletservice.login({
             username: email,
             password: 'something else'

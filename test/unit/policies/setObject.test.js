@@ -1,5 +1,5 @@
-var assert      = require('chai').assert,
-    sinon       = require('sinon'),
+var assert = require('chai').assert,
+    sinon  = require('sinon'),
     setObject;
 
 describe('setObject()', function () {
@@ -12,7 +12,7 @@ describe('setObject()', function () {
       it('should return bad request and not set req.object', function (done) {
         var req = {
               isSocket: true,
-              socket: {
+              socket  : {
                 host: '1.2.3.4'
               }
             },
@@ -54,11 +54,11 @@ describe('setObject()', function () {
   });
 
   context('resolvable by ip', function () {
-    context('socket.io connection',function () {
+    context('socket.io connection', function () {
       it('should set req.object and call next', function (done) {
         var req = {
               isSocket: true,
-              socket: {
+              socket  : {
                 host: 'api.islive.io'
               }
             },
@@ -112,11 +112,11 @@ describe('setObject()', function () {
   });
 
   context('localhost', function () {
-    context('socket.io connection',function () {
+    context('socket.io connection', function () {
       it('should set req.object with the default object and call next', function (done) {
         var req = {
               isSocket: true,
-              socket: {
+              socket  : {
                 host: '127.0.0.1'
               }
             },

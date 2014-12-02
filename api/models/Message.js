@@ -74,8 +74,8 @@ module.exports = {
           return sails.log.error('afterCreate in Message model failed on fetching `from` and `to`');
         }
 
-        newMessage.from   = results.from;
-        newMessage.to     = results.to;
+        newMessage.from = results.from;
+        newMessage.to = results.to;
         newMessage.thread = thread[0];
 
         // Yes, this can be run after calling next() because the email isn't that important.

@@ -9,15 +9,15 @@
  */
 
 var SailsApp = require('sails').Sails,
-    fs       = require('fs'),
-    config   = require('./config.js'),
-    mysql    = require('mysql'),
-    sails;
+fs           = require('fs'),
+config       = require('./config.js'),
+mysql        = require('mysql'),
+sails;
 
 function prepareDatabase (done) {
 
   var credentials = config.connections.chatterbox,
-      connection  = mysql.createConnection({
+      connection = mysql.createConnection({
         multipleStatements: true,
         host              : credentials.host,
         user              : credentials.user,
@@ -28,7 +28,7 @@ function prepareDatabase (done) {
         'create database ' + credentials.database
       ];
 
-  function importData(done) {
+  function importData (done) {
     fs.readFile(__dirname + '/data.sql', 'utf8', function (error, source) {
       if (error) {
         return done(done);
@@ -76,7 +76,7 @@ before(function (done) {
 
       var Barrels = require('barrels');
       var barrels = new Barrels();
-      barrels.populate(function(error) {
+      barrels.populate(function (error) {
         if (error) {
           return done(error);
         }

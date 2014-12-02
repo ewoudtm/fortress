@@ -21,7 +21,7 @@ describe('ThreadController', function () {
           .send({
             username: 'fixture-test@islive.io',
             password: 'keeshond',
-            role: 'visitor'
+            role    : 'visitor'
           })
           .expect(200)
           .end(function (error, loginResponse) {
@@ -45,7 +45,7 @@ describe('ThreadController', function () {
           .send({
             username: 'fixture-test@islive.io',
             password: 'keeshond',
-            role: 'visitor'
+            role    : 'visitor'
           })
           .expect(200)
           .end(function (error, loginResponse) {
@@ -77,7 +77,7 @@ describe('ThreadController', function () {
           .send({
             username: 'fixture-test@islive.io',
             password: 'keeshond',
-            role: 'visitor'
+            role    : 'visitor'
           })
           .expect(200)
           .end(function (error, loginResponse) {
@@ -109,7 +109,7 @@ describe('ThreadController', function () {
           .send({
             username: 'fixture-test@islive.io',
             password: 'keeshond',
-            role: 'visitor'
+            role    : 'visitor'
           })
           .expect(200)
           .end(function (error, loginResponse) {
@@ -141,7 +141,7 @@ describe('ThreadController', function () {
           .send({
             username: 'fixture-test@islive.io',
             password: 'keeshond',
-            role: 'visitor'
+            role    : 'visitor'
           })
           .expect(200)
           .end(function (error, loginResponse) {
@@ -176,7 +176,7 @@ describe('ThreadController', function () {
     });
 
     context('user logged in', function () {
-      it('should return the number of threads from and to the user', function(done) {
+      it('should return the number of threads from and to the user', function (done) {
         var requestHook = request(sails.hooks.http.app);
 
         requestHook
@@ -184,7 +184,7 @@ describe('ThreadController', function () {
           .send({
             username: 'fixture-test@islive.io',
             password: 'keeshond',
-            role: 'visitor'
+            role    : 'visitor'
           })
           .expect(200)
           .end(function (error, loginResponse) {

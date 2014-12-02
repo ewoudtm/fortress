@@ -1,5 +1,5 @@
-var assert      = require('chai').assert,
-    sinon       = require('sinon'),
+var assert = require('chai').assert,
+    sinon  = require('sinon'),
     setVersion;
 
 describe('setVersion()', function () {
@@ -11,7 +11,7 @@ describe('setVersion()', function () {
     it('should set the api version from req.socket.__api_version', function () {
       var req = {
             isSocket: true,
-            socket: {
+            socket  : {
               __api_version: '1.2.3'
             }
           },
@@ -31,7 +31,7 @@ describe('setVersion()', function () {
     it('should set the api version from __api_version param', function () {
       var req = {
             param: sinon.stub().withArgs('__api_version').returns('1.2.3'),
-            body: {},
+            body : {},
             query: {}
           },
           res = {},
@@ -49,7 +49,7 @@ describe('setVersion()', function () {
       it('should remove the version from body', function () {
         var req = {
               param: sinon.stub().withArgs('__api_version').returns('1.2.3'),
-              body: {
+              body : {
                 __api_version: '1.2.3'
               },
               query: {}
@@ -70,7 +70,7 @@ describe('setVersion()', function () {
       it('should remove the version from query', function () {
         var req = {
               param: sinon.stub().withArgs('__api_version').returns('1.2.3'),
-              body: {},
+              body : {},
               query: {
                 __api_version: '1.2.3'
               }

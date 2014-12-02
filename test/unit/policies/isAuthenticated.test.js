@@ -1,5 +1,5 @@
-var assert      = require('chai').assert,
-    sinon       = require('sinon'),
+var assert = require('chai').assert,
+    sinon  = require('sinon'),
     isAuthenticated;
 
 describe('isAuthenticated()', function () {

@@ -1,5 +1,5 @@
-var assert      = require('chai').assert,
-    sinon       = require('sinon'),
+var assert = require('chai').assert,
+    sinon  = require('sinon'),
     setPartnerInfo;
 
 describe('setPartnerInfo()', function () {
@@ -11,7 +11,7 @@ describe('setPartnerInfo()', function () {
     context('partnerInfo.partnerInfo not set', function () {
       it('should set partnerInfo.partnerInfo from req.object', function () {
         var req = {
-              param: sinon.stub().withArgs('partnerInfo').returns({partnerCode: 123}),
+              param : sinon.stub().withArgs('partnerInfo').returns({partnerCode: 123}),
               object: {
                 partnerCode: 124,
                 partnerInfo: 'somePartner'
@@ -35,7 +35,7 @@ describe('setPartnerInfo()', function () {
     context('partnerInfo.partnerCode not set', function () {
       it('should set partnerInfo.partnerCode from req.object', function () {
         var req = {
-              param: sinon.stub().withArgs('partnerInfo').returns({partnerInfo: 'otherPartner'}),
+              param : sinon.stub().withArgs('partnerInfo').returns({partnerInfo: 'otherPartner'}),
               object: {
                 partnerCode: 124,
                 partnerInfo: 'somePartner'
@@ -59,7 +59,7 @@ describe('setPartnerInfo()', function () {
     context('both given', function () {
       it('should not override them from req.object', function () {
         var req = {
-              param: sinon.stub().withArgs('partnerInfo').returns({
+              param : sinon.stub().withArgs('partnerInfo').returns({
                 partnerCode: 123,
                 partnerInfo: 'otherPartner'
               }),
@@ -86,9 +86,9 @@ describe('setPartnerInfo()', function () {
     context('partnerInfo set in req.query', function () {
       it('should remove req.query.partnerInfo', function () {
         var req = {
-              param: sinon.stub().withArgs('partnerInfo').returns({}),
+              param : sinon.stub().withArgs('partnerInfo').returns({}),
               object: {},
-              query: {
+              query : {
                 partnerInfo: {}
               }
             },
@@ -107,9 +107,9 @@ describe('setPartnerInfo()', function () {
     context('partnerInfo set in req.body', function () {
       it('should remove req.body.partnerInfo', function () {
         var req = {
-              param: sinon.stub().withArgs('partnerInfo').returns({}),
+              param : sinon.stub().withArgs('partnerInfo').returns({}),
               object: {},
-              body: {
+              body  : {
                 partnerInfo: {}
               }
             },
@@ -128,7 +128,7 @@ describe('setPartnerInfo()', function () {
     context('partnerInfo set in req.params', function () {
       it('should remove req.params.partnerInfo', function () {
         var req = {
-              param: sinon.stub().withArgs('partnerInfo').returns({}),
+              param : sinon.stub().withArgs('partnerInfo').returns({}),
               object: {},
               params: {
                 partnerInfo: {}
@@ -147,10 +147,10 @@ describe('setPartnerInfo()', function () {
     });
   });
 
-  context('partnerInfo via object', function() {
+  context('partnerInfo via object', function () {
     it('should set partnerInfo from req.object', function () {
       var req = {
-            param: sinon.stub(),
+            param : sinon.stub(),
             object: {
               partnerCode: 124,
               partnerInfo: 'somePartner'

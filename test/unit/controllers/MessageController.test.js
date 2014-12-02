@@ -21,7 +21,7 @@ describe('MessageController', function () {
           .send({
             username: 'fixture-test+nousername@islive.io',
             password: 'keeshond',
-            role: 'visitor'
+            role    : 'visitor'
           })
           .expect(200)
           .end(function (error, loginResponse) {
@@ -36,7 +36,7 @@ describe('MessageController', function () {
                 assert.strictEqual(response.body.error, 'missing_username')
                 done();
               });
-        });
+          });
       });
     });
 
@@ -49,7 +49,7 @@ describe('MessageController', function () {
           .send({
             username: 'fixture-test@islive.io',
             password: 'keeshond',
-            role: 'visitor'
+            role    : 'visitor'
           })
           .expect(200)
           .end(function (error, loginResponse) {
@@ -60,7 +60,7 @@ describe('MessageController', function () {
               .set('cookie', loginResponse.headers['set-cookie'])
               .expect(400)
               .end(done);
-            });
+          });
       });
     });
 
@@ -73,7 +73,7 @@ describe('MessageController', function () {
           .send({
             username: 'fixture-test@islive.io',
             password: 'keeshond',
-            role: 'visitor'
+            role    : 'visitor'
           })
           .expect(200)
           .end(function (error, loginResponse) {
@@ -82,9 +82,9 @@ describe('MessageController', function () {
             requestHook
               .post('/message')
               .send({
-                title: 'New message',
-                body: 'New message body',
-                to: 998,
+                title : 'New message',
+                body  : 'New message body',
+                to    : 998,
                 thread: 4
               })
               .set('cookie', loginResponse.headers['set-cookie'])
@@ -112,7 +112,7 @@ describe('MessageController', function () {
           .send({
             username: 'fixture-test+fiftycent@islive.io',
             password: 'keeshond',
-            role: 'visitor'
+            role    : 'visitor'
           })
           .expect(200)
           .end(function (error, loginResponse) {
@@ -121,9 +121,9 @@ describe('MessageController', function () {
             request(sails.hooks.http.app)
               .post('/message')
               .send({
-                title: 'New message',
-                body: 'New message body',
-                to: 998,
+                title : 'New message',
+                body  : 'New message body',
+                to    : 998,
                 thread: 4
               })
               .set('cookie', loginResponse.headers['set-cookie'])
@@ -146,7 +146,7 @@ describe('MessageController', function () {
           .send({
             username: 'event.handler.performer@islive.io',
             password: 'keeshond',
-            role: 'performer'
+            role    : 'performer'
           })
           .expect(200)
           .end(function (error, loginResponse) {
@@ -155,9 +155,9 @@ describe('MessageController', function () {
             request(sails.hooks.http.app)
               .post('/message')
               .send({
-                title: 'New message',
-                body: 'New message body',
-                to: 999,
+                title : 'New message',
+                body  : 'New message body',
+                to    : 999,
                 thread: 4
               })
               .set('cookie', loginResponse.headers['set-cookie'])
@@ -196,7 +196,7 @@ describe('MessageController', function () {
           .send({
             username: 'fixture-test@islive.io',
             password: 'keeshond',
-            role: 'visitor'
+            role    : 'visitor'
           })
           .expect(200)
           .end(function (error, loginResponse) {
@@ -208,7 +208,7 @@ describe('MessageController', function () {
               .expect(200)
               .end(function (error, response) {
                 var messages = response.body,
-                    message  = messages[0];
+                    message = messages[0];
 
                 assert.isNull(error);
                 assert.strictEqual(messages.length, 4);
@@ -251,7 +251,7 @@ describe('MessageController', function () {
             .send({
               username: 'fixture-test@islive.io',
               password: 'keeshond',
-              role: 'visitor'
+              role    : 'visitor'
             })
             .expect(200)
             .end(function (error, loginResponse) {
@@ -279,7 +279,7 @@ describe('MessageController', function () {
             .send({
               username: 'fixture-test@islive.io',
               password: 'keeshond',
-              role: 'visitor'
+              role    : 'visitor'
             })
             .expect(200)
             .end(function (error, loginResponse) {
@@ -323,7 +323,7 @@ describe('MessageController', function () {
           .send({
             username: 'fixture-test@islive.io',
             password: 'keeshond',
-            role: 'visitor'
+            role    : 'visitor'
           })
           .expect(200)
           .end(function (error, loginResponse) {

@@ -1,7 +1,7 @@
 var request = require('supertest'),
     assert  = require('chai').assert;
 
-describe('VisitorController', function() {
+describe('VisitorController', function () {
   describe('.setUsername(): PUT /visitor/username', function () {
     context('no logged in user', function () {
       it('Should return forbidden.', function (done) {
@@ -143,46 +143,46 @@ describe('VisitorController', function() {
         });
       });
 
-    context('new username is specified', function () {
-      it('should change the username for the user and the visitor', function (done) {
-        var requestHook = request(sails.hooks.http.app);
+      context('new username is specified', function () {
+        it('should change the username for the user and the visitor', function (done) {
+          var requestHook = request(sails.hooks.http.app);
 
-        requestHook
-          .post('/user/login')
-          .send({
-            role    : 'visitor',
-            username: 'fixture-test+changeusername@islive.io',
-            password: 'keeshond'
-          })
-          .expect(200)
-          .end(function (error, response) {
-            assert.isNull(error, 'can not log in');
+          requestHook
+            .post('/user/login')
+            .send({
+              role    : 'visitor',
+              username: 'fixture-test+changeusername@islive.io',
+              password: 'keeshond'
+            })
+            .expect(200)
+            .end(function (error, response) {
+              assert.isNull(error, 'can not log in');
 
-            requestHook
-              .put('/visitor/username')
-              .send({username: 'brandnew'})
-              .set('cookie', response.headers['set-cookie'])
-              .expect(200)
-              .end(function (error) {
-                assert.isNull(error, 'can not change the username');
-                sails.models.user.findOne(993, function (error, user) {
-                  assert.isNull(error);
-                  assert.strictEqual(user.username, 'brandnew', 'username was not changed for the user');
-                  sails.models.visitor.findOne(884, function (error, user) {
+              requestHook
+                .put('/visitor/username')
+                .send({username: 'brandnew'})
+                .set('cookie', response.headers['set-cookie'])
+                .expect(200)
+                .end(function (error) {
+                  assert.isNull(error, 'can not change the username');
+                  sails.models.user.findOne(993, function (error, user) {
                     assert.isNull(error);
-                    assert.strictEqual(user.username, 'brandnew', 'username was not changed for the visitor');
-                    done();
+                    assert.strictEqual(user.username, 'brandnew', 'username was not changed for the user');
+                    sails.models.visitor.findOne(884, function (error, user) {
+                      assert.isNull(error);
+                      assert.strictEqual(user.username, 'brandnew', 'username was not changed for the visitor');
+                      done();
+                    });
                   });
                 });
-              });
-          });
+            });
         });
       });
     });
   });
 
   describe('.register(): POST /visitor/register', function () {
-    context('missing parameters', function() {
+    context('missing parameters', function () {
       it('Should return bad request', function (done) {
         request(sails.hooks.http.app)
           .post('/visitor/register')
@@ -196,7 +196,7 @@ describe('VisitorController', function() {
         request(sails.hooks.http.app)
           .post('/visitor/register')
           .send({
-            email: 'fixture-test@islive.io',
+            email   : 'fixture-test@islive.io',
             username: 'fixturetest',
             password: 'keeshond'
           })
@@ -214,7 +214,7 @@ describe('VisitorController', function() {
         request(sails.hooks.http.app)
           .post('/visitor/register')
           .send({
-            email: 'new-test-user@islive.io',
+            email   : 'new-test-user@islive.io',
             username: 'newtestuser',
             password: 'keeshond'
           })

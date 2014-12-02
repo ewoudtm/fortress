@@ -3,7 +3,7 @@ var assert = require('chai').assert,
 
 describe('VisitorService', function () {
   describe('.updateCredits()', function () {
-    context('without req parameter', function() {
+    context('without req parameter', function () {
       it('Should update the credits of the visitor.', function (done) {
         var visitorservice = sails.services.visitorservice;
 
@@ -15,7 +15,7 @@ describe('VisitorService', function () {
         });
       });
     });
-    context('with req parameter', function() {
+    context('with req parameter', function () {
       it('Should update the credits of the visitor.', function (done) {
         var visitorservice = sails.services.visitorservice;
 
@@ -36,7 +36,7 @@ describe('VisitorService', function () {
           };
 
       before(function (done) {
-        socket = io.connect('http://127.0.0.1:'+ sails.config.port +'/');
+        socket = io.connect('http://127.0.0.1:' + sails.config.port + '/');
         socket.once('connect', done);
       });
 
@@ -53,7 +53,8 @@ describe('VisitorService', function () {
               assert.strictEqual(updateData.data.credits, 26);
               done();
             });
-            visitorservice.updateCredits(888, 26, {}, function () {});
+            visitorservice.updateCredits(888, 26, {}, function () {
+            });
           });
         });
       });
@@ -61,12 +62,12 @@ describe('VisitorService', function () {
   });
 
   describe('.getVisitor()', function () {
-    context('visitor object', function() {
+    context('visitor object', function () {
       it('Should call back with the same object.', function (done) {
         var visitorservice = sails.services.visitorservice,
             visitorObject = {username: 'someone'};
 
-        visitorservice.getVisitor(visitorObject, function(err, visitor) {
+        visitorservice.getVisitor(visitorObject, function (err, visitor) {
           assert.isNull(err);
           assert.strictEqual(visitor, visitorObject);
           done();
@@ -74,10 +75,10 @@ describe('VisitorService', function () {
       });
     });
 
-    context('id of existing visitor', function() {
+    context('id of existing visitor', function () {
       it('Should call back with the visitor.', function (done) {
         var visitorservice = sails.services.visitorservice;
-        visitorservice.getVisitor(888, function(err, visitor) {
+        visitorservice.getVisitor(888, function (err, visitor) {
           assert.isNull(err);
           assert.strictEqual(visitor.username, 'fixturetest');
           done();
@@ -85,10 +86,10 @@ describe('VisitorService', function () {
       });
     });
 
-    context('id of non existent visitor', function() {
+    context('id of non existent visitor', function () {
       it('Should call back with undefined.', function (done) {
         var visitorservice = sails.services.visitorservice;
-        visitorservice.getVisitor(556, function(err, visitor) {
+        visitorservice.getVisitor(556, function (err, visitor) {
           assert.isUndefined(err);
           assert.isUndefined(visitor);
           done();

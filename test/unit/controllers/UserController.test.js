@@ -138,10 +138,10 @@ describe('UserController', function () {
   describe.skip('.updatePassword(): PUT /user/password', function () {
     context('not skipping wallet update', function () {
       it('Should update the password in the user and the wallet', function (done) {
-        var requestHook   = request(sails.hooks.http.app),
+        var requestHook = request(sails.hooks.http.app),
             walletservice = sails.services.walletservice,
-            email         = 'fortress-test+changepass@ratus.nl',
-            credentials   = {
+            email = 'fortress-test+changepass@ratus.nl',
+            credentials = {
               username: '____changepass',
               email   : email,
               password: 'keeshond',
@@ -154,16 +154,16 @@ describe('UserController', function () {
             walletUser;
 
         async.series({
-          resetWalletPassword: function (callback) {
+          resetWalletPassword            : function (callback) {
             walletservice.remoteChangePassword(email, 'keeshond',
-            sails.services.hashservice.generateLoginHash(email),
-            function (error, success) {
-              assert.isNull(error);
-              assert.isTrue(success, 'Resetting password failed.');
-              callback();
-            });
+              sails.services.hashservice.generateLoginHash(email),
+              function (error, success) {
+                assert.isNull(error);
+                assert.isTrue(success, 'Resetting password failed.');
+                callback();
+              });
           },
-          importWalletUser: function (callback) {
+          importWalletUser               : function (callback) {
             sails.models.user.destroy({username: '____changepass'}, function (error) {
               assert.isNull(error);
               walletservice.importUser(credentials, function (error, user) {
@@ -185,7 +185,7 @@ describe('UserController', function () {
               callback();
             });
           },
-          changeUserPassword: function (callback) {
+          changeUserPassword             : function (callback) {
             requestHook
               .post('/user/login')
               .send({
@@ -206,9 +206,9 @@ describe('UserController', function () {
                     assert.strictEqual(response.status, 200, 'Request was invalid');
                     callback();
                   });
-                });
+              });
           },
-          fortressLoginWithNewPassword: function (callback) {
+          fortressLoginWithNewPassword   : function (callback) {
             requestHook
               .post('/user/login')
               .send({
@@ -223,7 +223,7 @@ describe('UserController', function () {
                 callback();
               });
           },
-          walletLoginWithNewPassword: function (callback) {
+          walletLoginWithNewPassword     : function (callback) {
             walletservice.login({
               username: email,
               password: 'something else'
@@ -239,10 +239,10 @@ describe('UserController', function () {
 
     context('skipping wallet update', function () {
       it('Should update the password in the user', function (done) {
-        var requestHook   = request(sails.hooks.http.app),
+        var requestHook = request(sails.hooks.http.app),
             walletservice = sails.services.walletservice,
-            email         = 'fortress-test+changepass@ratus.nl',
-            credentials   = {
+            email = 'fortress-test+changepass@ratus.nl',
+            credentials = {
               username: '____changepass',
               email   : email,
               password: 'keeshond',
@@ -255,16 +255,16 @@ describe('UserController', function () {
             walletUser;
 
         async.series({
-          resetWalletPassword: function (callback) {
+          resetWalletPassword            : function (callback) {
             walletservice.remoteChangePassword(email, 'keeshond',
-            sails.services.hashservice.generateLoginHash(email),
-            function (error, success) {
-              assert.isNull(error);
-              assert.isTrue(success, 'Resetting password failed.');
-              callback();
-            });
+              sails.services.hashservice.generateLoginHash(email),
+              function (error, success) {
+                assert.isNull(error);
+                assert.isTrue(success, 'Resetting password failed.');
+                callback();
+              });
           },
-          importWalletUser: function (callback) {
+          importWalletUser               : function (callback) {
             sails.models.user.destroy({username: '____changepass'}, function (error) {
               assert.isNull(error);
               walletservice.importUser(credentials, function (error, user) {
@@ -286,13 +286,13 @@ describe('UserController', function () {
               callback();
             });
           },
-          changeUserPassword: function (callback) {
+          changeUserPassword             : function (callback) {
             requestHook
               .post('/user/login')
               .send({
-                role      : 'visitor',
-                username  : email,
-                password  : 'keeshond',
+                role    : 'visitor',
+                username: email,
+                password: 'keeshond',
               })
               .end(function (error, res) {
                 assert.isNull(error);
@@ -302,7 +302,7 @@ describe('UserController', function () {
                   .put('/user/password')
                   .set('cookie', res.headers['set-cookie'])
                   .send({
-                    password: 'something else',
+                    password  : 'something else',
                     skipWallet: true
                   })
                   .end(function (error, response) {
@@ -310,9 +310,9 @@ describe('UserController', function () {
                     assert.strictEqual(response.status, 200, 'Request was invalid');
                     callback();
                   });
-                });
+              });
           },
-          fortressLoginWithNewPassword: function (callback) {
+          fortressLoginWithNewPassword   : function (callback) {
             requestHook
               .post('/user/login')
               .send({
@@ -327,7 +327,7 @@ describe('UserController', function () {
                 callback();
               });
           },
-          walletLoginWithNewPassword: function (callback) {
+          walletLoginWithNewPassword     : function (callback) {
             walletservice.login({
               username: email,
               password: 'something else'
@@ -344,7 +344,7 @@ describe('UserController', function () {
 
   describe('.getIdentity(): GET /user/identity/:role?', function () {
     context('role not specified', function () {
-      it('Should return the user without populated identity.', function(done) {
+      it('Should return the user without populated identity.', function (done) {
         var requestHook = request(sails.hooks.http.app),
             credentials = {
               role    : 'visitor',
@@ -372,7 +372,7 @@ describe('UserController', function () {
     });
 
     context('visitor role specified', function () {
-      it('Should return the user without populated identity.', function(done) {
+      it('Should return the user without populated identity.', function (done) {
         var requestHook = request(sails.hooks.http.app),
             credentials = {
               role    : 'visitor',
@@ -400,7 +400,7 @@ describe('UserController', function () {
     });
 
     context('performer role specified', function () {
-      it('Should return the user without populated identity.', function(done) {
+      it('Should return the user without populated identity.', function (done) {
         var requestHook = request(sails.hooks.http.app),
             credentials = {
               role    : 'performer',
@@ -428,7 +428,7 @@ describe('UserController', function () {
     });
 
     context('missing role specified', function () {
-      it('Should return bad request.', function(done) {
+      it('Should return bad request.', function (done) {
         var requestHook = request(sails.hooks.http.app),
             credentials = {
               role    : 'visitor',
@@ -457,7 +457,7 @@ describe('UserController', function () {
     });
 
     context('non-existent role specified', function () {
-      it('Should return bad request.', function(done) {
+      it('Should return bad request.', function (done) {
         var requestHook = request(sails.hooks.http.app),
             credentials = {
               role    : 'visitor',
@@ -486,7 +486,7 @@ describe('UserController', function () {
     });
   });
 
-  describe('.unsubscribe(): GET /user/:id/unsubscribe', function() {
+  describe('.unsubscribe(): GET /user/:id/unsubscribe', function () {
     context('invalid hash', function () {
       it('Should return bad request.', function (done) {
         request(sails.hooks.http.app)
@@ -522,7 +522,7 @@ describe('UserController', function () {
     });
   });
 
-  describe('.usernameAvailable(): POST /user/username-available', function() {
+  describe('.usernameAvailable(): POST /user/username-available', function () {
     context('username is available', function () {
       it('Should return available', function (done) {
         request(sails.hooks.http.app)
@@ -599,7 +599,7 @@ describe('UserController', function () {
           .send({
             username: 'fixture-test@islive.io',
             password: 'keeshond',
-            role: 'abuser'
+            role    : 'abuser'
           })
           .expect(400)
           .end(function (error, response) {
@@ -617,7 +617,7 @@ describe('UserController', function () {
           .send({
             username: 'fixture-test@islive.io',
             password: 'keeshondje',
-            role: 'visitor'
+            role    : 'visitor'
           })
           .expect(400)
           .end(function (error, response) {
@@ -635,7 +635,7 @@ describe('UserController', function () {
           .send({
             username: 'fixture-test@islive.io',
             password: 'keeshondje',
-            role: 'performer'
+            role    : 'performer'
           })
           .expect(400)
           .end(function (error, response) {
@@ -655,7 +655,7 @@ describe('UserController', function () {
           .send({
             username: 'fixture-test@islive.io',
             password: 'keeshond',
-            role: 'visitor'
+            role    : 'visitor'
           })
           .expect(200)
           .end(function (error, response) {
@@ -691,8 +691,8 @@ describe('UserController', function () {
         request(sails.hooks.http.app)
           .post('/user/login-by-hash')
           .send({
-           email: 'fixture-test@islive.io',
-            hash: loginHash
+            email: 'fixture-test@islive.io',
+            hash : loginHash
           })
           .expect(400)
           .end(function (error, response) {
@@ -711,8 +711,8 @@ describe('UserController', function () {
           .post('/user/login-by-hash')
           .send({
             email: 'fixture-test@islive.io',
-            hash: loginHash,
-            role: 'abuser'
+            hash : loginHash,
+            role : 'abuser'
           })
           .expect(400)
           .end(function (error, response) {
@@ -729,8 +729,8 @@ describe('UserController', function () {
           .post('/user/login-by-hash')
           .send({
             email: 'fixture-test@islive.io',
-            hash: 'sUS7SFkNQv0Xp29SIofOrg',
-            role: 'visitor'
+            hash : 'sUS7SFkNQv0Xp29SIofOrg',
+            role : 'visitor'
           })
           .expect(400)
           .end(function (error, response) {
@@ -749,8 +749,8 @@ describe('UserController', function () {
           .post('/user/login-by-hash')
           .send({
             email: 'fixture-test@islive.io',
-            hash: loginHash,
-            role: 'performer'
+            hash : loginHash,
+            role : 'performer'
           })
           .expect(400)
           .end(function (error, response) {
@@ -764,14 +764,14 @@ describe('UserController', function () {
     context('valid credentials', function () {
       it('Should authenticate and return the user', function (done) {
         var requestHook = request(sails.hooks.http.app),
-            loginHash   = sails.services.hashservice.generateLoginHash('fixture-test@islive.io');
+            loginHash = sails.services.hashservice.generateLoginHash('fixture-test@islive.io');
 
         requestHook
           .post('/user/login-by-hash')
           .send({
             email: 'fixture-test@islive.io',
-            hash: loginHash,
-            role: 'visitor'
+            hash : loginHash,
+            role : 'visitor'
           })
           .expect(200)
           .end(function (error, response) {
@@ -796,7 +796,7 @@ describe('UserController', function () {
           .send({
             username: 'fixture-test@islive.io',
             password: 'keeshond',
-            role: 'visitor'
+            role    : 'visitor'
           })
           .expect(200)
           .end(function (error, loginResponse) {

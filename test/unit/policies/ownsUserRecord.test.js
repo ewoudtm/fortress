@@ -1,5 +1,5 @@
-var assert      = require('chai').assert,
-    sinon       = require('sinon'),
+var assert = require('chai').assert,
+    sinon  = require('sinon'),
     ownsUserRecord;
 
 describe('ownsUserRecord()', function () {
@@ -17,7 +17,7 @@ describe('ownsUserRecord()', function () {
               options: {
                 model: 'user'
               },
-              param: sinon.stub().withArgs('id').returns('998')
+              param  : sinon.stub().withArgs('id').returns('998')
             },
             res = {
               forbidden: sinon.spy()
@@ -41,7 +41,7 @@ describe('ownsUserRecord()', function () {
               options: {
                 model: 'user'
               },
-              param: sinon.stub().withArgs('id').returns('999')
+              param  : sinon.stub().withArgs('id').returns('999')
             },
             res = {
               forbidden: sinon.spy()
@@ -67,7 +67,7 @@ describe('ownsUserRecord()', function () {
               options: {
                 model: 'message'
               },
-              param: sinon.stub().withArgs('user').returns('998')
+              param  : sinon.stub().withArgs('user').returns('998')
             },
             res = {
               forbidden: sinon.spy()
@@ -91,7 +91,7 @@ describe('ownsUserRecord()', function () {
               options: {
                 model: 'message'
               },
-              param: sinon.stub().withArgs('user').returns('999')
+              param  : sinon.stub().withArgs('user').returns('999')
             },
             res = {
               forbidden: sinon.spy()

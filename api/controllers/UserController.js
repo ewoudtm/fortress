@@ -40,7 +40,7 @@ UserController = {
         query, role;
 
     query = userModel.findOne({id: req.session.user});
-    role  = req.param('role');
+    role = req.param('role');
 
     if (role) {
       if (!userModel.isValidRole(role)) {
@@ -479,7 +479,7 @@ UserController = {
    * @param req
    * @param res
    */
-  updatePassword: function (req, res){
+  updatePassword: function (req, res) {
     var userInfo = req.session.userInfo,
         requiredProperties = [
           'password',

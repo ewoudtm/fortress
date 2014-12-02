@@ -1,5 +1,5 @@
-var assert      = require('chai').assert,
-    sinon       = require('sinon'),
+var assert = require('chai').assert,
+    sinon  = require('sinon'),
     canMarkRead;
 
 describe('canMarkRead()', function () {
@@ -47,7 +47,7 @@ describe('canMarkRead()', function () {
   context('no logged in user', function () {
     it('should send bad request', function () {
       var req = {
-            route: {
+            route  : {
               path: '/message/inbox'
             },
             session: {}
@@ -68,7 +68,7 @@ describe('canMarkRead()', function () {
   context('with logged in user', function () {
     it('should call next and set a request body for query', function () {
       var req = {
-            route: {
+            route  : {
               path: '/message/inbox'
             },
             session: {
@@ -85,7 +85,7 @@ describe('canMarkRead()', function () {
       assert.isTrue(next.calledOnce);
       assert.isTrue(next.calledWithExactly());
       assert.deepEqual(req.body, {
-        where: {
+        where  : {
           or: [
             {
               to: 999
@@ -96,7 +96,7 @@ describe('canMarkRead()', function () {
           ]
         },
         groupBy: 'thread',
-        sort: 'updatedAt desc'
+        sort   : 'updatedAt desc'
       });
     });
   });
