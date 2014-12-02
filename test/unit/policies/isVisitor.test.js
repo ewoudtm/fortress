@@ -2,7 +2,7 @@ var assert      = require('chai').assert,
     sinon       = require('sinon'),
     isVisitor;
 
-describe.only('isVisitor()', function () {
+describe('isVisitor()', function () {
   before(function () {
     isVisitor = sails.hooks.policies.middleware.isvisitor;
   });
