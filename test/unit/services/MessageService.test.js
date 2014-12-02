@@ -73,4 +73,57 @@ describe('MessageService', function () {
       });
     });
   });
+
+  describe('.getScanner()', function () {
+    it('should return the censoring scanner', function () {
+      var scanner = sails.services.messageservice.getScanner();
+
+      scanner.prepare('email@address.com');
+      assert.isTrue(scanner.test());
+    });
+  });
+
+  describe('.abuseCheck()', function () {
+    it('should call back with false for non-abusive messages', function (done) {
+      sails.services.messageservice.abuseCheck({
+        body: 'hey, how are you?',
+        to: {}
+      }, function (error, abusive) {
+        assert.isNull(error);
+        assert.isFalse(abusive);
+        done();
+      });
+    });
+
+    it('should call back with false for sending to non-visitor users', function (done) {
+      sails.services.messageservice.abuseCheck({
+        body: 'email@adress.com',
+        to: {}
+      }, function (error, abusive) {
+        assert.isNull(error);
+        assert.isFalse(abusive);
+        done();
+      });
+    });
+
+    it('should call back with true for sending abusive messages for visitor users', function (done) {
+      sails.services.messageservice.abuseCheck({
+        body: 'email@adress.com',
+        from: {
+          username: 'test',
+          object: {
+            email: 'test@email.com'
+          }
+        },
+        to: {
+          username: 'test',
+          visitor : {}
+        }
+      }, function (error, abusive) {
+        assert.isNull(error);
+        assert.isTrue(abusive);
+        done();
+      });
+    });
+  });
 });

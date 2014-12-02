@@ -133,19 +133,20 @@ module.exports = {
       // Just here to avoid errors.
     };
 
-    var scanner = this.getScanner();
+    var from = message.from,
+        to = message.to,
+        scanner;
+
+    if (!to.visitor) {
+      return callback(null, false); // Not monitoring visitors.
+    }
+
+    scanner = this.getScanner();
 
     scanner.prepare(message.body, true);
 
     if (!scanner.test()) {
-      return;
-    }
-
-    var from = message.from,
-        to = message.to;
-
-    if (!to.visitor) {
-      return callback(null, true); // Not monitoring visitors.
+      return callback(null, false);
     }
 
     var template = '\
@@ -172,10 +173,18 @@ module.exports = {
       html   : template
     };
 
+    if(process.env.NODE_ENV === 'test') {
+      return callback(null, true);
+    }
+
     smtpClient.sendMail(mailConfig, function (error) {
       if (error) {
         sails.log.error('Failed to sent e-mail', error);
+
+        return callback(error);
       }
+
+      callback(null, true);
     });
   },
 
