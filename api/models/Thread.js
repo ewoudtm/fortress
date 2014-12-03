@@ -1,20 +1,28 @@
 module.exports = {
-  schema: true,
-  attributes: {
-    messages: {
+  schema     : true,
+  attributes : {
+    messages    : {
       collection: 'message',
-      via: 'thread'
+      via       : 'thread'
     },
-    subject: 'string',
-    from: {
+    subject     : 'string',
+    from        : {
       model: 'user',
       index: true
     },
-    to: {
+    to          : {
       model: 'user',
       index: true
     },
-    toJSON: function() {
+    fromArchived: {
+      type      : 'boolean',
+      defaultsTo: false
+    },
+    toArchived  : {
+      type      : 'boolean',
+      defaultsTo: false
+    },
+    toJSON      : function () {
       var modelInstance = this.toObject();
 
       modelInstance._modelName = 'thread';
@@ -22,7 +30,7 @@ module.exports = {
       return modelInstance;
     }
   },
-  afterCreate : function (values, done) {
+  afterCreate: function (values, done) {
     sails.services.messageservice.publishInbox(values, done);
   }
 };

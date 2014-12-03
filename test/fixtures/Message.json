@@ -1,0 +1,42 @@
+[
+  {
+    "id": 6,
+    "thread": 6,
+    "subject": "Test subject 6",
+    "body": "Test message 6",
+    "read": false,
+    "from": 988,
+    "to": 989,
+    "initial": true
+  },
+  {
+    "id": 7,
+    "thread": 6,
+    "subject": "Test subject 6",
+    "body": "Test message 7",
+    "read": false,
+    "from": 989,
+    "to": 988,
+    "initial": false
+  },
+  {
+    "id": 8,
+    "thread": 7,
+    "subject": "Test subject 7",
+    "body": "Test message 8",
+    "read": false,
+    "from": 989,
+    "to": 988,
+    "initial": true
+  },
+  {
+    "id": 9,
+    "thread": 7,
+    "subject": "Test subject 7",
+    "body": "Test message 9",
+    "read": false,
+    "from": 988,
+    "to": 989,
+    "initial": false
+  }
+]
