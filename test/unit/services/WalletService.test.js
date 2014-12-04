@@ -44,7 +44,7 @@ describe('WalletService', function () {
     });
   });
 
-  describe.skip('.remoteChangePassword()', function () {
+  describe('.remoteChangePassword()', function () {
     it('Should change the wallet password', function (done) {
       var walletservice = sails.services.walletservice,
           email = 'fortress-test+changepass@ratus.nl';
