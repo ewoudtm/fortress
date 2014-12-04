@@ -47,6 +47,36 @@ describe('ThreadController', function () {
     });
   });
 
+  describe('.getThreadCount(): GET /thread/thread-count', function () {
+    context('user logged in', function () {
+      it('should return the non-archived threads for the user', function (done) {
+        var requestHook = request(sails.hooks.http.app);
+
+        requestHook
+          .post('/user/login')
+          .send({
+            username: 'fixture-test+message3@islive.io',
+            password: 'keeshond',
+            role    : 'visitor'
+          })
+          .expect(200)
+          .end(function (error, loginResponse) {
+            assert.isNull(error);
+            assert.strictEqual(loginResponse.body.id, 987);
+            requestHook
+              .get('/thread/thread-count')
+              .set('cookie', loginResponse.headers['set-cookie'])
+              .expect(200)
+              .end(function (error, response) {
+                assert.isNull(error);
+                assert.strictEqual(response.body.count, 4);
+                done();
+              });
+          });
+      });
+    });
+  });
+
   describe('.update(): PUT /thread/:id', function () {
     context('no user logged in', function () {
       it('should return forbidden', function (done) {
