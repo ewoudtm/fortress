@@ -2,6 +2,51 @@ var request = require('supertest'),
     assert  = require('chai').assert;
 
 describe('ThreadController', function () {
+  describe('.find(): GET /thread', function () {
+    context('no user logged in', function () {
+      it('should return forbidden', function (done) {
+        request(sails.hooks.http.app)
+          .put('/thread')
+          .expect(403)
+          .end(done);
+      });
+
+      context('user logged in', function () {
+        it('should return the non-archived threads for the user', function (done) {
+          var requestHook = request(sails.hooks.http.app);
+
+          requestHook
+            .post('/user/login')
+            .send({
+              username: 'fixture-test+message3@islive.io',
+              password: 'keeshond',
+              role    : 'visitor'
+            })
+            .expect(200)
+            .end(function (error, loginResponse) {
+              assert.isNull(error);
+              assert.strictEqual(loginResponse.body.id, 987);
+              requestHook
+                .get('/thread')
+                .set('cookie', loginResponse.headers['set-cookie'])
+                .expect(200)
+                .end(function (error, response) {
+                  var threads = response.body;
+
+                  assert.isNull(error);
+                  assert.lengthOf(threads, 4);
+                  assert.strictEqual(threads[0].id, 8);
+                  assert.strictEqual(threads[1].id, 9);
+                  assert.strictEqual(threads[2].id, 11);
+                  assert.strictEqual(threads[3].id, 13);
+                  done();
+                });
+            });
+        });
+      });
+    });
+  });
+
   describe('.update(): PUT /thread/:id', function () {
     context('no user logged in', function () {
       it('should return forbidden', function (done) {

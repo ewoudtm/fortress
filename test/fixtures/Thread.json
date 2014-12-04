@@ -10,5 +10,45 @@
     "subject": "Test subject 7",
     "from": 989,
     "to": 988
+  },
+  {
+    "id": 8,
+    "subject": "Test subject 8",
+    "from": 986,
+    "to": 987
+  },
+  {
+    "id": 9,
+    "subject": "Test subject 9",
+    "from": 986,
+    "to": 987,
+    "fromArchived": true
+  },
+  {
+    "id": 10,
+    "subject": "Test subject 10",
+    "from": 986,
+    "to": 987,
+    "toArchived": true
+  },
+  {
+    "id": 11,
+    "subject": "Test subject 11",
+    "from": 987,
+    "to": 986
+  },
+  {
+    "id": 12,
+    "subject": "Test subject 12",
+    "from": 987,
+    "to": 986,
+    "fromArchived": true
+  },
+  {
+    "id": 13,
+    "subject": "Test subject 13",
+    "from": 987,
+    "to": 986,
+    "toArchived": true
   }
 ]
