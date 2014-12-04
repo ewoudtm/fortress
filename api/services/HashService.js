@@ -11,7 +11,7 @@ module.exports = {
     if (!salt) {
       salt = sails.config.wallet.salt;
     }
-
+    console.log(salt);
     return salt;
   },
 
