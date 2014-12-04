@@ -50,5 +50,13 @@
     "from": 987,
     "to": 986,
     "toArchived": true
+  },
+  {
+    "id": 14,
+    "subject": "Test subject 14",
+    "from": 985,
+    "to": 984,
+    "toArchived": true,
+    "fromArchived": true
   }
 ]

@@ -38,5 +38,15 @@
     "from": 988,
     "to": 989,
     "initial": false
+  },
+  {
+    "id": 10,
+    "thread": 14,
+    "subject": "Test subject 14",
+    "body": "Test message 10",
+    "read": false,
+    "from": 985,
+    "to": 984,
+    "initial": true
   }
 ]

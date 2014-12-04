@@ -24,7 +24,7 @@ module.exports.policies = {
   '*': false,
 
   MessageController: {
-    create  : makePolicies(['isAuthenticated', 'hasUsername', 'subtractCredits', 'complementReply', 'track']),
+    create  : makePolicies(['isAuthenticated', 'hasUsername', 'subtractCredits', 'complementReply', 'unarchiveThread', 'track']),
     inbox   : makePolicies(['isAuthenticated']), // Protected in action
     find    : makePolicies(['isAuthenticated', 'ensureParticipation']),
     markRead: makePolicies(['isAuthenticated']), // Protected in action
