@@ -9,10 +9,10 @@
  */
 
 var SailsApp = require('sails').Sails,
-fs           = require('fs'),
-config       = require('./config.js'),
-mysql        = require('mysql'),
-sails;
+    fs       = require('fs'),
+    config   = require('./config.js'),
+    mysql    = require('mysql'),
+    sails;
 
 function prepareDatabase (done) {
 
