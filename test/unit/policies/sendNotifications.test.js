@@ -15,7 +15,7 @@ describe('sendNotifications', function () {
       res.status(200).send({});
     });
 
-    server      = app.listen(6663); //the port you want to use
+    server = app.listen(6663); //the port you want to use
     requestHook = request(sails.hooks.http.app);
 
     requestHook
@@ -34,7 +34,8 @@ describe('sendNotifications', function () {
 
             assert.deepEqual(response.body, {
               error      : 'not_implemented',
-              description: 'This feature hasn\'t been implemented yet.'
+              description: 'This feature hasn\'t been implemented yet.',
+              status     : 500
             }, 'Did not get the expected error response.');
 
             server.close();
@@ -186,7 +187,7 @@ describe('sendNotifications', function () {
       res.status(200).send({});
     });
 
-    server      = app.listen(6663); //the port you want to use
+    server = app.listen(6663); //the port you want to use
     requestHook = request(sails.hooks.http.app);
 
     requestHook

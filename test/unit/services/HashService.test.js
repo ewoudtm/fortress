@@ -1,6 +1,12 @@
 var assert = require('chai').assert;
 
 describe('HashService', function () {
+  after(function () {
+    var hashservice = sails.services.hashservice;
+
+    hashservice.setSalt(sails.config.wallet.salt);
+  });
+
   describe('.getSalt()', function () {
     it('Should set the salt.', function () {
       var hashservice = sails.services.hashservice;

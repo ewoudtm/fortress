@@ -1,4 +1,5 @@
-var assert = require('chai').assert;
+var assert = require('chai').assert,
+    sinon = require('sinon');
 
 describe('WalletService', function () {
   describe('.importUser()', function () {
@@ -45,19 +46,29 @@ describe('WalletService', function () {
   });
 
   describe('.remoteChangePassword()', function () {
+    before(function () {
+      var stub = sinon.stub(sails.services.hashservice, 'encode');
+
+      stub.withArgs('fortress-test+changepass@ratus.nl').returns('KWEzk8U5tw0iN3/dAfQ0Wg')
+    });
+
+    after(function () {
+      sails.services.hashservice.encode.restore();
+    });
+
     it('Should change the wallet password', function (done) {
       var walletservice = sails.services.walletservice,
-          email         = 'fortress-test+changepass@ratus.nl';
+          email = 'fortress-test+changepass@ratus.nl';
 
       async.series({
-        resetWalletPassword: function (callback) {
+        resetWalletPassword            : function (callback) {
           walletservice.remoteChangePassword(email, 'keeshond',
-          sails.services.hashservice.generateLoginHash(email),
-          function (error, success) {
-            assert.isNull(error);
-            assert.isTrue(success);
-            callback();
-          });
+            sails.services.hashservice.generateLoginHash(email),
+            function (error, success) {
+              assert.isNull(error);
+              assert.isTrue(success);
+              callback();
+            });
         },
         walletLogInWithOriginalPassword: function (callback) {
           walletservice.login({
@@ -69,16 +80,16 @@ describe('WalletService', function () {
             callback();
           });
         },
-        setNewWalletPassword: function (callback) {
+        setNewWalletPassword           : function (callback) {
           walletservice.remoteChangePassword(email, 'something else',
-          sails.services.hashservice.generateLoginHash(email),
-          function (error, success) {
-            assert.isNull(error);
-            assert.isTrue(success);
-            callback();
-          });
+            sails.services.hashservice.generateLoginHash(email),
+            function (error, success) {
+              assert.isNull(error);
+              assert.isTrue(success);
+              callback();
+            });
         },
-        walletLogInWithNewPassword: function (callback) {
+        walletLogInWithNewPassword     : function (callback) {
           walletservice.login({
             username: email,
             password: 'something else'

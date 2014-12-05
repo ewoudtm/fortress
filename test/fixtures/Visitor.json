@@ -34,5 +34,32 @@
     "updatedAt": "2014-09-10T10:05:16.704Z",
     "id"       : 885,
     "user"     : 995
+  },
+  {
+    "walletId" : 111,
+    "credits"  : 1584,
+    "username" : "changeusername",
+    "createdAt": "2014-09-10T10:05:16.235Z",
+    "updatedAt": "2014-09-10T10:05:16.704Z",
+    "id"       : 884,
+    "user"     : 993
+  },
+  {
+    "walletId" : 125,
+    "credits"  : 50,
+    "username" : "fiftycent",
+    "createdAt": "2014-09-10T10:05:16.235Z",
+    "updatedAt": "2014-09-10T10:05:16.704Z",
+    "id"       : 883,
+    "user"     : 991
+  },
+  {
+    "walletId" : 111,
+    "credits"  : 1337,
+    "username" : "fiftycent",
+    "createdAt": "2014-09-10T10:05:16.235Z",
+    "updatedAt": "2014-09-10T10:05:16.704Z",
+    "id"       : 882,
+    "user"     : 990
   }
 ]

@@ -166,6 +166,7 @@ module.exports = {
       if (error) {
         return callback(error);
       }
+
       callback(null, !!response.ok);
     });
   }

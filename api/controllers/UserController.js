@@ -36,12 +36,16 @@ function setupUserSession (req, result, role) {
 
 UserController = {
   getIdentity: function (req, res) {
-    var query, role;
+    var userModel = sails.models.user,
+        query, role;
 
-    query = sails.models.user.findOne({id: req.session.user});
-    role  = req.param('role');
+    query = userModel.findOne({id: req.session.user});
+    role = req.param('role');
 
     if (role) {
+      if (!userModel.isValidRole(role)) {
+        return res.badRequest('invalid_role', role);
+      }
       query.populate(role);
     }
 
@@ -475,7 +479,7 @@ UserController = {
    * @param req
    * @param res
    */
-  updatePassword: function (req, res){
+  updatePassword: function (req, res) {
     var userInfo = req.session.userInfo,
         requiredProperties = [
           'password',
