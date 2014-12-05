@@ -1,5 +1,6 @@
 var request = require('supertest'),
-    assert  = require('chai').assert;
+    assert  = require('chai').assert,
+    sinon   = require('sinon');
 
 describe('UserController', function () {
   describe('.getUsername(): GET /user/username/:id', function () {
@@ -135,7 +136,17 @@ describe('UserController', function () {
     });
   });
 
-  describe.skip('.updatePassword(): PUT /user/password', function () {
+  describe('.updatePassword(): PUT /user/password', function () {
+    before(function () {
+      var stub = sinon.stub(sails.services.hashservice, 'encode');
+
+      stub.withArgs('fortress-test+changepass@ratus.nl').returns('KWEzk8U5tw0iN3/dAfQ0Wg')
+    });
+
+    after(function () {
+      sails.services.hashservice.encode.restore();
+    });
+
     context('not skipping wallet update', function () {
       it('Should update the password in the user and the wallet', function (done) {
         var requestHook = request(sails.hooks.http.app),

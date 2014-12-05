@@ -1,4 +1,5 @@
-var assert = require('chai').assert;
+var assert = require('chai').assert,
+    sinon = require('sinon');
 
 describe('WalletService', function () {
   describe('.importUser()', function () {
@@ -44,7 +45,17 @@ describe('WalletService', function () {
     });
   });
 
-  describe.skip('.remoteChangePassword()', function () {
+  describe('.remoteChangePassword()', function () {
+    before(function () {
+      var stub = sinon.stub(sails.services.hashservice, 'encode');
+
+      stub.withArgs('fortress-test+changepass@ratus.nl').returns('KWEzk8U5tw0iN3/dAfQ0Wg')
+    });
+
+    after(function () {
+      sails.services.hashservice.encode.restore();
+    });
+
     it('Should change the wallet password', function (done) {
       var walletservice = sails.services.walletservice,
           email = 'fortress-test+changepass@ratus.nl';
