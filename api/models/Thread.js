@@ -16,11 +16,13 @@ module.exports = {
     },
     fromArchived: {
       type      : 'boolean',
-      defaultsTo: false
+      defaultsTo: false,
+      index     : true
     },
     toArchived  : {
       type      : 'boolean',
-      defaultsTo: false
+      defaultsTo: false,
+      index     : true
     },
     toJSON      : function () {
       var modelInstance = this.toObject();
