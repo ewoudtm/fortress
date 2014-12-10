@@ -78,7 +78,6 @@ before(function (done) {
       var barrels = new Barrels();
       barrels.populate(function (error) {
         if (error) {
-        console.log('asdgasdfasdf', error);
           return done(error);
         }
 
