@@ -81,7 +81,6 @@ before(function (done) {
           return done(error);
         }
 
-
         done();
       });
     });
