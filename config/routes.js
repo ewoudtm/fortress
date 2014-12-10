@@ -32,6 +32,7 @@ module.exports.routes = {
   'put /thread/mark-read'        : 'ThreadController.markRead',
   'get /thread/thread-count'     : 'ThreadController.getThreadCount',
   'get /thread/:id'              : 'ThreadController.findonesimple',
+  'put /thread/:id?'             : 'ThreadController.update',
 
   // UserController
   'put /user/password'           : 'UserController.updatePassword',

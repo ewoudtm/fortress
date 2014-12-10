@@ -22,8 +22,8 @@ describe('ensureParticipation()', function () {
     assert.deepEqual(req.options, {
       where: {
         or: [
-          {to: 999},
-          {from: 999}
+          {to: 999, toArchived: false},
+          {from: 999, fromArchived: false}
         ]
       }
     })

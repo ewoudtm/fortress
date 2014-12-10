@@ -1,5 +1,5 @@
 var assert = require('chai').assert,
-    sinon = require('sinon');
+    sinon  = require('sinon');
 
 describe('WalletService', function () {
   describe('.importUser()', function () {
