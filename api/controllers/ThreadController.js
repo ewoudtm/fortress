@@ -31,14 +31,12 @@ module.exports = {
     async.parallel({
       to : function (callback) {
         sails.models.thread.count({
-          to: userId,
-          toArchived: false
+          to: userId
         }, callback);
       },
       from : function (callback) {
         sails.models.thread.count({
-          from: userId,
-          fromArchived: false
+          from: userId
         }, callback);
       }
     }, function (error, results) {

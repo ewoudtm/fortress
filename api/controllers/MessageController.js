@@ -8,12 +8,10 @@ module.exports = {
           where: {
             or: [
               {
-                to: userId,
-                toArchived: false
+                to: userId
               },
               {
-                from: userId,
-                fromArchived: false
+                from: userId
               }
             ]
           },

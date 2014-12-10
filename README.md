@@ -47,7 +47,5 @@ alter table message add key `read_to` (`read`,`to`);
 alter table message add key `to_thread` (`to`,`thread`);
 alter table message add key `createdAt` (`createdAt`);
 alter table thread add KEY `updatedAt` (`updatedAt`);
-alter table thread add key `to_toArchived` (`to`, `toArchived`);
-alter table thread add key `from_fromArchived` (`from`, `fromArchived`);
 ```
 

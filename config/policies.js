@@ -24,7 +24,7 @@ module.exports.policies = {
   '*': false,
 
   MessageController: {
-    create  : makePolicies(['isAuthenticated', 'hasUsername', 'subtractCredits', 'complementReply', 'unarchiveThread', 'track']),
+    create  : makePolicies(['isAuthenticated', 'hasUsername', 'subtractCredits', 'complementReply', 'track']),
     inbox   : makePolicies(['isAuthenticated']), // Protected in action
     find    : makePolicies(['isAuthenticated', 'ensureParticipation']),
     markRead: makePolicies(['isAuthenticated']), // Protected in action
@@ -64,8 +64,7 @@ module.exports.policies = {
     findonesimple : makePolicies(['isAuthenticated', 'hasUsername', 'ensureParticipation']),
     markRead      : makePolicies(['isAuthenticated']), // Protected in action
     find          : makePolicies('ensureParticipation'),
-    getThreadCount: makePolicies(['isAuthenticated']), // Protected in action
-    update        : makePolicies(['isAuthenticated', 'setThread', 'canArchive'])
+    getThreadCount: makePolicies(['isAuthenticated'])  // Protected in action
   },
 
   PerformerController: {

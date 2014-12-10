@@ -14,16 +14,6 @@ module.exports = {
       model: 'user',
       index: true
     },
-    fromArchived: {
-      type      : 'boolean',
-      defaultsTo: false,
-      index     : true
-    },
-    toArchived  : {
-      type      : 'boolean',
-      defaultsTo: false,
-      index     : true
-    },
     toJSON      : function () {
       var modelInstance = this.toObject();
 
