@@ -12,7 +12,7 @@ module.exports = function (req, res, next) {
     }
 
     if (thread.to !== req.session.user && thread.from !== req.session.user) {
-      return res.forbidden('You are not permitted to perform this action.');
+      return res.forbidden();
     }
 
     req.thread = thread;
