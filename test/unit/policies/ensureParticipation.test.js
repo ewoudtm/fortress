@@ -23,7 +23,7 @@ describe('ensureParticipation()', function () {
       where: {
         or: [
           {to: 999},
-          {from: 999  }
+          {from: 999}
         ]
       }
     })

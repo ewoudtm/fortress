@@ -64,7 +64,7 @@ module.exports.policies = {
     findonesimple : makePolicies(['isAuthenticated', 'hasUsername', 'ensureParticipation']),
     markRead      : makePolicies(['isAuthenticated']), // Protected in action
     find          : makePolicies('ensureParticipation'),
-    getThreadCount: makePolicies(['isAuthenticated'])  // Protected in action
+    getThreadCount: makePolicies(['isAuthenticated']) // Protected in action
   },
 
   PerformerController: {

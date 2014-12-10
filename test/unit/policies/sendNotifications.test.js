@@ -3,7 +3,7 @@ var assert  = require('chai').assert,
     express = require('express');
 
 describe('sendNotifications()', function () {
-  it('Should return a "not_implemented" error when trying to end without handler for object..', function (done) {
+  it('Should return a "not_implemented" error when trying to end without handler for object.', function (done) {
     var app = express(),
         called = false,
         requestHook,
