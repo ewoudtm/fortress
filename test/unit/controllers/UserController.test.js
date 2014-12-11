@@ -303,7 +303,7 @@ describe('UserController', function () {
               .send({
                 role    : 'visitor',
                 username: email,
-                password: 'keeshond',
+                password: 'keeshond'
               })
               .end(function (error, res) {
                 assert.isNull(error);
@@ -329,7 +329,7 @@ describe('UserController', function () {
               .send({
                 role    : 'visitor',
                 username: email,
-                password: 'something else',
+                password: 'something else'
               })
               .end(function (error, res) {
                 assert.isNull(error);
