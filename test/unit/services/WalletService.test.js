@@ -62,8 +62,7 @@ describe('WalletService', function () {
 
       async.series({
         resetWalletPassword            : function (callback) {
-          walletservice.remoteChangePassword(email, 'keeshond',
-            sails.services.hashservice.generateLoginHash(email),
+          walletservice.changePassword(1, email, 'keeshond',
             function (error, success) {
               assert.isNull(error);
               assert.isTrue(success);
@@ -81,8 +80,7 @@ describe('WalletService', function () {
           });
         },
         setNewWalletPassword           : function (callback) {
-          walletservice.remoteChangePassword(email, 'something else',
-            sails.services.hashservice.generateLoginHash(email),
+          walletservice.changePassword(1, email, 'something else',
             function (error, success) {
               assert.isNull(error);
               assert.isTrue(success);

@@ -8,5 +8,6 @@ module.exports.wallet = {
    * action   : string
    * -----------------
    */
-  walletAPIUrl: 'http://mysecurewallet.nl/payment/islive/ajax/wallet'
+  apiUrl    : 'http://mysecurewallet.nl/payment/islive/ajax/wallet',
+  programId : 2473
 };

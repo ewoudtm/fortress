@@ -1,5 +1,4 @@
-var request = require('request'),
-    extend  = require('extend');
+var request = require('request');
 
 module.exports = {
 
@@ -57,10 +56,24 @@ module.exports = {
     });
   },
 
-  request: function (action, parameters, callback, method) {
-    method = method || 'post';
+  getWalletApiUrl: function (object, callback) {
+    var apiUrl = sails.config.wallet.apiUrl;
 
-    var walletUrl = sails.config.wallet.walletAPIUrl;
+    if (!object) {
+      return callback(null, apiUrl);
+    }
+
+    sails.services.objectconfigservice.initConfig(object, function (error, objectConfig) {
+      if (error && error.error === 'unknown_object') {
+        return callback(null, apiUrl);
+      }
+
+      callback(error, objectConfig.resolve('wallet.apiUrl', apiUrl));
+    });
+  },
+
+  request: function (action, parameters, callback, method, object) {
+    method = method || 'post';
 
     if (typeof parameters === 'function') {
       callback = parameters;
@@ -73,20 +86,26 @@ module.exports = {
       parameters.qs.action = action;
     }
 
-    request[method](walletUrl, parameters, function (error, response, body) {
-      var responseData;
-
+    this.getWalletApiUrl(object, function (error, apiUrl) {
       if (error) {
         return callback(error);
       }
 
-      try {
-        responseData = JSON.parse(body);
-      } catch (error) {
-        return callback(error);
-      }
+      request[method](apiUrl, parameters, function (error, response, body) {
+        var responseData;
 
-      callback(null, responseData);
+        if (error) {
+          return callback(error);
+        }
+
+        try {
+          responseData = JSON.parse(body);
+        } catch (error) {
+          return callback(error);
+        }
+
+        callback(null, responseData);
+      });
     });
   },
 
@@ -100,7 +119,7 @@ module.exports = {
     delete walletAccount.email;
     delete walletAccount.object;
 
-    this.request('register', {qs: walletAccount}, function (error, response) {
+    this.request(credentials.object, 'register', {qs: walletAccount}, function (error, response) {
       if (error) {
         return callback(error);
       }
@@ -160,20 +179,29 @@ module.exports = {
         return callback(error);
       }
       callback(null, !!response.ok);
-    });
+    }, 'post', credentials.object);
   },
 
-  remoteChangePassword: function(email, password, token, callback) {
-    this.request('remoteChangePassword', {form: {
-      email: email,
-      password: password,
-      token: token
-    }}, function(error, response) {
+  /**
+   * @todo fix arguments (object)
+   * @param object
+   * @param email
+   * @param password
+   * @param callback
+   */
+  changePassword: function (object, email, password, callback) {
+    this.request('remoteChangePassword', {
+      form: {
+        email   : email,
+        password: password,
+        token   : sails.services.hashservice.generateLoginHash(email)
+      }
+    }, function (error, response) {
       if (error) {
         return callback(error);
       }
 
       callback(null, !!response.ok);
-    });
+    }, 'post', object);
   }
 };

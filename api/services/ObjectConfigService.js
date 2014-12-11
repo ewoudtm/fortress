@@ -32,18 +32,22 @@ ObjectConfig.prototype = {
    * This strategy takes care of wildcard resolving as well.
    *
    * @param {string} key
+   * @param {*}      defaultsTo The default value to return if `key` wasn't found. Defaults to `null`.
+   * @todo write test
    *
    * @returns {*}
    */
-  resolve: function (key) {
+  resolve: function (key, defaultsTo) {
     var config = this.config;
+
+    defaultsTo = typeof defaultsTo !== 'undefined' ? defaultsTo : null;
 
     if (config[key]) {
       return config[key];
     }
 
     if (typeof key !== 'string' && typeof key !== 'number') {
-      return null;
+      return defaultsTo;
     }
 
     return key.split('.').every(function (segment) {
@@ -61,7 +65,7 @@ ObjectConfig.prototype = {
       config = config['*'];
 
       return !!config;
-    }) ? config : null;
+    }) ? config : defaultsTo;
   }
 };
 

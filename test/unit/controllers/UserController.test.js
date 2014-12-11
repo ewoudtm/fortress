@@ -166,8 +166,7 @@ describe('UserController', function () {
 
         async.series({
           resetWalletPassword            : function (callback) {
-            walletservice.remoteChangePassword(email, 'keeshond',
-              sails.services.hashservice.generateLoginHash(email),
+            walletservice.changePassword(1, email, 'keeshond',
               function (error, success) {
                 assert.isNull(error);
                 assert.isTrue(success, 'Resetting password failed.');
@@ -267,8 +266,7 @@ describe('UserController', function () {
 
         async.series({
           resetWalletPassword            : function (callback) {
-            walletservice.remoteChangePassword(email, 'keeshond',
-              sails.services.hashservice.generateLoginHash(email),
+            walletservice.changePassword(1, email, 'keeshond',
               function (error, success) {
                 assert.isNull(error);
                 assert.isTrue(success, 'Resetting password failed.');
