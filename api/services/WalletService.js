@@ -3,55 +3,62 @@ var request = require('request');
 module.exports = {
 
   importUser: function (credentials, callback) {
-
     var queryUser = credentials.username;
 
     if (credentials.email) {
       queryUser = credentials.email;
     }
 
-    sails.models.wallet.findUser(queryUser, function (error, user) {
+    sails.services.objectconfigservice.initConfig(credentials.object, function (error, objectConfig) {
       if (error) {
         return callback(error);
       }
 
-      if (!user) {
-        sails.log.warn(
-          'WalletService.importUser() could not find requested user in wallet DB. \n' +
-          'Did you perhaps forget to change `sails.config.wallet.walletAPIUrl`? ' +
-          'Or the connection config for chatterbox? The environments have to match!'
-        );
+      var programId = objectConfig.resolve('wallet.programId');
 
-        return callback(null, null);
-      }
-
-      var newVisitorValues = {
-        walletId: user.id,
-        credits : user.credits
-      }, newUserValues = {
-        ip           : credentials.ip,
-        email        : credentials.username,
-        emailVerified: !!user.email_verified,
-        partnerInfo  : user.reg_promotor_info || null,
-        partnerCode  : user.partner_code || null,
-        object       : credentials.object,
-        password     : credentials.password || null, // @see UserController.loginByHash
-        visitor      : newVisitorValues
-      };
-
-      if (credentials.email && credentials.username) {
-        newUserValues.email = credentials.email;
-        newUserValues.username = credentials.username;
-        newUserValues.object = credentials.object;
-        newVisitorValues.username = credentials.username;
-      }
-
-      sails.models.user.register(newUserValues, function (error, newUser) {
+      sails.models.wallet.findUser(programId, queryUser, function (error, user) {
         if (error) {
           return callback(error);
         }
 
-        callback(null, newUser);
+        if (!user) {
+          sails.log.warn(
+            'WalletService.importUser() could not find requested user in wallet DB. \n' +
+            'Did you perhaps forget to change `sails.config.wallet.walletAPIUrl`? ' +
+            'Or the connection config for chatterbox? The environments have to match!'
+          );
+
+          return callback(null, null);
+        }
+
+        var newVisitorValues = {
+          walletId: user.id,
+          credits : user.credits
+        }, newUserValues = {
+          ip           : credentials.ip,
+          email        : credentials.username,
+          emailVerified: !!user.email_verified,
+          partnerInfo  : user.reg_promotor_info || null,
+          partnerCode  : user.partner_code || null,
+          object       : credentials.object,
+          password     : credentials.password || null, // @see UserController.loginByHash
+          visitor      : newVisitorValues
+        };
+
+        if (credentials.email && credentials.username) {
+          newUserValues.email = credentials.email;
+          newUserValues.username = credentials.username;
+          newUserValues.object = credentials.object;
+          newVisitorValues.username = credentials.username;
+        }
+
+        sails.models.user.register(newUserValues, function (error, newUser) {
+          if (error) {
+            return callback(error);
+          }
+
+          callback(null, newUser);
+        });
       });
     });
   },
@@ -183,11 +190,10 @@ module.exports = {
   },
 
   /**
-   * @todo fix arguments (object)
-   * @param object
-   * @param email
-   * @param password
-   * @param callback
+   * @param {*}         object
+   * @param {string}    email
+   * @param {string}    password
+   * @param {Function}  callback
    */
   changePassword: function (object, email, password, callback) {
     this.request('remoteChangePassword', {
