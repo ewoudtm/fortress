@@ -1,5 +1,4 @@
 module.exports = function(req, res, next) {
-
   var host = req.host,
       xObjectHost = req.get ? req.get('X-Object-Host') : null;
 
