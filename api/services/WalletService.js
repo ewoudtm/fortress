@@ -98,7 +98,7 @@ module.exports = {
       }
 
       if (parameters.form) {
-        parameters.action   = action;
+        parameters.form.action   = action;
       } else {
         parameters.qs.action   = action;
         parameters.qs.from_url = apiUrl;
