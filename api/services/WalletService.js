@@ -24,7 +24,7 @@ module.exports = {
         if (!user) {
           sails.log.warn(
             'WalletService.importUser() could not find requested user in wallet DB. \n' +
-            'Did you perhaps forget to change `sails.config.wallet.walletAPIUrl`? ' +
+            'Did you perhaps forget to change `sails.config.wallet.apiUrl`? ' +
             'Or the connection config for chatterbox? The environments have to match!'
           );
 
@@ -65,6 +65,11 @@ module.exports = {
 
   getWalletApiUrl: function (object, callback) {
     var apiUrl = sails.config.wallet.apiUrl;
+
+    if (typeof object === 'function') {
+      callback = object;
+      object = false;
+    }
 
     if (!object) {
       return callback(null, apiUrl);
