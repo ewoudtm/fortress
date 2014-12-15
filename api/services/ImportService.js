@@ -164,8 +164,9 @@ function ImportService() {
    *
    * @param {*} error
    * @param {string} message
+   * @param {boolean} [resume]
    */
-  function handleError(error, message) {
+  function handleError(error, message, resume) {
     if (!error) {
       return;
     }
@@ -185,7 +186,9 @@ function ImportService() {
       // Just here to prevent the application from crashing if end cannot be called.
     }
 
-    process.exit(1);
+    if (!resume) {
+      process.exit(1);
+    }
   }
 
   /**
@@ -264,7 +267,7 @@ function ImportService() {
       return userModel.register(newUser, function onRegisterModel(error) {
         connection.resume();
 
-        handleError(error, 'Importing performer ' + newUser.username + ' (create) failed.');
+        handleError(error, 'Importing performer ' + newUser.username + ' (create) failed.', true);
       }, true);
     });
   }
