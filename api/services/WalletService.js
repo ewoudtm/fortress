@@ -92,15 +92,16 @@ module.exports = {
       parameters = {};
     }
 
-    if (parameters.form) {
-      parameters.form.action = action;
-    } else {
-      parameters.qs.action = action;
-    }
-
     this.getWalletApiUrl(object, function (error, apiUrl) {
       if (error) {
         return callback(error);
+      }
+
+      if (parameters.form) {
+        parameters.action   = action;
+      } else {
+        parameters.qs.action   = action;
+        parameters.qs.from_url = apiUrl;
       }
 
       request[method](apiUrl, parameters, function (error, response, body) {
@@ -131,7 +132,7 @@ module.exports = {
     delete walletAccount.email;
     delete walletAccount.object;
 
-    this.request(credentials.object, 'register', {qs: walletAccount}, function (error, response) {
+    this.request('register', {qs: walletAccount}, function (error, response) {
       if (error) {
         return callback(error);
       }
@@ -182,7 +183,7 @@ module.exports = {
       }
 
       self.importUser(credentials, callback);
-    }, 'get');
+    }, 'get', credentials.object);
   },
 
   login: function (credentials, callback) {
