@@ -237,7 +237,8 @@ UserController = {
       };
 
       criteria = {
-        email: params.username.trim()
+        object: req.object.id,
+        email : params.username.trim()
       };
 
       /**
@@ -403,7 +404,8 @@ UserController = {
       };
 
       criteria = {
-        email: params.email.trim()
+        object: req.object.id,
+        email : params.email.trim()
       };
 
       if (params.username) {
