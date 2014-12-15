@@ -89,6 +89,7 @@ describe('sendNotifications()', function () {
 
     requestHook
       .post('/user/login')
+      .set('X-Object-Host', 'mock.event.handler.islive.io')
       .send({
         role    : 'visitor',
         username: 'send.notificationds@islive.io',
@@ -156,6 +157,7 @@ describe('sendNotifications()', function () {
 
     requestHook
       .post('/user/login')
+      .set('X-Object-Host', 'mock.event.handler.islive.io')
       .send({
         role    : 'visitor',
         username: 'send.notificationds@islive.io',
@@ -192,6 +194,7 @@ describe('sendNotifications()', function () {
 
     requestHook
       .post('/user/login')
+      .set('X-Object-Host', 'mock.event.handler.islive.io')
       .send({
         role    : 'visitor',
         username: 'send.notificationds@islive.io',
