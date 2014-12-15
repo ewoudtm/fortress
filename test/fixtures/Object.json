@@ -54,5 +54,17 @@
     "partnerCode": "1235",
     "partnerInfo": "objservdiff",
     "email"      : "test@islive.nl"
+  },
+  {
+    "id"         : 6,
+    "host"       : "api.otherhost.io",
+    "partnerCode": "981",
+    "partnerInfo": "event_handler_test",
+    "email"      : "handler.test@islive.nl",
+    "config"     : {
+      "wallet": {
+        "apiUrl": "compare me"
+      }
+    }
   }
 ]

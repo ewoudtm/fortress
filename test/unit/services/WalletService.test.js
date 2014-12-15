@@ -45,6 +45,30 @@ describe('WalletService', function () {
     });
   });
 
+  describe('.getWalletApiUrl()', function () {
+    it('Should change the wallet API url if supplied by object', function (done) {
+      var walletService = sails.services.walletservice;
+
+      walletService.getWalletApiUrl('api.otherhost.io', function (error, apiUrl) {
+        assert.notOk(error, 'Resolving failed.');
+        assert.equal('compare me', apiUrl, 'Did not get the object-specific API url.');
+
+        done();
+      });
+    });
+
+    it('Should return the default if no object was supplied', function (done) {
+      var walletService = sails.services.walletservice;
+
+      walletService.getWalletApiUrl(function (error, apiUrl) {
+        assert.notOk(error, 'Resolving failed.');
+        assert.equal(sails.config.wallet.apiUrl, apiUrl, 'Did not get the object-specific API url.');
+
+        done();
+      });
+    });
+  });
+
   describe('.remoteChangePassword()', function () {
     before(function () {
       var stub = sinon.stub(sails.services.hashservice, 'encode');
