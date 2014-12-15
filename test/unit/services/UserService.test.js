@@ -143,34 +143,35 @@ describe('UserService', function () {
 
       done();
     });
+  });
 
-    describe('emitTo()', function () {
-      var socket,
-          credentials = {
-            role    : 'visitor',
-            username: 'fixture-test@islive.io',
-            password: 'keeshond'
-          };
+  describe('.emitTo()', function () {
+    var socket,
+        credentials = {
+          role    : 'visitor',
+          username: 'fixture-test@islive.io',
+          password: 'keeshond'
+        };
 
-      before(function (done) {
-        socket = io.connect('http://127.0.0.1:' + sails.config.port + '/', {'force new connection': true });
-        socket.once('connect', done);
-      });
+    before(function (done) {
+      socket = io.connect('http://127.0.0.1:' + sails.config.port + '/', {'force new connection': true });
+      socket.once('connect', done);
+    });
 
-      after(function () {
-        socket.disconnect();
-      });
+    after(function () {
+      socket.disconnect();
+    });
 
-      it('should emit to the user', function (done) {
-        socket.emit('post', JSON.stringify({url: '/user/login', data: credentials}), function () {
-          socket.on('something', function (data) {
-            assert.deepEqual(data, {
-              some: 'data'
-            });
-            done();
+    it('should emit to the user', function (done) {
+      socket.emit('post', JSON.stringify({url: '/user/login', data: credentials}), function () {
+        socket.on('something', function (data) {
+          assert.deepEqual(data, {
+            some: 'data'
           });
-          sails.services.userservice.emitTo(999, 'something', {some: 'data'});
+          done();
         });
+
+        sails.services.userservice.emitTo(999, 'something', {some: 'data'});
       });
     });
   });

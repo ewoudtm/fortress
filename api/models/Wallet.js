@@ -10,7 +10,7 @@ module.exports = {
   connection: 'chatterbox',
   migrate   : 'safe',
 
-  findUser: function (username, callback) {
+  findUser: function (programId, username, callback) {
     var query = '' +
       'select ' +
       'uc.id, ' +
@@ -20,7 +20,7 @@ module.exports = {
       'ifnull(u.reg_promotor_id, uc.partner_code) as partner_code ' +
       'from ' + dbs.user + ' u ' +
       'join ' + dbs.user_client + ' uc on u.id = uc.id ' +
-      'where u.username=' + mysql.escape(username);
+      'where u.username=' + mysql.escape(username) + ' and reg_program_id=' + mysql.escape(programId);
 
     this.query(query, function findUserQuery (error, data) {
       if (error) {

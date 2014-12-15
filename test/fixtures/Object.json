@@ -54,5 +54,29 @@
     "partnerCode": "1235",
     "partnerInfo": "objservdiff",
     "email"      : "test@islive.nl"
+  },
+  {
+    "id"         : 6,
+    "host"       : "api.otherhost.io",
+    "partnerCode": "981",
+    "partnerInfo": "api_url_test",
+    "email"      : "handler.test@islive.nl",
+    "config"     : {
+      "wallet": {
+        "apiUrl": "compare me"
+      }
+    }
+  },
+  {
+    "id"         : 7,
+    "host"       : "api.yetotherhost.io",
+    "partnerCode": "981",
+    "partnerInfo": "program_id_test",
+    "email"      : "handler.test@islive.nl",
+    "config"     : {
+      "wallet": {
+        "programId": 9182
+      }
+    }
   }
 ]

@@ -1,92 +1,124 @@
-var request = require('request'),
-    extend  = require('extend');
+var request = require('request');
 
 module.exports = {
 
   importUser: function (credentials, callback) {
-
     var queryUser = credentials.username;
 
     if (credentials.email) {
       queryUser = credentials.email;
     }
 
-    sails.models.wallet.findUser(queryUser, function (error, user) {
+    sails.services.objectconfigservice.initConfig(credentials.object, function (error, objectConfig) {
       if (error) {
         return callback(error);
       }
 
-      if (!user) {
-        sails.log.warn(
-          'WalletService.importUser() could not find requested user in wallet DB. \n' +
-          'Did you perhaps forget to change `sails.config.wallet.walletAPIUrl`? ' +
-          'Or the connection config for chatterbox? The environments have to match!'
-        );
+      var programId = objectConfig.resolve('wallet.programId');
 
-        return callback(null, null);
-      }
-
-      var newVisitorValues = {
-        walletId: user.id,
-        credits : user.credits
-      }, newUserValues = {
-        ip           : credentials.ip,
-        email        : credentials.username,
-        emailVerified: !!user.email_verified,
-        partnerInfo  : user.reg_promotor_info || null,
-        partnerCode  : user.partner_code || null,
-        object       : credentials.object,
-        password     : credentials.password || null, // @see UserController.loginByHash
-        visitor      : newVisitorValues
-      };
-
-      if (credentials.email && credentials.username) {
-        newUserValues.email = credentials.email;
-        newUserValues.username = credentials.username;
-        newUserValues.object = credentials.object;
-        newVisitorValues.username = credentials.username;
-      }
-
-      sails.models.user.register(newUserValues, function (error, newUser) {
+      sails.models.wallet.findUser(programId, queryUser, function (error, user) {
         if (error) {
           return callback(error);
         }
 
-        callback(null, newUser);
+        if (!user) {
+          sails.log.warn(
+            'WalletService.importUser() could not find requested user in wallet DB. \n' +
+            'Did you perhaps forget to change `sails.config.wallet.apiUrl`? ' +
+            'Or the connection config for chatterbox? The environments have to match!'
+          );
+
+          return callback(null, null);
+        }
+
+        var newVisitorValues = {
+          walletId: user.id,
+          credits : user.credits
+        }, newUserValues = {
+          ip           : credentials.ip,
+          email        : credentials.username,
+          emailVerified: !!user.email_verified,
+          partnerInfo  : user.reg_promotor_info || null,
+          partnerCode  : user.partner_code || null,
+          object       : credentials.object,
+          password     : credentials.password || null, // @see UserController.loginByHash
+          visitor      : newVisitorValues
+        };
+
+        if (credentials.email && credentials.username) {
+          newUserValues.email = credentials.email;
+          newUserValues.username = credentials.username;
+          newUserValues.object = credentials.object;
+          newVisitorValues.username = credentials.username;
+        }
+
+        sails.models.user.register(newUserValues, function (error, newUser) {
+          if (error) {
+            return callback(error);
+          }
+
+          callback(null, newUser);
+        });
       });
     });
   },
 
-  request: function (action, parameters, callback, method) {
-    method = method || 'post';
+  getWalletApiUrl: function (object, callback) {
+    var apiUrl = sails.config.wallet.apiUrl;
 
-    var walletUrl = sails.config.wallet.walletAPIUrl;
+    if (typeof object === 'function') {
+      callback = object;
+      object = false;
+    }
+
+    if (!object) {
+      return callback(null, apiUrl);
+    }
+
+    sails.services.objectconfigservice.initConfig(object, function (error, objectConfig) {
+      if (error && error.error === 'unknown_object') {
+        return callback(null, apiUrl);
+      }
+
+      callback(error, objectConfig.resolve('wallet.apiUrl', apiUrl));
+    });
+  },
+
+  request: function (action, parameters, callback, method, object) {
+    method = method || 'post';
 
     if (typeof parameters === 'function') {
       callback = parameters;
       parameters = {};
     }
 
-    if (parameters.form) {
-      parameters.form.action = action;
-    } else {
-      parameters.qs.action = action;
-    }
-
-    request[method](walletUrl, parameters, function (error, response, body) {
-      var responseData;
-
+    this.getWalletApiUrl(object, function (error, apiUrl) {
       if (error) {
         return callback(error);
       }
 
-      try {
-        responseData = JSON.parse(body);
-      } catch (error) {
-        return callback(error);
+      if (parameters.form) {
+        parameters.form.action   = action;
+      } else {
+        parameters.qs.action   = action;
+        parameters.qs.from_url = apiUrl;
       }
 
-      callback(null, responseData);
+      request[method](apiUrl, parameters, function (error, response, body) {
+        var responseData;
+
+        if (error) {
+          return callback(error);
+        }
+
+        try {
+          responseData = JSON.parse(body);
+        } catch (error) {
+          return callback(error);
+        }
+
+        callback(null, responseData);
+      });
     });
   },
 
@@ -151,7 +183,7 @@ module.exports = {
       }
 
       self.importUser(credentials, callback);
-    }, 'get');
+    }, 'get', credentials.object);
   },
 
   login: function (credentials, callback) {
@@ -160,20 +192,28 @@ module.exports = {
         return callback(error);
       }
       callback(null, !!response.ok);
-    });
+    }, 'post', credentials.object);
   },
 
-  remoteChangePassword: function(email, password, token, callback) {
-    this.request('remoteChangePassword', {form: {
-      email: email,
-      password: password,
-      token: token
-    }}, function(error, response) {
+  /**
+   * @param {*}         object
+   * @param {string}    email
+   * @param {string}    password
+   * @param {Function}  callback
+   */
+  changePassword: function (object, email, password, callback) {
+    this.request('remoteChangePassword', {
+      form: {
+        email   : email,
+        password: password,
+        token   : sails.services.hashservice.generateLoginHash(email)
+      }
+    }, function (error, response) {
       if (error) {
         return callback(error);
       }
 
       callback(null, !!response.ok);
-    });
+    }, 'post', object);
   }
 };

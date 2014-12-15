@@ -1,3 +1,5 @@
+var walletConfig = require('./wallet.js');
+
 module.exports.objects = {
   defaultConfig: {
     notifications: {
@@ -9,6 +11,7 @@ module.exports.objects = {
           }
         }
       }
-    }
+    },
+    wallet : walletConfig.wallet
   }
 };

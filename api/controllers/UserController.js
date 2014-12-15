@@ -237,7 +237,8 @@ UserController = {
       };
 
       criteria = {
-        email: params.username.trim()
+        object: req.object.id,
+        email : params.username.trim()
       };
 
       /**
@@ -403,7 +404,8 @@ UserController = {
       };
 
       criteria = {
-        email: params.email.trim()
+        object: req.object.id,
+        email : params.email.trim()
       };
 
       if (params.username) {
@@ -490,8 +492,6 @@ UserController = {
       var password = params.password;
 
       sails.models.user.update(req.session.user, {password: password}, function (error, result) {
-        var loginHash;
-
         if (error) {
           return res.negotiate(error);
         }
@@ -504,9 +504,7 @@ UserController = {
           return res.ok();
         }
 
-        loginHash = sails.services.hashservice.generateLoginHash(userInfo.email);
-
-        sails.services.walletservice.remoteChangePassword(userInfo.email, password, loginHash, function (error) {
+        sails.services.walletservice.changePassword(req.object, userInfo.email, password, function (error) {
           if (error) {
             return res.negotiate('server_error', error);
           }

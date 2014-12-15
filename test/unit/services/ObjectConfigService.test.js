@@ -85,6 +85,22 @@ describe('ObjectConfigService', function () {
         });
       });
     });
+
+    it('Should, when supplied, return a default value if the key was not found', function (done) {
+      initObject(2, function (objectConfig) {
+        assert.equal(objectConfig.resolve('some.invalid.key', 'yet a nice default'), 'yet a nice default', 'We did not get the default.');
+
+        done();
+      });
+    });
+
+    it('Should return null if the key was not found', function (done) {
+      initObject(2, function (objectConfig) {
+        assert.isNull(objectConfig.resolve('some.invalid.key'), 'We did not get null.');
+
+        done();
+      });
+    });
   });
 
   describe('.merge()', function () {
