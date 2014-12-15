@@ -363,6 +363,7 @@ describe('UserController', function () {
 
         requestHook
           .post('/user/login')
+
           .send(credentials)
           .end(function (error, res) {
             assert.isFalse(res.error, "User login failed");
@@ -381,7 +382,7 @@ describe('UserController', function () {
     });
 
     context('visitor role specified', function () {
-      it('Should return the user without populated identity.', function (done) {
+      it('Should return the (visitor) user without populated identity.', function (done) {
         var requestHook = request(sails.hooks.http.app),
             credentials = {
               role    : 'visitor',
@@ -409,7 +410,7 @@ describe('UserController', function () {
     });
 
     context('performer role specified', function () {
-      it('Should return the user without populated identity.', function (done) {
+      it('Should return the (performer) user without populated identity.', function (done) {
         var requestHook = request(sails.hooks.http.app),
             credentials = {
               role    : 'performer',
@@ -419,6 +420,7 @@ describe('UserController', function () {
 
         requestHook
           .post('/user/login')
+          .set('X-Object-Host', 'mock.event.handler.islive.io')
           .send(credentials)
           .end(function (error, res) {
             assert.isFalse(res.error, "User login failed");

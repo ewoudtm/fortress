@@ -18,6 +18,7 @@ describe('VisitorController', function () {
 
         requestHook
           .post('/user/login')
+          .set('X-Object-Host', 'mock.event.handler.islive.io')
           .send({
             role    : 'performer',
             username: 'event.handler.performer@islive.io',
