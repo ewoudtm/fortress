@@ -97,11 +97,13 @@ module.exports = {
         return callback(error);
       }
 
-      if (parameters.form) {
+      if (typeof parameters.form === 'object') {
         parameters.form.action   = action;
-      } else {
+      } else if (typeof parameters.qs === 'object') {
         parameters.qs.action   = action;
         parameters.qs.from_url = apiUrl;
+      } else {
+        return callback({error: 'invalid parameters for request'});
       }
 
       request[method](apiUrl, parameters, function (error, response, body) {
