@@ -136,7 +136,7 @@ UserController = {
             generatedHash = sails.services.userservice.generateHash(result, 'verify.' + field);
 
         if (generatedHash !== hash) {
-          return res.badRequest('invalid_hash ' + hash + ', ' + generatedHash);
+          return res.badRequest('invalid_hash');
         }
 
         var newValue = {};
