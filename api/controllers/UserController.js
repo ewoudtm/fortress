@@ -34,6 +34,14 @@ function setupUserSession (req, result, role) {
   subscribe(req, role, result[role]);
 }
 
+function fullCloneUser (userModel) {
+  var cloned = _.cloneDeep(userModel.toObject());
+
+  delete cloned.password;
+
+  return cloned;
+}
+
 UserController = {
   getIdentity: function (req, res) {
     var userModel = sails.models.user,
@@ -68,7 +76,7 @@ UserController = {
         subscribe(req, role, user[role]);
       }
 
-      res.ok(user);
+      res.ok(fullCloneUser(user));
     });
   },
 
@@ -255,7 +263,7 @@ UserController = {
         setupUserSession(req, result, role);
 
         // all done and authenticated.
-        return res.ok(result);
+        return res.ok(fullCloneUser(result));
       }
 
       // Fetch the user from the database.
@@ -459,7 +467,7 @@ UserController = {
 
         setupUserSession(req, result, role);
 
-        return res.ok(result);
+        return res.ok(fullCloneUser(result));
       });
     });
   },
