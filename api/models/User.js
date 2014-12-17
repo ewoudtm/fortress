@@ -98,6 +98,8 @@ userModel.attributes = {
     var modelInstance = this.toObject();
 
     delete modelInstance.password;
+    delete modelInstance.email;
+    delete modelInstance.notificationEmail;
 
     modelInstance._modelName = 'user';
 
