@@ -24,8 +24,8 @@ userModel.attributes = {
   },
 
   notificationEmail: {
-    type    : 'email',
-    index   : true
+    type : 'email',
+    index: true
   },
 
   /**
@@ -131,7 +131,7 @@ userModel.hashPassword = hashPassword;
  * @param {function} callback
  */
 userModel.beforeUpdate = function (values, callback) {
-  var self     = this,
+  var self = this,
       password = values.password;
 
   if (values.notificationEmail) {
