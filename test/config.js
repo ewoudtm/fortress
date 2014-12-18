@@ -30,7 +30,7 @@ module.exports.log = {
 };
 
 module.exports.wallet = {
-  walletAPIUrl: 'http://mysecurewallet.nl/payment/islive/ajax/wallet'
+  apiUrl: 'http://mysecurewallet.nl/payment/islive/ajax/wallet'
 };
 
 module.exports.notifications = {
