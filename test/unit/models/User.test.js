@@ -13,7 +13,7 @@ describe('UserModel', function () {
   });
 
   describe('.toJSON()', function () {
-    it.only('Should not return email or password', function (done) {
+    it('Should not return email or password', function (done) {
       sails.models.user.findOne(990, function (error, user) {
         var jsonified = JSON.parse(JSON.stringify(user)); // Test toJSON and also indirectly if toJSON is called.
 
