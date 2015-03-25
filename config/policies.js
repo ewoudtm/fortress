@@ -59,6 +59,12 @@ module.exports.policies = {
     '*': 'hasMasterIp'
   },
 
+  FollowController: {
+    find   : makePolicies(['isAuthenticated', 'hasUsername', 'whereUsername']),
+    create : makePolicies(['isAuthenticated', 'hasUsername', 'whereUsername']),
+    destroy: makePolicies(['isAuthenticated', 'hasUsername', 'whereUsername'])
+  },
+
   ThreadController: {
     create        : makePolicies(['isAuthenticated', 'hasUsername', 'subtractCredits', 'complementNewThread', 'track']),
     findonesimple : makePolicies(['isAuthenticated', 'hasUsername', 'ensureParticipation']),
