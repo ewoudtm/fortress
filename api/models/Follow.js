@@ -2,8 +2,7 @@ module.exports = {
   schema    : true,
   attributes: {
     user: {
-      type  : 'integer',
-      index : true,
+      model: 'visitor'
     },
     username: {
       type  : 'string',

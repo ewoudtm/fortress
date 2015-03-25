@@ -66,7 +66,7 @@ module.exports.routes = {
   // FollowController
   'get /follow/:username?'       : 'FollowController.find',
   'post /follow'                 : 'FollowController.create',
-  'delete /follow'               : 'FollowController.destroy',
+  'delete /follow/:username'     : 'FollowController.destroy',
 
   // Misc
   'get /connect/getcookie'       : 'ConnectController.getCookie',

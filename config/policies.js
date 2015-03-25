@@ -60,9 +60,9 @@ module.exports.policies = {
   },
 
   FollowController: {
-    find   : makePolicies(['isAuthenticated', 'hasUsername', 'whereUsername']),
-    create : makePolicies(['isAuthenticated', 'hasUsername', 'whereUsername']),
-    destroy: makePolicies(['isAuthenticated', 'hasUsername', 'whereUsername'])
+    find   : makePolicies(['isAuthenticated', 'whereUsername']),
+    create : makePolicies(['isAuthenticated', 'ensurePerformerExist', 'whereUsername']),
+    destroy: makePolicies(['isAuthenticated', 'ensurePerformerExist', 'whereUsername'])
   },
 
   ThreadController: {
