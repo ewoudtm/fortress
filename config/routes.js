@@ -63,6 +63,11 @@ module.exports.routes = {
   'put /object/:id'              : 'ObjectController.update',
   'delete /object/:id'           : 'ObjectController.destroy',
 
+  // FollowController
+  'get /follow/:username?'       : 'FollowController.find',
+  'post /follow'                 : 'FollowController.create',
+  'delete /follow/:username'     : 'FollowController.destroy',
+
   // Misc
   'get /connect/getcookie'       : 'ConnectController.getCookie',
   'get /connect/safari-getcookie': 'ConnectController.safariGetCookie',
