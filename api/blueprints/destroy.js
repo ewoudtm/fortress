@@ -1,10 +1,8 @@
 var actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
 
-function publishDestroy (id, mirror, record, Model) {
-  Model.publishDestroy(id, mirror, {previous: record});
-}
+function publishDestroy (req, mirror, record, Model) {
+  Model.publishDestroy(record.id, mirror, {previous: record});
 
-function unsubscribe (req, record, Model) {
   if (req.isSocket) {
     Model.unsubscribe(req, record);
     Model.retire(record);
@@ -15,15 +13,11 @@ function pubsub (Model, records, req) {
   var mirror = !sails.config.blueprints.mirror && req;
 
   if (!Array.isArray(records)) {
-    publishDestroy(records.id, mirror, records, Model);
-    unsubscribe(req, records, Model);
-
-    return;
+    return publishDestroy(req, mirror, records, Model);
   }
 
   records.forEach(function pubsubRecord (record) {
-    publishDestroy(record.id, mirror, records, Model);
-    unsubscribe(req, record, Model);
+    publishDestroy(req, mirror, record, Model);
   });
 }
 
