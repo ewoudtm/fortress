@@ -61,7 +61,7 @@ module.exports.policies = {
 
   FollowController: {
     find   : makePolicies(['isAuthenticated', 'ensureUserAssociation']),
-    create : makePolicies(['isAuthenticated', 'ensurePerformerExists', 'ensureUserAssociation']),
+    create : makePolicies(['isAuthenticated', 'performerExists', 'ensureUserAssociation']),
     destroy: makePolicies(['isAuthenticated', 'ensureUserAssociation'])
   },
 
