@@ -2,10 +2,10 @@ var requestHelpers = require('request-helpers');
 
 module.exports = {
   create : function (req, res) {
-    var query     = {
-          user    : req.session.user,
-          username: req.body.username,
-        };
+    var query = {
+      user    : req.session.user,
+      username: req.body.username,
+    };
 
     sails.models.follow.count(query, function (error, count) {
       if (error) {
