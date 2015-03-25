@@ -1,5 +1,3 @@
-var requestHelpers = require('request-helpers');
-
 module.exports = function(req, res, next) {
   var username = req.param('username');
 
