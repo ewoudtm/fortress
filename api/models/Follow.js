@@ -2,12 +2,14 @@ module.exports = {
   schema    : true,
   attributes: {
     user: {
-      model: 'visitor'
+      model: 'visitor',
+      required: true
     },
     username: {
-      type  : 'string',
-      regex : /^[\w\-]{2,14}$/,
-      index : true,
+      type    : 'string',
+      regex   : /^[\w\-]{2,14}$/,
+      index   : true,
+      required: true
     },
     toJSON: function () {
       var modelInstance = this.toObject();

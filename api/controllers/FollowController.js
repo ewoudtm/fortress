@@ -4,26 +4,15 @@ module.exports = {
   create : function (req, res) {
     var query = {
       user    : req.session.user,
-      username: req.body.username,
+      username: req.param('username'),
     };
 
-    sails.models.follow.count(query, function (error, count) {
+    sails.models.follow.findOrCreate(query, query, function (error, result) {
       if (error) {
         return res.serverError('database_error', error);
       }
 
-      // user is already following this performer
-      if (count > 0) {
-        return res.ok();
-      }
-
-      sails.models.follow.create(query, function (error, result) {
-        if (error) {
-          return res.serverError('database_error', error);
-        }
-
-        res.ok();
-      });
+      res.ok(result);
     });
   }
 };
