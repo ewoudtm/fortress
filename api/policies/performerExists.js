@@ -3,7 +3,7 @@ var requestHelpers = require('request-helpers');
 module.exports = function(req, res, next) {
   var username = req.param('username');
 
-  if (username.length < 1) {
+  if (!username) {
     return res.badRequest('missing_parameter', 'username');
   }
 
