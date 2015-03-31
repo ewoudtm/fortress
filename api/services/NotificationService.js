@@ -121,6 +121,10 @@ module.exports = {
       userObject.walletId = user.visitor.walletId;
     }
 
+    if (user.walletId) {
+      userObject.walletId = user.walletId;
+    }
+
     return userObject;
   },
 
