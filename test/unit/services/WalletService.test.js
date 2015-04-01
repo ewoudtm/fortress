@@ -133,6 +133,7 @@ describe('WalletService', function () {
         resetWalletPassword            : function (callback) {
           walletservice.changePassword(1, email, 'keeshond',
             function (error, success) {
+              console.log('resetWalletPassword', error, success);
               assert.isNull(error);
               assert.isTrue(success);
               callback();
@@ -143,6 +144,7 @@ describe('WalletService', function () {
             username: email,
             password: 'keeshond'
           }, function (error, success) {
+            console.log('walletLogInWithOriginalPassword', error, success);
             assert.isNull(error);
             assert.isTrue(success);
             callback();
@@ -151,6 +153,7 @@ describe('WalletService', function () {
         setNewWalletPassword           : function (callback) {
           walletservice.changePassword(1, email, 'something else',
             function (error, success) {
+              console.log('setNewWalletPassword', error, success);
               assert.isNull(error);
               assert.isTrue(success);
               callback();
@@ -161,6 +164,7 @@ describe('WalletService', function () {
             username: email,
             password: 'something else'
           }, function (error, success) {
+            console.log('walletLogInWithNewPassword', error, success);
             assert.isNull(error);
             assert.isTrue(success);
             callback();
