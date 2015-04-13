@@ -100,8 +100,7 @@ module.exports = {
       if (typeof parameters.form === 'object') {
         parameters.form.action = action;
       } else if (typeof parameters.qs === 'object') {
-        apiUrl = parameters.qs.api_url || apiUrl;
-
+        apiUrl                 = parameters.qs.api_url || apiUrl;
         parameters.qs.action   = action;
         parameters.qs.from_url = apiUrl.replace(/\/ajax\/wallet/, '\/');
       } else {
