@@ -100,9 +100,11 @@ module.exports = {
       if (typeof parameters.form === 'object') {
         parameters.form.action = action;
       } else if (typeof parameters.qs === 'object') {
-        apiUrl                 = parameters.qs.api_url || apiUrl;
-        parameters.qs.action   = action;
-        parameters.qs.from_url = apiUrl.replace(/\/ajax\/wallet/, '\/');
+        parameters.qs.action = action;
+
+        if (typeof parameters.qs.from_url === 'undefined') {
+          parameters.qs.from_url = apiUrl.replace(/\/ajax\/wallet/, '\/');
+        }
       } else {
         return callback({error: 'invalid parameters for request'});
       }
