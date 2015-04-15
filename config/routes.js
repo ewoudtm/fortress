@@ -66,6 +66,7 @@ module.exports.routes = {
   // FollowController
   'get /follow/:username?'       : 'FollowController.find',
   'post /follow'                 : 'FollowController.create',
+  'put /follow/:id'              : 'FollowController.update',
   'delete /follow/:username'     : 'FollowController.destroy',
 
   // Misc
