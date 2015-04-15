@@ -18,7 +18,6 @@ module.exports = {
     toJSON: function () {
       var modelInstance = this.toObject();
 
-      delete modelInstance.id;
       delete modelInstance.user;
 
       modelInstance._modelName = 'follow';
