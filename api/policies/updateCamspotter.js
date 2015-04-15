@@ -6,7 +6,7 @@ module.exports = function (req, res, next) {
     return next();
   }
 
-  if (typeof siteUrl === 'undefined') {
+  if (typeof siteUrl === 'undefined' && (mail === 'true' || mail === '1')) {
     return res.badRequest('missing_parameter', 'url');
   }
 
