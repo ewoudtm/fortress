@@ -1,3 +1,3 @@
 module.exports.camspotter = {
-  apiUrl: 'http://chatterbox.vj/camspotter/'
+  apiUrl: 'http://cb.islive.nl/camspotter/'
 };
