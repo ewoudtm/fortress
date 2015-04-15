@@ -38,9 +38,8 @@ module.exports = {
   },
 
   resolve : function (req, res, callback) {
-    var subscribe = (req.param('mail') === 'false' || req.param('mail') === '0') ? false : true,
+    var self      = this,
         siteUrl   = req.param('url'),
-        self      = this,
         followQuery = {
           id: req.param('id')
         },
@@ -77,7 +76,7 @@ module.exports = {
               url         : siteUrl
             };
 
-        self.request(subscribe, params, callback);
+        self.request(!!req.param('mail'), params, callback);
       });
     });
   }
