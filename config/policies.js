@@ -62,6 +62,7 @@ module.exports.policies = {
   FollowController: {
     find   : makePolicies(['isAuthenticated', 'ensureUserAssociation']),
     create : makePolicies(['isAuthenticated', 'performerExists', 'ensureUserAssociation']),
+    update : makePolicies(['isAuthenticated', 'ensureUserAssociation', 'updateCamspotter']),
     destroy: makePolicies(['isAuthenticated', 'ensureUserAssociation']),
     count  : makePolicies(true)
   },

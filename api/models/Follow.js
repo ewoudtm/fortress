@@ -11,10 +11,13 @@ module.exports = {
       index   : true,
       required: true
     },
+    mail : {
+      type      : 'boolean',
+      defaultsTo: true
+    },
     toJSON: function () {
       var modelInstance = this.toObject();
 
-      delete modelInstance.id;
       delete modelInstance.user;
 
       modelInstance._modelName = 'follow';
