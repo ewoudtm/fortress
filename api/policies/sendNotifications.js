@@ -33,6 +33,10 @@ module.exports = function (req, res, next) {
             email   : req.session.userInfo.email
           };
 
+      if (req.session.userInfo.walletId) {
+        userMock.walletId = req.session.userInfo.walletId;
+      }
+
       userMock[field]              = newValue;
       userMock[field + 'Verified'] = true;
 

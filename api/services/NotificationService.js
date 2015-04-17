@@ -95,7 +95,7 @@ module.exports = {
       try {
         responseData = JSON.parse(body);
       } catch (error) {
-        sails.services.logservice.error('Got invalid JSON format from endpoint.', error, body);
+        sails.services.logservice.logErrors('Got invalid JSON format from endpoint.', error, body);
         responseData = null;
       }
 
@@ -119,6 +119,10 @@ module.exports = {
 
     if (user.visitor && user.visitor.walletId) {
       userObject.walletId = user.visitor.walletId;
+    }
+
+    if (user.walletId) {
+      userObject.walletId = user.walletId;
     }
 
     return userObject;

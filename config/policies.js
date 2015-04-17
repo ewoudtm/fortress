@@ -63,7 +63,8 @@ module.exports.policies = {
     find   : makePolicies(['isAuthenticated', 'ensureUserAssociation']),
     create : makePolicies(['isAuthenticated', 'performerExists', 'ensureUserAssociation']),
     update : makePolicies(['isAuthenticated', 'ensureUserAssociation', 'updateCamspotter']),
-    destroy: makePolicies(['isAuthenticated', 'ensureUserAssociation'])
+    destroy: makePolicies(['isAuthenticated', 'ensureUserAssociation']),
+    count  : makePolicies(true)
   },
 
   ThreadController: {
