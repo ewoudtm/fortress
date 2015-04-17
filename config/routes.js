@@ -64,6 +64,7 @@ module.exports.routes = {
   'delete /object/:id'           : 'ObjectController.destroy',
 
   // FollowController
+  'get /follow/count/:username'  : 'FollowController.count',
   'get /follow/:username?'       : 'FollowController.find',
   'post /follow'                 : 'FollowController.create',
   'delete /follow/:username'     : 'FollowController.destroy',
