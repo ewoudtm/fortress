@@ -161,7 +161,7 @@ UserController = {
               return res.negotiate(error);
             }
 
-            if (typeof followIdentity === 'undefined') {
+            if (!followIdentity) {
               return res.ok();
             }
 
