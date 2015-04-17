@@ -141,13 +141,12 @@ UserController = {
         }
 
         var field = type === 'email' ? 'email' : 'notificationEmail',
-            generatedHash = sails.services.userservice.generateHash(result, 'verify.' + field);
+            generatedHash = sails.services.userservice.generateHash(result, 'verify.' + field),
+            newValue      = {};
 
         if (generatedHash !== hash) {
           return res.badRequest('invalid_hash');
         }
-
-        var newValue = {};
 
         newValue[field + 'Verified'] = true;
 
@@ -156,7 +155,29 @@ UserController = {
             return res.negotiate(error);
           }
 
-          res.ok();
+          // check if user is following someone
+          sails.models.follow.findOne({user: result.id}, function (error, followIdentity) {
+            if (error) {
+              return res.negotiate(error);
+            }
+
+            if (typeof followIdentity === 'undefined') {
+              return res.ok();
+            }
+
+            // update old with new email
+            sails.services.camspotterservice.changeEmail(result.email, result[field], function (error, response) {
+              if (error) {
+                return res.negotiate(error);
+              }
+
+              if (response.error) {
+                return res.badRequest(response);
+              }
+
+              res.ok();
+            }, true);
+          });
         });
       });
     });
