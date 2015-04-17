@@ -70,7 +70,8 @@ describe('sendNotifications()', function () {
             id             : '995',
             unsubscribeHash: actualUnsubscribeHash,
             email          : 'something.few@and.blue',
-            username       : 'somethingcruel'
+            username       : 'somethingcruel',
+            walletId       : '82'
           },
           data : {
             verificationHash: actualVerificationHash
@@ -138,7 +139,8 @@ describe('sendNotifications()', function () {
             id             : '995',
             unsubscribeHash: actualUnsubscribeHash,
             email          : 'something.else@and.welsh',
-            username       : 'somethingcruel'
+            username       : 'somethingcruel',
+            walletId       : '82'
           },
           data : {
             verificationHash: actualVerificationHash
