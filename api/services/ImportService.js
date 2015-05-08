@@ -245,7 +245,7 @@ function ImportService() {
       handleError(error, 'Importing performer (update performer) failed.');
 
       var newUser = {
-        email    : row.email_adres.replace(/(^\s+)|(\s+$)/g, ''),
+        email    : row.email_adres.replace(/(^\s+)|(\s+$)/g, '').toLowerCase(),
         password : row.passwd
       };
 
@@ -424,7 +424,7 @@ function ImportService() {
 
       var model = results.importModel,
           object = results.defaultObject;
-      
+
       lastUpdateString = dateFormat(model.lastUpdate, 'yyyy-mm-dd HH:MM:ss');
       defaultObject = object;
 
