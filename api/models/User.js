@@ -135,12 +135,12 @@ userModel.beforeUpdate = function (values, callback) {
       password = values.password;
 
   if (values.notificationEmail) {
-    values.notificationEmail.toLowerCase();
+    values.notificationEmail         = values.notificationEmail.toLowerCase();
     values.notificationEmailVerified = false;
   }
 
   if (values.email) {
-    values.email.toLowerCase();
+    values.email         = values.email.toLowerCase();
     values.emailVerified = false;
   }
 
