@@ -245,7 +245,7 @@ function ImportService() {
       handleError(error, 'Importing performer (update performer) failed.');
 
       var newUser = {
-        email    : row.email_adres.replace(/(^\s+)|(\s+$)/g, '').toLowerCase(),
+        email    : row.email_adres.replace(/(^\s+)|(\s+$)/g, ''),
         password : row.passwd
       };
 
