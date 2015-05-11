@@ -424,7 +424,7 @@ function ImportService() {
 
       var model = results.importModel,
           object = results.defaultObject;
-      
+
       lastUpdateString = dateFormat(model.lastUpdate, 'yyyy-mm-dd HH:MM:ss');
       defaultObject = object;
 

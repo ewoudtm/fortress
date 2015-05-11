@@ -174,7 +174,7 @@ userService = {
 
     return md5([
       user.id,
-      user.email,
+      user.email.toLowerCase(),
       veil,
       typeof user.object === 'object' ? user.object.id : user.object
     ].join(''));
