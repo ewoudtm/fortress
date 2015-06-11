@@ -40,6 +40,7 @@ module.exports.routes = {
   'get /user/:id/verify/:type'   : 'UserController.verify', // /user/123/verify/notification-email?hash=
   'get /user/logout'             : 'UserController.logout',
   'post /user/login'             : 'UserController.login',
+  'get /user/login'              : 'UserController.login',
   'post /user/login-by-hash'     : 'UserController.loginByHash',
   'get  /user/login-by-hash'     : 'UserController.loginByHash',
   'get /user/username/:id'       : 'UserController.getUsername',
