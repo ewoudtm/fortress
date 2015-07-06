@@ -82,6 +82,9 @@ module.exports.policies = {
   },
 
   SystemController: {
-    '*': 'hasMasterIp'
+    totalConnections : makePolicies('hasMasterIp'),
+    verify           : makePolicies('hasMasterIp'),
+    debug            : makePolicies('hasMasterIp'),
+    unsubscribe      : makePolicies(true)
   }
 };

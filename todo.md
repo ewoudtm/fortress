@@ -10,7 +10,7 @@ All of this should be done **FIRST**.
 ### Throttle requests
 Perhaps to 10 requests a second? We can't be flooded by people with ill intentions.
 
-### Security
+### Security 
 Try implementing some sort of validation. As it stands, I see a way of doing this but it's inefficient:
 
 #### Request token
