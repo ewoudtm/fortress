@@ -68,6 +68,10 @@ module.exports.userSync = {
   enabled: false
 };
 
+module.exports.mandrill = {
+  key: '' // Webhook key
+};
+
 module.exports.wallet = {
   salt: '' // Salt goes here.
 };

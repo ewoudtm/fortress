@@ -78,5 +78,6 @@ module.exports.routes = {
   // System
   'get /system/total-connections': 'SystemController.totalConnections',
   'get /system/verify/:type'     : 'SystemController.verify',
-  'get /system/debug/:toggle'    : 'SystemController.debug'
+  'get /system/debug/:toggle'    : 'SystemController.debug',
+  'post /system/unsubscribe'     : 'SystemController.unsubscribe' // webhook for mandrill
 };

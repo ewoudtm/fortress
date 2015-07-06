@@ -1,4 +1,5 @@
-var requestHelpers = require('request-helpers');
+var requestHelpers = require('request-helpers'),
+    validator      = require('mandrill-webhook-validator');
 
 module.exports = {
   totalConnections: function (req, res) {
@@ -58,6 +59,33 @@ module.exports = {
   },
   debug           : function (req, res) {
     sails.config.system.debug = req.param('toggle') === 'on';
+
+    res.ok();
+  },
+  unsubscribe     : function (req, res) {
+    var events = JSON.parse(req.param('mandrill_events'));
+
+    function verifyKey (req) {
+      // Mandrill uses a very complex way to verify the signature with the webhook key
+      // Just check if the signature matches the signature from the request (is based on the key).
+      return req.headers['x-mandrill-signature'] === sails.config.mandrill.signature;
+    }
+
+    if(!events || events.length < 1) {
+      return res.negotiate('invalid_request');
+    }
+
+    if (!verifyKey(req)) {
+      return res.negotiate('invalid_signature');
+    }
+
+    for (var i in events) {
+      sails.models.user.update({email: events[i].msg.email}, {mailable: 0}, function (error, result) {
+        if (error) {
+          return res.negotiate(error);
+        }
+      });
+    }
 
     res.ok();
   }
