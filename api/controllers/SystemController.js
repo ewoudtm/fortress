@@ -66,9 +66,7 @@ module.exports = {
     var events = JSON.parse(req.param('mandrill_events'));
 
     function verifyKey (req) {
-      // Mandrill uses a very complex way to verify the signature with the webhook key
-      // Just check if the signature matches the signature from the request (is based on the key).
-      return req.headers['x-mandrill-signature'] === sails.config.mandrill.signature;
+      return req.headers['X-Mandrill-Signature'] === validator.makeSignature(sails.config.mandrill.key, sails.config.mandrill.url, req.body);
     }
 
     if(!events || events.length < 1) {
