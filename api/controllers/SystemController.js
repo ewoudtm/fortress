@@ -66,7 +66,7 @@ module.exports = {
     var events = JSON.parse(req.param('mandrill_events'));
 
     function verifyKey (req) {
-      return req.headers['X-Mandrill-Signature'] === validator.makeSignature(sails.config.mandrill.key, sails.config.mandrill.url, req.body);
+      return req.headers['x-mandrill-signature'] === validator.makeSignature(sails.config.mandrill.key, sails.config.mandrill.url, req.body);
     }
 
     if(!events || events.length < 1) {
