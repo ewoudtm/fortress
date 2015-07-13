@@ -207,5 +207,42 @@ module.exports = {
       initial  : message.initial,
       subject  : message.thread.subject
     }, callback);
+  },
+
+  /**
+   * send an predefined message to a user
+   *
+   * @param  {integer}    receiver  The userid from the receiver
+   * @param  {[Function]} callback  Optional callback
+   * @return {bool}
+   */
+  sendWelcomeMessage: function (receiver, callback) {
+    callback = callback || function () {
+      // Just here to avoid errors.
+    };
+
+    if (typeof receiver === 'object') {
+      receiver = receiver.id;
+    }
+
+    var config   = sails.config.welcomeMsg,
+        theadObj = {
+          from     : config.performerId,
+          to       : receiver,
+          subject  : config.subject,
+          messages : {
+            body : config.message,
+            from : config.performerId,
+            to   : receiver
+          }
+        };
+
+    if (!config.enabled) {
+      return callback(null, false);
+    }
+
+    sails.models.thread.create(theadObj, function (error) {
+      return callback(error, true);
+    });
   }
 };
