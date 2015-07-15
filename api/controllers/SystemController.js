@@ -86,5 +86,29 @@ module.exports = {
     }
 
     res.ok();
+  },
+
+  unsubscribeWallet: function (req, res) {
+    var id = req.param('id');
+
+    sails.models.user.findOne(id, function (error, user) {
+      if (error) {
+        return res.serverError('database_error', error);
+      }
+
+      if (!user) {
+        return res.badRequest('unknown_user');
+      }
+
+      user.mailable = false;
+
+      user.save(function (error) {
+        if (error) {
+          return res.serverError('database_error', error);
+        }
+
+        res.ok();
+      });
+    });
   }
 };
