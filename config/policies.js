@@ -82,9 +82,10 @@ module.exports.policies = {
   },
 
   SystemController: {
-    totalConnections : makePolicies('hasMasterIp'),
-    verify           : makePolicies('hasMasterIp'),
-    debug            : makePolicies('hasMasterIp'),
-    unsubscribe      : makePolicies(true)
+    totalConnections  : makePolicies('hasMasterIp'),
+    verify            : makePolicies('hasMasterIp'),
+    debug             : makePolicies('hasMasterIp'),
+    unsubscribeWallet : makePolicies('hasMasterIp'),
+    unsubscribe       : makePolicies(true)
   }
 };
