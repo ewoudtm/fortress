@@ -155,6 +155,10 @@ UserController = {
             return res.negotiate(error);
           }
 
+          if (type === 'email') {
+            sails.services.messageservice.sendWelcomeMessage(result.id);
+          }
+
           // check if user is following someone
           sails.models.follow.findOne({user: result.id}, function (error, followIdentity) {
             if (error) {
