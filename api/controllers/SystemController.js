@@ -45,6 +45,10 @@ module.exports = {
             return res.negotiate(error);
           }
 
+          if (field === 'email') {
+            sails.services.messageservice.sendWelcomeMessage(visitor.user);
+          }
+
           if (!visitor) {
             return res.negotiate('unknown_user');
           }
