@@ -87,5 +87,9 @@ module.exports.policies = {
     debug             : makePolicies('hasMasterIp'),
     unsubscribeWallet : makePolicies('hasMasterIp'),
     unsubscribe       : makePolicies(true)
+  },
+
+  RemoteMessageController: {
+    '*': makePolicies(['hasMasterIp', 'hasUserProperty'])
   }
 };

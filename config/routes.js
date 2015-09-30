@@ -80,5 +80,15 @@ module.exports.routes = {
   'get /system/verify/:type'     : 'SystemController.verify',
   'get /system/debug/:toggle'    : 'SystemController.debug',
   'get /system/unsubscribe/:id'  : 'SystemController.unsubscribeWallet',
-  'post /system/unsubscribe'     : 'SystemController.unsubscribe' // webhook for mandrill
+  'post /system/unsubscribe'     : 'SystemController.unsubscribe', // webhook for mandrill
+
+  // routes for Headquarters
+  'get /system/message/inbox'      : 'RemoteMessageController.inbox',
+  'get /system/message/reply'      : 'RemoteMessageController.reply',
+  'put /system/message/mark-read'  : 'RemoteMessageController.markMsgRead',
+  'get /system/message/unread'     : 'RemoteMessageController.unreadMessages',
+  'get /system/thread'             : 'RemoteMessageController.findThread',
+  'put /system/thread/mark-read'   : 'RemoteMessageController.markThreadRead',
+  'get /system/thread/thread-count': 'RemoteMessageController.getThreadCount',
+  'get /system/thread/:thread'     : 'RemoteMessageController.loadMessages',
 };
