@@ -114,5 +114,21 @@ module.exports = {
         res.ok();
       });
     });
+  },
+
+  getUser: function (req, res) {
+    var username = req.param('username');
+
+    if (!username) {
+      return res.badRequest('missing_parameter', 'username');
+    }
+
+    sails.models.user.findOne({username: username}).exec(function (error, result) {
+      if (error) {
+        return res.serverError('database_error', error);
+      }
+
+      res.ok(result);
+    });
   }
 };
