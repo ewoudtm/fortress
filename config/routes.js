@@ -86,10 +86,10 @@ module.exports.routes = {
   // routes for Headquarters
   'get /system/message/inbox'      : 'RemoteMessageController.inbox',
   'get /system/message/reply'      : 'RemoteMessageController.reply',
-  'put /system/message/mark-read'  : 'RemoteMessageController.markMsgRead',
+  'get /system/message/mark-read'  : 'RemoteMessageController.markMsgRead',
   'get /system/message/unread'     : 'RemoteMessageController.unreadMessages',
   'get /system/thread'             : 'RemoteMessageController.findThread',
-  'put /system/thread/mark-read'   : 'RemoteMessageController.markThreadRead',
+  'get /system/thread/mark-read'   : 'RemoteMessageController.markThreadRead',
   'get /system/thread/thread-count': 'RemoteMessageController.getThreadCount',
   'get /system/thread/:thread'     : 'RemoteMessageController.loadMessages',
 };

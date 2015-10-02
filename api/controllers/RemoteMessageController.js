@@ -53,7 +53,7 @@ module.exports = {
         return res.serverError('database_error', error);
       }
 
-      res.ok();
+      res.ok({status: 'ok'});
     });
   },
 
@@ -103,12 +103,12 @@ module.exports = {
       }
     };
 
-    sails.models.message.update(searchCriteria, {read: true}).exec(function (error) {
+    return sails.models.message.update(searchCriteria, {read: true}).exec(function (error) {
       if (error) {
         return res.serverError('database_error', error);
       }
 
-      res.ok();
+      return res.ok({status: 'ok'});
     });
   },
 
@@ -142,16 +142,20 @@ module.exports = {
             ],
             thread: thread
           },
-          sort: 'createdAt DESC'
+          sort: 'createdAt ASC'
         };
 
-    sails.models.message.find(query).exec(function (error, result) {
-      if (error) {
-        return res.serverError('database_error', error);
-      }
+    sails.models.message.find(query)
+      .populate('from')
+      .populate('to')
+      .populate('thread')
+      .exec(function (error, result) {
+        if (error) {
+          return res.serverError('database_error', error);
+        }
 
-      res.ok(result);
-    });
+        res.ok(result);
+      });
   },
 
   reply : function (req, res) {
@@ -178,12 +182,11 @@ module.exports = {
       body   : content,
       read   : 0,
       from   : user,
-      to     : receiver,
       initial: 0
     };
 
     // check if receiver exists
-    sails.models.user.findOne(receiver).exec(function (error, userResult) {
+    sails.models.user.findOne({username: receiver}).exec(function (error, userResult) {
       if (error) {
         return res.serverError('database_error', error);
       }
@@ -191,6 +194,8 @@ module.exports = {
       if (!userResult) {
         return res.badRequest('invalid_receiver');
       }
+
+      query.to = userResult.id;
 
       // check if thread exists
       sails.models.thread.findOne(thread).exec(function (error, threadResult) {
@@ -202,12 +207,12 @@ module.exports = {
           return res.badRequest('invalid_thread');
         }
 
-        sails.models.message.create(query).exec(function (error) {
+        sails.models.message.create(query).exec(function (error, result) {
           if (error) {
             return res.serverError('database_error', error);
           }
 
-          res.ok();
+          res.ok(result);
         });
       });
     });
