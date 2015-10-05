@@ -20,6 +20,6 @@ module.exports = {
   },
 
   safariGetCookie : function (req, res) {
-    return res.redirect(req.header('referer') || null);
+    return res.redirect(req.header('referer') || '');
   }
 };
