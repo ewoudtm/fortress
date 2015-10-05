@@ -8,24 +8,15 @@ module.exports = {
               { to  : user },
               { from: user }
             ]
-          }
+          },
+          limit: 30,
+          skip : 0
         },
-        limit = req.param('limit'),
-        skip  = req.param('skip'),
         messageCriteria = {
           limit: 1,
           sort : 'createdAt desc'
         },
         findQuery;
-
-    // pagination
-    if(skip && !isNaN(parseInt(skip, 10))) {
-      threadCriteria.skip = skip;
-    }
-
-    if(limit && !isNaN(parseInt(limit, 10))) {
-      threadCriteria.limit = limit;
-    }
 
     findQuery = sails.models.thread.find(threadCriteria);
 
@@ -142,7 +133,9 @@ module.exports = {
             ],
             thread: thread
           },
-          sort: 'createdAt ASC'
+          limit: 30,
+          skip : 0,
+          sort : 'createdAt ASC'
         };
 
     sails.models.message.find(query)
