@@ -76,17 +76,25 @@ module.exports = {
   },
 
   flatten: function (userId, thread) {
-    var flattened, message, from, to;
+    var flattened, message, from, to, flatten;
 
     // If an array was supplied, call self over every entry.
     if (Array.isArray(thread)) {
       flattened = [];
 
       thread.forEach(function (entry) {
-        flattened.push(this.flatten(userId, entry));
+        flatten = this.flatten(userId, entry);
+
+        if (flatten.to) {
+          flattened.push(flatten);
+        }
       }, this);
 
       return flattened;
+    }
+
+    if (thread.messages.length < 1) {
+      return [];
     }
 
     message = thread.messages[0];
