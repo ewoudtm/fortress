@@ -10,7 +10,6 @@ module.exports = {
             ]
           },
           limit: 30,
-          skip : 0
         },
         messageCriteria = {
           limit: 1,
@@ -134,8 +133,7 @@ module.exports = {
             thread: thread
           },
           limit: 30,
-          skip : 0,
-          sort : 'createdAt ASC'
+          sort : 'createdAt desc'
         };
 
     sails.models.message.find(query)
