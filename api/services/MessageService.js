@@ -94,7 +94,7 @@ module.exports = {
     }
 
     if (thread.messages.length < 1) {
-      return false;
+      return [];
     }
 
     message = thread.messages[0];
