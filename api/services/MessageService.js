@@ -104,6 +104,10 @@ module.exports = {
       sails.log.error(thread);
     }
 
+    if (!thread.from || !thread.from.id) {
+      return [];
+    }
+
     if (message.from === thread.from.id) {
       from = thread.from.username;
       to = thread.to.username;
