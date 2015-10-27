@@ -82,6 +82,7 @@ module.exports.routes = {
   'get /system/unsubscribe/:id'    : 'SystemController.unsubscribeWallet',
   'post /system/unsubscribe'       : 'SystemController.unsubscribe', // webhook for mandrill
   'get /system/get-user'           : 'SystemController.getUser',
+  'get /system/settings'           : 'SystemController.saveUserSettings',
 
   // routes for Headquarters
   'get /system/message/inbox'      : 'RemoteMessageController.inbox',
