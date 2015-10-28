@@ -9,7 +9,7 @@ module.exports = {
               { from: user }
             ]
           },
-          limit: 30,
+          limit: 60,
         },
         messageCriteria = {
           limit: 1,
