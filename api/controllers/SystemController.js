@@ -130,5 +130,32 @@ module.exports = {
 
       res.ok(result);
     });
+  },
+
+  saveUserSettings : function (req, res) {
+    var username             = req.param('username'),
+        emailVerified        = req.param('emailVerified'),
+        receiveNotifications = req.param('receiveNotifications'),
+        whereQuery           = {
+          username : username,
+          performer: {
+            '!': null
+          }
+        };
+
+    if (!username) {
+      return res.badRequest('missing_parameter', 'username');
+    }
+
+    sails.models.user.update(whereQuery, {
+      emailVerified: emailVerified,
+      mailable     : receiveNotifications
+    }).exec(function (error, result) {
+      if (error) {
+        return res.serverError('database_error', error);
+      }
+
+      res.ok(result);
+    });
   }
 };
