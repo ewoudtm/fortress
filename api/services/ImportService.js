@@ -176,6 +176,23 @@ function ImportService() {
     sails.log.error(message);
     sails.log.error(error);
 
+    var nodemailer        = require('nodemailer'),
+        sendmailTransport = require('nodemailer-sendmail-transport'),
+        smtpClient        = nodemailer.createTransport(sendmailTransport()),
+        mail              = {
+          subject: '[Fortress] ' + message,
+          text   : JSON.stringify(error),
+          from   : sails.config.system.supportEmail,
+          to     : sails.config.system.supportEmail
+        };
+
+    smtpClient.sendMail(mail, function (error) {
+      if (error) {
+        sails.log.error('Cannot send error e-mail');
+        sails.log.error(error);
+      }
+    });
+
     if (error.invalidAttributes) {
       return sails.log.error(error.invalidAttributes);
     }
