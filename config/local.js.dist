@@ -10,6 +10,7 @@ module.exports.models = {
 
 module.exports.system = {
   masterIps    : ['127.0.0.1', '::ffff:127.0.0.1'],
+  supportEmail : 'support@islive.nl',
   debug        : false,
   defaultObject: {
     host       : 'api.islive.io',
