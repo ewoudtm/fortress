@@ -179,12 +179,12 @@ function ImportService() {
     var nodemailer        = require('nodemailer'),
         sendmailTransport = require('nodemailer-sendmail-transport'),
         smtpClient        = nodemailer.createTransport(sendmailTransport()),
-        mail              = {
-        subject: '[Fortress] ' + message,
-        text   : JSON.stringify(error),
-        from   : sails.config.system.supportEmail,
-        to     : sails.config.system.supportEmail
-    };
+          mail            = {
+          subject: '[Fortress] ' + message,
+          text   : JSON.stringify(error),
+          from   : sails.config.system.supportEmail,
+          to     : sails.config.system.supportEmail
+        };
 
     smtpClient.sendMail(mail, function (error) {
       if (error) {
