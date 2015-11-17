@@ -40,7 +40,7 @@ var TrackThisService = {
       promotor_info: req.partnerInfo.partnerInfo,
       sub_type     : product.currency === 'credits' ? 'wallet' : ppm,
       paytype_id   : product.paytype,
-      user         : producer.username,
+      user         : (producer.username) ? producer.username.toLowerCase() : producer.username,
       sessionid    : md5('i.io' + consumer.id + t.getTime()),
       unique       : unique,
       country      : consumer.country || 'NL', // @todo fetch from userService. Maintain ip and country.
