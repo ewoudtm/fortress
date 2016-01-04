@@ -281,8 +281,13 @@ function ImportService() {
       newUser.performer = rowValues;
 
       // Not higher than 0, we'll have to create a new record.
-      return userModel.register(newUser, function onRegisterModel(error) {
-        if (error && error.error !== 'user_exists' && error.property !== 'username') {
+      return userModel.register(newUser, function onRegisterModel (error) {
+        if (!error) {
+          connection.resume();
+          return;
+        }
+
+        if (error.error !== 'user_exists' && error.property !== 'username') {
           handleError(error, 'Importing performer ' + newUser.username + ' (create) failed.', true);
           connection.resume();
 
@@ -302,7 +307,7 @@ function ImportService() {
           }
 
           // update duplicate username with new username
-          return userModel.update({username: newUser.username}, {username: newUsername}).exec(function updateVisitor(error, model) {
+          return userModel.update({username: newUser.username}, {username: newUsername}).exec(function updateVisitor (error, model) {
             if (error) {
               handleError(error, 'Renaming user to "' + newUsername + '" for performer "' + newUser.username + '" import failed.', true);
               connection.resume();
@@ -311,8 +316,11 @@ function ImportService() {
             }
 
             // lets try to import the performer again
-            return userModel.register(newUser, function onRegisterModel(error) {
-              handleError(error, 'Importing performer ' + newUser.username + ' (create) failed.', true);
+            return userModel.register(newUser, function onRegisterModel (error) {
+              if (error) {
+                handleError(error, 'Importing performer ' + newUser.username + ' (create) failed.', true);
+              }
+
               connection.resume();
             });
           });
