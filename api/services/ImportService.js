@@ -282,9 +282,41 @@ function ImportService() {
 
       // Not higher than 0, we'll have to create a new record.
       return userModel.register(newUser, function onRegisterModel(error) {
-        connection.resume();
+        if (error && error.error !== 'user_exists' && error.property !== 'username') {
+          handleError(error, 'Importing performer ' + newUser.username + ' (create) failed.', true);
+          connection.resume();
 
-        handleError(error, 'Importing performer ' + newUser.username + ' (create) failed.', true);
+          return;
+        }
+
+        var newUsername = ((newUser.username.length >= 12) ? newUser.username.slice(0, -2) : newUser.username) + Math.floor(Math.random() * 100);
+
+        // check if the new usernamename is available
+        return userModel.count({username: newUsername}).then(function (isAvailable) {
+          // username still exists even after renaming
+          if (isAvailable > 0) {
+            handleError(error, 'Importing performer ' + newUser.username + ' (create) failed (exists after rename to "' + newUsername + '").', true);
+            connection.resume();
+
+            return;
+          }
+
+          // update duplicate username with new username
+          return userModel.update({username: newUser.username}, {username: newUsername}).exec(function updateVisitor(error, model) {
+            if (error) {
+              handleError(error, 'Renaming user to "' + newUsername + '" for performer "' + newUser.username + '" import failed.', true);
+              connection.resume();
+
+              return;
+            }
+
+            // lets try to import the performer again
+            return userModel.register(newUser, function onRegisterModel(error) {
+              handleError(error, 'Importing performer ' + newUser.username + ' (create) failed.', true);
+              connection.resume();
+            });
+          });
+        });
       }, true);
     });
   }
