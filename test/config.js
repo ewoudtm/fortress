@@ -54,7 +54,7 @@ module.exports.connections = {
   chatterbox: {
     adapter : 'sails-mysql',
     host    : 'localhost',
-    user    : 'root',
+    user    : 'admin',
     password: '',
     database: 'test_fortress'
   },
