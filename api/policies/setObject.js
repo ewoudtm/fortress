@@ -1,6 +1,6 @@
 module.exports = function(req, res, next) {
   var host        = req.host,
-      xObjectHost = (req.params && req.params['X-Object-Host']) || (req.get ? req.get('X-Object-Host') : null);
+      xObjectHost = (req.query && req.query['X-Object-Host']) || (req.get ? req.get('X-Object-Host') : null);
 
   if (req.isSocket) {
     host = req.socket.host;
