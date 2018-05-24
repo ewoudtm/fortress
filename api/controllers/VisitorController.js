@@ -68,40 +68,6 @@ module.exports = {
         return res.ok(record);
       });
     });
-  },
-
-  delete: function (req, res) {
-    if (!req.session.user) {
-      return res.forbidden();
-    }
-
-    const currentUser = req.session.user;
-    const currentVisitor = Visitor.findOne({user: currentUser.id})
-      .catch((err) => { return res.badRequest('database_error', err) })
-
-    if (currentVisitor === {} || currentVisitor === undefined || currentVisitor === null) { return res.notFound(); }
-
-    // delete messages and threads from currentUser
-    messageservice.deleteUserMessages(currentUser, ((err, res) => {
-      if (err) { return res.badRequest('database_error', err) };
-    }));
-
-    // delete wallet of current user
-    walletservice.delete(currentVisitor.id, ((err, res) => {
-      if (err) { return res.badRequest('database_error', err) };
-    }));
-
-    // delete visitor record of current user
-    visitorservice.delete(currentVisitor.id, ((err, res) => {
-      if (err) { return res.badRequest('database_error', err) };
-    }));
-
-    // delete user record of current user
-    userservice.delete(currentUser.id, ((err, res) => {
-      if (err) { return res.badRequest('database_error', err) };
-    }));
-
-    res.ok();
   }
    
 };

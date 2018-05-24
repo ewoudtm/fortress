@@ -46,6 +46,8 @@ module.exports.routes = {
   'get /user/username/:id'         : 'UserController.getUsername',
   'post /user/username-available'  : 'UserController.usernameAvailable',
   'get /user/identity/:role?'      : 'UserController.getIdentity',
+  'put /user/delete'               : 'UserController.delete',        
+
 
   // VisitorController
   'get  /visitor/register'         : 'VisitorController.register',
@@ -53,7 +55,6 @@ module.exports.routes = {
   'put /visitor/username'          : 'VisitorController.setUsername', // @see policies/resolveVisitorIdentity
   'put /visitor/:id?'              : 'VisitorController.update',
   'get /visitor/identity'          : 'VisitorController.find',        // @see policies/resolveVisitorIdentity
-  'put /visitor/delete'            : 'VisitorController.delete',        
 
   // PerformerController
   'get /performer/count'           : 'PerformerController.count',
