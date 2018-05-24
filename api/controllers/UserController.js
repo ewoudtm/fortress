@@ -553,37 +553,31 @@ UserController = {
       return res.forbidden();
     }
 
-    const currentUser = req.session.user;
-    const currentVisitor = Visitor.findOne({user: currentUser.id})
-      .catch((err) => { return res.badRequest('database_error', err) })
+    var currentUser = req.session.user;
 
-    if (currentVisitor === {} || currentVisitor === undefined || currentVisitor === null) { return res.notFound(); }
+    Visitor
+      .findOne({user: currentUser.id})
+      .then(function(currentVisitor){
+        if(!currentVisitor || !currentVisitor.length) {
+          throw 'invalid_user';
+        }
 
-    // delete messages and threads from currentUser
-    messageservice.deleteUserMessages(currentUser, ((err, res) => {
-      if (err) { return res.badRequest('database_error', err) };
-    }));
-
-    // delete wallet of current user
-    walletservice.delete(currentVisitor.id, ((err, res) => {
-      if (err) { return res.badRequest('database_error', err) };
-    }));
-
-    // delete visitor record of current user
-    visitorservice.delete(currentVisitor.id, ((err, res) => {
-      if (err) { return res.badRequest('database_error', err) };
-    }));
-
-    // delete user record of current user
-    userservice.delete(currentUser.id, ((err, res) => {
-      if (err) { return res.badRequest('database_error', err) };
-    }));
-
-    // logout user
-    req.session.user = null;
-    delete req.session.user;
-
-    res.ok();
+        Promise.all([
+          messageservice.deleteUserMessages(currentUser),
+          walletservice.delete(currentVisitor),
+          visitorservice.delete(currentVisitor),
+          userservice.delete(currentUser)
+        ])
+        .then(function() {
+          // logout user
+          req.session.user = null;
+          delete req.session.user;
+    
+          res.ok();
+        })
+        .catch(res.badRequest())
+      })
+      .catch(res.badRequest())
   }
 };
 

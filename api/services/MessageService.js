@@ -260,31 +260,68 @@ module.exports = {
 
   /**
    * Delete all messages of user
-   * NOTE: Method requires fully populated from, and to.
    *
-   * @param {{}} user
-   * @param {Function} [callback]
    */
   deleteUserMessages: function (user, callback) {
     callback = callback || function () {
       // Just here to avoid errors.
     };
-    const userMessages = Message.find({ or: [{from: user.id}, {to: user.id}]})
-    .then((userMessages) => { 
-      if (userMessages === {} || userMessages === undefined || userMessages === null) { return callback(null, false) };
-      Messages.destroy(userMessages)
-        .catch((err) => { return callback(err, false) });
-      
-      const userThreads = Thread.find({ or: [{from: currentUser.id}, {to: currentUser.id}]})
-      .then((userThreads) => { 
-        if (userThreads !== {} || userThreads !== undefined || userThreads !== null) {
-          Threads.destroy(userThreads)
-          .catch((err) => { return callback(err, false) });
-        }
-      })
-      .catch((err) => { return callback(err, false) });
 
+    Promise.all([
+      Message.find({ or: [{from: user.id}, {to: user.id}]}),
+      Thread.find({ or: [{from: user.id}, {to: user.id}]})
+    ])
+    .spread(function (userMessages, userThreads) {
+      var destroyMessages = new Promise(
+        function(resolve, reject) {
+          if(userMessages) {
+            resolve(Messages.destroy(userMessages.map(function(msg) {return msg.id} ))
+          } else {
+            reject('no messages')
+          }
+        }
+      )
+      var destroyThreass = new Promise(
+        function(resolve, reject) {
+          if(userThreads) {
+            resolve(Threads.destroy(userThreads));
+          } else {
+            reject('no threads')
+          }
+        }
+      )
+
+      if(userMessages) {
+        destroyMessages.then()
+      }
+      Promise.all([
+          Messages.destroy(userMessages),
+          Threads.destroy(userThreads)
+      ])
+      .catch((err) => { return callback(err, false) });
     })
-    .catch((err) => { return callback(err, false) })
+
+    return Message.find({ or: [{from: user.id}, {to: user.id}]})
+      .then(function(userMessages) { 
+          if(!userMessages.length) { return callback(null, false) };
+        
+          Promise.all([]
+            Message.find({ or: [{from: user.id}, {to: user.id}]}),
+
+          ])
+          Messages.destroy(userMessages)
+          .catch((err) => { return callback(err, false) });
+        
+        const userThreads = Thread.find({ or: [{from: currentUser.id}, {to: currentUser.id}]})
+        .then((userThreads) => { 
+          if (userThreads !== {} || userThreads !== undefined || userThreads !== null) {
+            Threads.destroy(userThreads)
+            .catch((err) => { return callback(err, false) });
+          }
+        })
+        .catch((err) => { return callback(err, false) });
+
+      })
+      .catch((err) => { return callback(err, false) })
   }
 };
