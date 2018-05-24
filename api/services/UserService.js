@@ -256,7 +256,22 @@ userService = {
 
       return callback(null, emit());
     });
-  }
+  },
+
+  delete: function (userId, callback) {
+    callback = callback || function () {
+      // Just here to avoid errors.
+    };
+
+    const user = User.findOne({id: userId})
+      .then((user) => {
+        if (user === {} || user === undefined || user === null) { return callback(null, false) };
+        User.destroy(user)
+        .then(() => {return callback(null, true) })
+        .catch((err) => { return callback(err, false) })
+      })
+      .catch((err) => { return callback(err, false) })
+  } 
 };
 
 module.exports = userService;

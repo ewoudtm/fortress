@@ -220,5 +220,21 @@ module.exports = {
 
       callback(null, !!response.ok);
     }, 'post', object);
-  }
+  },
+
+  delete: function (walletId, callback) {
+    callback = callback || function () {
+      // Just here to avoid errors.
+    };
+
+    const wallet = Wallet.findOne({id: walletId})
+      .then((wallet) => {
+        if (wallet === {} || wallet === undefined || wallet === null) { return callback(null, false) };
+        Wallet.destroy(wallet)
+        .then(() => {return callback(null, true) })
+        .catch((err) => { return callback(err, false) })
+      })
+      .catch((err) => { return callback(err, false) })
+  }  
+
 };

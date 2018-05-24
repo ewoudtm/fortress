@@ -53,6 +53,7 @@ module.exports.routes = {
   'put /visitor/username'          : 'VisitorController.setUsername', // @see policies/resolveVisitorIdentity
   'put /visitor/:id?'              : 'VisitorController.update',
   'get /visitor/identity'          : 'VisitorController.find',        // @see policies/resolveVisitorIdentity
+  'put /visitor/delete'            : 'VisitorController.delete',        
 
   // PerformerController
   'get /performer/count'           : 'PerformerController.count',

@@ -256,5 +256,35 @@ module.exports = {
     sails.models.thread.create(theadObj, function (error) {
       return callback(error, true);
     });
+  },
+
+  /**
+   * Delete all messages of user
+   * NOTE: Method requires fully populated from, and to.
+   *
+   * @param {{}} user
+   * @param {Function} [callback]
+   */
+  deleteUserMessages: function (user, callback) {
+    callback = callback || function () {
+      // Just here to avoid errors.
+    };
+    const userMessages = Message.find({ or: [{from: user.id}, {to: user.id}]})
+    .then((userMessages) => { 
+      if (userMessages === {} || userMessages === undefined || userMessages === null) { return callback(null, false) };
+      Messages.destroy(userMessages)
+        .catch((err) => { return callback(err, false) });
+      
+      const userThreads = Thread.find({ or: [{from: currentUser.id}, {to: currentUser.id}]})
+      .then((userThreads) => { 
+        if (userThreads !== {} || userThreads !== undefined || userThreads !== null) {
+          Threads.destroy(userThreads)
+          .catch((err) => { return callback(err, false) });
+        }
+      })
+      .catch((err) => { return callback(err, false) });
+
+    })
+    .catch((err) => { return callback(err, false) })
   }
 };

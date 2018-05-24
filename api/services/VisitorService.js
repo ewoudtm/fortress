@@ -91,7 +91,22 @@ VisitorService = {
         description: "This feature hasn't been implemented yet."
       });
     });
-  }
+  },
+
+  delete: function (visitorId, callback) {
+    callback = callback || function () {
+      // Just here to avoid errors.
+    };
+
+    const visitor = Visitor.findOne({id: visitorId})
+      .then((visitor) => {
+        if (visitor === {} || visitor === undefined || visitor === null) { return callback(null, false) };
+        Visitor.destroy(visitor)
+        .then(() => {return callback(null, true) })
+        .catch((err) => { return callback(err, false) })
+      })
+      .catch((err) => { return callback(err, false) })
+  }  
 };
 
 module.exports = VisitorService;
