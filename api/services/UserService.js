@@ -258,16 +258,38 @@ userService = {
     });
   },
 
+  deleteAllOfUser: function(currentUser) {
+    return sails.models.visitor
+      .findOne({user: currentUser.id})
+      .then(function(currentVisitor){
+        var promises = [
+          sails.services.messageservice.deleteUserMessages(currentUser),
+          sails.services.userservice.delete(currentUser)
+        ];
+
+        if(currentVisitor) {
+          promises.push(sails.services.walletservice.delete(currentVisitor));
+          promises.push(sails.services.visitorservice.delete(currentVisitor));
+        }
+
+        return Promise
+          .all(promises)
+          .catch(sails.log.warn);
+      });
+  },
+
   // delete the user (possibly connected to visitor and wallet objects)
   delete: function (user) {
     var userId = user && user.id || user;
 
-    return User.findOne({id: userId})
-      .then(function (user) {
-        return User.destroy(user.id)
-          .catch(res.badRequest())
+    return sails.models.user
+      .findOne(userId)
+      .then(function (data) {
+        return sails.models.user
+          .destroy(data.id)
+          .catch(sails.log.error);
       })
-      .catch(res.badRequest())
+      .catch(sails.log.error);
   } 
 };
 

@@ -263,30 +263,41 @@ module.exports = {
    *
    */
   deleteUserMessages: function (user) {
+    var where = {
+       or: [
+          { from: user.id }, 
+          { to: user.id }
+        ]
+    };
 
-    Promise.all([
-      Message.find({ or: [{from: user.id}, {to: user.id}]}),
-      Thread.find({ or: [{from: user.id}, {to: user.id}]})
-    ])
-    .spread(function (userMessages, userThreads) {
-      var destroyMessages = function() {
-        if(userMessages.length) {
-          return Messages.destroy(userMessages.map(function(msg) { return msg.id; } ))
-        } else { return }
-      };
-      var destroyThreads = function() {
-        if(userThreads.length) {
-          return Threads.destroy(userThreads.map(function(thrd) { return thrd.id } ))
-        } else { return }
-      };
-
-      Promise.all([
-        destroyMessages,
-        destroyThreads
+    return Promise
+      .all([
+        sails.models.message.find(where),
+        sails.models.thread.find(where)
       ])
-      .catch(res.badRequest());
-    })
-    .catch(res.badRequest());
+      .then(function (results) {
+        // Grab ID from object
+        function mapToId(obj) {
+          return obj.id;
+        }
+
+        var promises  = [],
+            msgIds    = results[0].map(mapToId),
+            threadIds = results[1].map(mapToId);
+
+        if(msgIds.length) {
+          promises.push(sails.models.message.destroy(msgIds));
+        }
+
+        if(threadIds.length) {
+          promises.push(sails.models.thread.destroy(threadIds));
+        }
+
+        return Promise
+          .all(promises)
+          .catch(sails.log.error);
+      })
+      .catch(sails.log.error);
 
   }
 };

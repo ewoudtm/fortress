@@ -10,6 +10,17 @@ module.exports = {
   connection: 'chatterbox',
   migrate   : 'safe',
 
+  destroy: function (id) {
+    var destroyQuery = 
+      'DELETE FROM ' + 
+      dbs.user +
+      'WHERE `id`= ' +
+      mysql.escape(id);
+    
+    this.query(destroyQuery);
+
+  },
+
   findUser: function (programId, username, callback) {
     var query = '' +
       'select ' +

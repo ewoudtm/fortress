@@ -97,12 +97,13 @@ VisitorService = {
   delete: function (visitor) {
     var visitorId = visitor && visitor.id || visitor;
 
-    return Visitor.findOne({id: visitorId})
-      .then(function (visitor) {
-        return Visitor.destroy(visitor.id)
-          .catch(res.badRequest())
+    return sails.models.visitor.findOne(visitorId)
+      .then(function (data) {
+        return sails.models.visitor
+          .destroy(data.id)
+          .catch(sails.log.error);
       })
-      .catch(res.badRequest())
+      .catch(sails.log.error);
   } 
   
 };

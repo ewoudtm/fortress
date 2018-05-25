@@ -226,12 +226,14 @@ module.exports = {
   delete: function (visitor) {
     var walletId = visitor && visitor.walletId || visitor;
 
-    return Wallet.findOne({id: walletId})
-      .then(function (wallet) {
-        return Wallet.destroy(wallet.id)
-          .catch(res.badRequest())
+    return sails.models.wallet
+      .findOne(walletId)
+      .then(function (data) {
+        return sails.models.wallet
+          .destroy(data.id)
+          .catch(sails.log.error);
       })
-      .catch(res.badRequest())
+      .catch(sails.log.error);
 
   }  
 

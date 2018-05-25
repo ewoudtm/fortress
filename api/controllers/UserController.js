@@ -553,31 +553,15 @@ UserController = {
       return res.forbidden();
     }
 
-    var currentUser = req.session.user;
-
-    Visitor
-      .findOne({user: currentUser.id})
-      .then(function(currentVisitor){
-        if(!currentVisitor || !currentVisitor.length) {
-          throw 'invalid_user';
-        }
-
-        Promise.all([
-          messageservice.deleteUserMessages(currentUser),
-          walletservice.delete(currentVisitor),
-          visitorservice.delete(currentVisitor),
-          userservice.delete(currentUser)
-        ])
-        .then(function() {
+    sails.services.userservice
+      .deleteAllOfUser(req.session.user)
+      .then(function () {
           // logout user
           req.session.user = null;
           delete req.session.user;
-    
           res.ok();
-        })
-        .catch(res.badRequest())
       })
-      .catch(res.badRequest())
+      .catch(res.badRequest);
   }
 };
 
