@@ -222,19 +222,17 @@ module.exports = {
     }, 'post', object);
   },
 
-  delete: function (walletId, callback) {
-    callback = callback || function () {
-      // Just here to avoid errors.
-    };
+  // Delete the visitors wallet (connected to visitor object)
+  delete: function (visitor) {
+    var walletId = visitor && visitor.walletId || visitor;
 
-    const wallet = Wallet.findOne({id: walletId})
-      .then((wallet) => {
-        if (wallet === {} || wallet === undefined || wallet === null) { return callback(null, false) };
-        Wallet.destroy(wallet)
-        .then(() => {return callback(null, true) })
-        .catch((err) => { return callback(err, false) })
+    return Wallet.findOne({id: walletId})
+      .then(function (wallet) {
+        return Wallet.destroy(wallet.id)
+          .catch(res.badRequest())
       })
-      .catch((err) => { return callback(err, false) })
+      .catch(res.badRequest())
+
   }  
 
 };

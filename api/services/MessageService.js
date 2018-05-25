@@ -259,69 +259,34 @@ module.exports = {
   },
 
   /**
-   * Delete all messages of user
+   * Delete all messages and threads of user
    *
    */
-  deleteUserMessages: function (user, callback) {
-    callback = callback || function () {
-      // Just here to avoid errors.
-    };
+  deleteUserMessages: function (user) {
 
     Promise.all([
       Message.find({ or: [{from: user.id}, {to: user.id}]}),
       Thread.find({ or: [{from: user.id}, {to: user.id}]})
     ])
     .spread(function (userMessages, userThreads) {
-      var destroyMessages = new Promise(
-        function(resolve, reject) {
-          if(userMessages) {
-            resolve(Messages.destroy(userMessages.map(function(msg) {return msg.id} ))
-          } else {
-            reject('no messages')
-          }
-        }
-      )
-      var destroyThreass = new Promise(
-        function(resolve, reject) {
-          if(userThreads) {
-            resolve(Threads.destroy(userThreads));
-          } else {
-            reject('no threads')
-          }
-        }
-      )
+      var destroyMessages = function() {
+        if(userMessages.length) {
+          return Messages.destroy(userMessages.map(function(msg) { return msg.id; } ))
+        } else { return }
+      };
+      var destroyThreads = function() {
+        if(userThreads.length) {
+          return Threads.destroy(userThreads.map(function(thrd) { return thrd.id } ))
+        } else { return }
+      };
 
-      if(userMessages) {
-        destroyMessages.then()
-      }
       Promise.all([
-          Messages.destroy(userMessages),
-          Threads.destroy(userThreads)
+        destroyMessages,
+        destroyThreads
       ])
-      .catch((err) => { return callback(err, false) });
+      .catch(res.badRequest());
     })
+    .catch(res.badRequest());
 
-    return Message.find({ or: [{from: user.id}, {to: user.id}]})
-      .then(function(userMessages) { 
-          if(!userMessages.length) { return callback(null, false) };
-        
-          Promise.all([]
-            Message.find({ or: [{from: user.id}, {to: user.id}]}),
-
-          ])
-          Messages.destroy(userMessages)
-          .catch((err) => { return callback(err, false) });
-        
-        const userThreads = Thread.find({ or: [{from: currentUser.id}, {to: currentUser.id}]})
-        .then((userThreads) => { 
-          if (userThreads !== {} || userThreads !== undefined || userThreads !== null) {
-            Threads.destroy(userThreads)
-            .catch((err) => { return callback(err, false) });
-          }
-        })
-        .catch((err) => { return callback(err, false) });
-
-      })
-      .catch((err) => { return callback(err, false) })
   }
 };

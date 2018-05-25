@@ -93,20 +93,18 @@ VisitorService = {
     });
   },
 
-  delete: function (visitorId, callback) {
-    callback = callback || function () {
-      // Just here to avoid errors.
-    };
+  // Delete the visitor (connected to wallet and user objects)
+  delete: function (visitor) {
+    var visitorId = visitor && visitor.id || visitor;
 
-    const visitor = Visitor.findOne({id: visitorId})
-      .then((visitor) => {
-        if (visitor === {} || visitor === undefined || visitor === null) { return callback(null, false) };
-        Visitor.destroy(visitor)
-        .then(() => {return callback(null, true) })
-        .catch((err) => { return callback(err, false) })
+    return Visitor.findOne({id: visitorId})
+      .then(function (visitor) {
+        return Visitor.destroy(visitor.id)
+          .catch(res.badRequest())
       })
-      .catch((err) => { return callback(err, false) })
-  }  
+      .catch(res.badRequest())
+  } 
+  
 };
 
 module.exports = VisitorService;

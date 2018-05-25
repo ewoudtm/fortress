@@ -258,19 +258,16 @@ userService = {
     });
   },
 
-  delete: function (userId, callback) {
-    callback = callback || function () {
-      // Just here to avoid errors.
-    };
+  // delete the user (possibly connected to visitor and wallet objects)
+  delete: function (user) {
+    var userId = user && user.id || user;
 
-    const user = User.findOne({id: userId})
-      .then((user) => {
-        if (user === {} || user === undefined || user === null) { return callback(null, false) };
-        User.destroy(user)
-        .then(() => {return callback(null, true) })
-        .catch((err) => { return callback(err, false) })
+    return User.findOne({id: userId})
+      .then(function (user) {
+        return User.destroy(user.id)
+          .catch(res.badRequest())
       })
-      .catch((err) => { return callback(err, false) })
+      .catch(res.badRequest())
   } 
 };
 
