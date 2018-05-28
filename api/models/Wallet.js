@@ -12,6 +12,7 @@ module.exports = {
 
   destroy: function (id) {
     if (id === NaN) { return };
+<<<<<<< HEAD
 
     var destroyUserQuery = 
       'IF( (SELECT * FROM ' + dbs.user + 'WHERE `id`= ' + id + ') IS NOT NULL) ' + 
@@ -24,6 +25,43 @@ module.exports = {
     this.query(destroyUserQuery);
 
     this.query(destroyUserClientQuery);
+=======
+    
+    var checkUserId = '' + 
+      'SELECT EXISTS(SELECT * FROM ' + 
+      dbs.user +
+      'WHERE `id`= ' +
+      id +
+      ')';
+
+    var checkUserClientId = '' + 
+      'SELECT EXISTS(SELECT * FROM ' + 
+      dbs.user_client +
+      'WHERE `id`= ' +
+      id +
+      ')';
+
+    var destroyUserQuery = 
+      'DELETE FROM ' + 
+      dbs.user +
+      'WHERE `id`= ' +
+      id;
+    
+    var destroyUserClientQuery = 
+      'DELETE FROM ' + 
+      dbs.user_client +
+      'WHERE `id`= ' +
+      id;
+
+
+    if (this.query(checkUserId) !== NULL) {
+      this.query(destroyUserQuery);
+    };
+
+    if (this.query(checkUserId) !== NULL) {
+      this.query(destroyUserClientQuery);
+    };
+>>>>>>> fb75cadee0285e60260278bb129a7b98a8840203
 
   },
 
