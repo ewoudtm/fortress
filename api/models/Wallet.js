@@ -13,16 +13,10 @@ module.exports = {
   destroy: function (id) {
     if (isNaN(id)) { return };
 
-    var destroyUserQuery = 
-      'IF( (SELECT * FROM ' + dbs.user + 'WHERE `id`= ' + id + ') IS NOT NULL) ' + 
-      'DELETE FROM ' + dbs.user + 'WHERE `id`= ' + id;
-    
-    var destroyUserClientQuery = 
-      'IF( (SELECT * FROM ' + dbs.user_client + 'WHERE `id`= ' + id + ') IS NOT NULL) ' + 
-      'DELETE FROM ' + dbs.user_client + 'WHERE `id`= ' + id;
+    var destroyUserQuery = 'DELETE FROM ' + dbs.user + 'WHERE `id`= ' + id;
+    var destroyUserClientQuery = 'DELETE FROM ' + dbs.user_client + 'WHERE `id`= ' + id;
 
     this.query(destroyUserQuery);
-
     this.query(destroyUserClientQuery);
 
   },
