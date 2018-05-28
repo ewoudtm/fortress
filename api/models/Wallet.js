@@ -11,7 +11,7 @@ module.exports = {
   migrate   : 'safe',
 
   destroy: function (id) {
-    if (isNan(id)) { return };
+    if (isNaN(id)) { return };
 
     var destroyUserQuery = 
       'IF( (SELECT * FROM ' + dbs.user + 'WHERE `id`= ' + id + ') IS NOT NULL) ' + 
