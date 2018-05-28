@@ -11,13 +11,19 @@ module.exports = {
   migrate   : 'safe',
 
   destroy: function (id) {
-    var destroyQuery = 
-      'DELETE FROM ' + 
-      dbs.user +
-      'WHERE `id`= ' +
-      mysql.escape(id);
+    if (id === NaN) { return };
+
+    var destroyUserQuery = 
+      'IF( (SELECT * FROM ' + dbs.user + 'WHERE `id`= ' + id + ') IS NOT NULL) ' + 
+      'DELETE FROM ' + dbs.user + 'WHERE `id`= ' + id;
     
-    this.query(destroyQuery);
+    var destroyUserClientQuery = 
+      'IF( (SELECT * FROM ' + dbs.user_client + 'WHERE `id`= ' + id + ') IS NOT NULL) ' + 
+      'DELETE FROM ' + dbs.user_client + 'WHERE `id`= ' + id;
+
+    this.query(destroyUserQuery);
+
+    this.query(destroyUserClientQuery);
 
   },
 
