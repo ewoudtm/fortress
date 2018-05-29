@@ -227,14 +227,7 @@ module.exports = {
     var walletId = visitor && visitor.walletId || visitor;
 
     return sails.models.wallet
-      .findOne(walletId)
-      .then(function (data) {
-        return sails.models.wallet
-          .destroy(data.id)
-          .catch(sails.log.error);
-      })
+      .destroy(walletId)
       .catch(sails.log.error);
-
-  }  
-
+  }
 };
