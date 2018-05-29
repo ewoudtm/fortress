@@ -226,8 +226,6 @@ module.exports = {
   delete: function (visitor) {
     var walletId = visitor && visitor.walletId || visitor;
 
-    return sails.models.wallet
-      .destroy(walletId)
-      .catch(sails.log.error);
+    return sails.models.wallet.destroy(walletId);
   }
 };
