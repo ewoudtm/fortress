@@ -263,10 +263,12 @@ module.exports = {
    *
    */
   deleteUserMessages: function (user) {
+    var userId = user && user.id || user;
+
     var where = {
        or: [
-          { from: user.id }, 
-          { to: user.id }
+          { from: userId }, 
+          { to: userId }
         ]
     };
 

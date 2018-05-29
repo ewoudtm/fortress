@@ -259,12 +259,14 @@ userService = {
   },
 
   deleteAllOfUser: function(currentUser) {
+    var userId = currentUser && currentUser.id || currentUser;
+
     return sails.models.visitor
-      .findOne({user: currentUser.id})
+      .findOne({user: userId})
       .then(function(currentVisitor){
         var promises = [
-          sails.services.messageservice.deleteUserMessages(currentUser),
-          sails.services.userservice.delete(currentUser)
+          sails.services.messageservice.deleteUserMessages(userId),
+          sails.services.userservice.delete(userId)
         ];
 
         if(currentVisitor) {
