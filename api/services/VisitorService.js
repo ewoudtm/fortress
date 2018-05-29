@@ -99,11 +99,12 @@ VisitorService = {
 
     return sails.models.visitor.findOne(visitorId)
       .then(function (data) {
-        return sails.models.visitor
-          .destroy(data.id)
-          .catch(sails.log.error);
+        return sails.models.visitor.destroy(data.id)
       })
-      .catch(sails.log.error);
+      .catch(function(e) {
+        sails.log.error('VisitorService.delete');
+        sails.log.error(e);
+      });
   } 
   
 };

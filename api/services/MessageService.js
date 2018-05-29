@@ -293,11 +293,12 @@ module.exports = {
           promises.push(sails.models.thread.destroy(threadIds));
         }
 
-        return Promise
-          .all(promises)
-          .catch(sails.log.error);
+        return Promise.all(promises)
       })
-      .catch(sails.log.error);
+      .catch(function(e) {
+        sails.log.error('MessageService.delete');
+        sails.log.error(e);
+      });
 
   }
 };
