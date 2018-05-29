@@ -46,7 +46,7 @@ module.exports.routes = {
   'get /user/username/:id'         : 'UserController.getUsername',
   'post /user/username-available'  : 'UserController.usernameAvailable',
   'get /user/identity/:role?'      : 'UserController.getIdentity',
-  'put /user/delete'               : 'UserController.delete',        
+  'delete /user/delete'            : 'UserController.delete',        
 
 
   // VisitorController
