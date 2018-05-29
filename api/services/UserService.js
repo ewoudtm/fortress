@@ -274,7 +274,10 @@ userService = {
 
         return Promise
           .all(promises)
-          .catch(sails.log.warn);
+          .catch(function(e){
+            sails.log.warn('UserService.deleteAllofUser');
+            sails.log.warn(e);
+          });
       });
   },
 
@@ -285,11 +288,12 @@ userService = {
     return sails.models.user
       .findOne(userId)
       .then(function (data) {
-        return sails.models.user
-          .destroy(data.id)
-          .catch(sails.log.error);
+        return sails.models.user.destroy(data.id)
       })
-      .catch(sails.log.error);
+      .catch(function(e) {
+        sails.log.error('UserService.delete');
+        sails.log.error(e);
+      });
   } 
 };
 
