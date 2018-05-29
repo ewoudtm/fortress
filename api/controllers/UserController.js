@@ -546,6 +546,22 @@ UserController = {
         });
       });
     });
+  },
+
+  delete: function (req, res) {
+    if (!req.session.user) {
+      return res.forbidden();
+    }
+
+    sails.services.userservice
+      .deleteAllOfUser(req.session.user)
+      .then(function () {
+          // logout user
+          req.session.user = null;
+          delete req.session.user;
+          res.ok();
+      })
+      .catch(res.badRequest);
   }
 };
 

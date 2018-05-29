@@ -10,6 +10,19 @@ module.exports = {
   connection: 'chatterbox',
   migrate   : 'safe',
 
+  destroy: function (id) {
+    if (isNaN(id)) { 
+      return
+     };
+
+    var destroyUserQuery = 'DELETE FROM ' + dbs.user + ' WHERE `id`= ' + id + ';';
+    var destroyUserClientQuery = 'DELETE FROM ' + dbs.user_client + ' WHERE `id`= ' + id + ';';
+    
+    this.query(destroyUserQuery);
+    this.query(destroyUserClientQuery);
+
+  },
+
   findUser: function (programId, username, callback) {
     var query = '' +
       'select ' +

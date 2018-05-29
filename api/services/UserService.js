@@ -256,7 +256,47 @@ userService = {
 
       return callback(null, emit());
     });
-  }
+  },
+
+  deleteAllOfUser: function(currentUser) {
+    var userId = currentUser && currentUser.id || currentUser;
+
+    return sails.models.visitor
+      .findOne({user: userId})
+      .then(function(currentVisitor){
+        var promises = [
+          sails.services.messageservice.deleteUserMessages(userId),
+          sails.services.userservice.delete(userId)
+        ];
+
+        if(currentVisitor) {
+          promises.push(sails.services.walletservice.delete(currentVisitor));
+          promises.push(sails.services.visitorservice.delete(currentVisitor));
+        }
+
+        return Promise
+          .all(promises)
+          .catch(function(e){
+            sails.log.warn('UserService.deleteAllofUser');
+            sails.log.warn(e);
+          });
+      });
+  },
+
+  // delete the user (possibly connected to visitor and wallet objects)
+  delete: function (user) {
+    var userId = user && user.id || user;
+
+    return sails.models.user
+      .findOne(userId)
+      .then(function (data) {
+        return sails.models.user.destroy(data.id)
+      })
+      .catch(function(e) {
+        sails.log.error('UserService.delete');
+        sails.log.error(e);
+      });
+  } 
 };
 
 module.exports = userService;

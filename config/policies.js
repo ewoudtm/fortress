@@ -46,7 +46,8 @@ module.exports.policies = {
     update           : makePolicies(['isAuthenticated', 'ownsUserRecord', 'filterProperties', 'sendNotifications']),
     updatePassword   : makePolicies(['isAuthenticated']),
     verify           : makePolicies(true),
-    logout           : makePolicies('isAuthenticated')
+    logout           : makePolicies('isAuthenticated'),
+    delete           : makePolicies('isAuthenticated')
   },
 
   VisitorController: {

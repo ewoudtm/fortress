@@ -256,5 +256,51 @@ module.exports = {
     sails.models.thread.create(theadObj, function (error) {
       return callback(error, true);
     });
+  },
+
+  /**
+   * Delete all messages and threads of user
+   *
+   */
+  deleteUserMessages: function (user) {
+    var userId = user && user.id || user;
+
+    var where = {
+       or: [
+          { from: userId }, 
+          { to: userId }
+        ]
+    };
+
+    return Promise
+      .all([
+        sails.models.message.find(where),
+        sails.models.thread.find(where)
+      ])
+      .then(function (results) {
+        // Grab ID from object
+        function mapToId(obj) {
+          return obj.id;
+        }
+
+        var promises  = [],
+            msgIds    = results[0].map(mapToId),
+            threadIds = results[1].map(mapToId);
+
+        if(msgIds.length) {
+          promises.push(sails.models.message.destroy(msgIds));
+        }
+
+        if(threadIds.length) {
+          promises.push(sails.models.thread.destroy(threadIds));
+        }
+
+        return Promise.all(promises)
+      })
+      .catch(function(e) {
+        sails.log.error('MessageService.delete');
+        sails.log.error(e);
+      });
+
   }
 };

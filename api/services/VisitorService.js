@@ -91,7 +91,22 @@ VisitorService = {
         description: "This feature hasn't been implemented yet."
       });
     });
-  }
+  },
+
+  // Delete the visitor (connected to wallet and user objects)
+  delete: function (visitor) {
+    var visitorId = visitor && visitor.id || visitor;
+
+    return sails.models.visitor.findOne(visitorId)
+      .then(function (data) {
+        return sails.models.visitor.destroy(data.id)
+      })
+      .catch(function(e) {
+        sails.log.error('VisitorService.delete');
+        sails.log.error(e);
+      });
+  } 
+  
 };
 
 module.exports = VisitorService;

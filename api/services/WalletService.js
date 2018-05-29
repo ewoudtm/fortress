@@ -220,5 +220,12 @@ module.exports = {
 
       callback(null, !!response.ok);
     }, 'post', object);
+  },
+
+  // Delete the visitors wallet (connected to visitor object)
+  delete: function (visitor) {
+    var walletId = visitor && visitor.walletId || visitor;
+
+    return sails.models.wallet.destroy(walletId);
   }
 };
